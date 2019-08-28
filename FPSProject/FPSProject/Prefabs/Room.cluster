@@ -1,0 +1,32 @@
+﻿
+<Prefab Filename="Prefabs\\Window.xml">
+  <Transform>
+    <Position X="POSX" Y="POSY" Z="POSZ+5.0"/>
+  </Transform>
+</Prefab>
+
+<Prefab Filename="Prefabs\\Window.xml">
+  <Transform>
+    <Position X="POSX" Y="POSY" Z="POSZ-5.0"/>
+  </Transform>
+</Prefab>
+
+<Prefab Filename="Prefabs\\Window.xml">
+  <Transform>
+    <Position X="POSX+5.0" Y="POSY" Z="POSZ"/>
+    <Rotation X="0.0" Y="90.0" Z="0.0"/>
+  </Transform>
+</Prefab>
+
+<Prefab Filename="Prefabs\\Doorway.xml">
+  <Transform>
+    <Position X="POSX-5.0" Y="POSY" Z="POSZ"/>
+    <Rotation X="0.0" Y="90.0" Z="0.0"/>
+  </Transform>
+</Prefab>
+
+<Prefab Filename="Prefabs\\Roof.xml">
+  <Transform>
+    <Position X="POSX" Y="POSY+10.0" Z="POSZ"/>
+  </Transform>
+</Prefab>

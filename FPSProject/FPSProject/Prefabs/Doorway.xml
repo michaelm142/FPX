@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<Object Name="Doorway">
+  <Transform/>
+  <MeshRenderer>
+    <Model Name="Models//Doorway"/>
+  </MeshRenderer>
+  <Material>
+    <AmbientColor R="169" G="169" B="169" A="255"/>
+    <SpecularColor R="0" G="0" B="0" A="0"/>
+    <DiffuseColor R="255" G="255" B="255" A="255"/>
+  </Material>
+  <BoxCollider>
+    <Size X="0.5" Y="0.5" Z="0.5"/>
+  </BoxCollider>
+</Object>
+

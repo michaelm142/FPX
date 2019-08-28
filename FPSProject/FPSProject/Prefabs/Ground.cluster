@@ -1,0 +1,62 @@
+﻿<Prefab Filename="Prefabs\\GrassTile.xml">
+  <Transform>
+    <Position X="-20" Y="0.0" Z="-20"/>
+    <Scale X="10" Y="1.0" Z="10"/>
+  </Transform>
+</Prefab>
+
+<Prefab Filename="Prefabs\\GrassTile.xml">
+  <Transform>
+    <Position X="-20" Y="0.0" Z="0"/>
+    <Scale X="10" Y="1.0" Z="10"/>
+  </Transform>
+</Prefab>
+
+<Prefab Filename="Prefabs\\GrassTile.xml">
+  <Transform>
+    <Position X="-20" Y="0.0" Z="20"/>
+    <Scale X="10" Y="1.0" Z="10"/>
+  </Transform>
+</Prefab>
+
+<Prefab Filename="Prefabs\\GrassTile.xml">
+  <Transform>
+    <Position X="0" Y="0.0" Z="-20"/>
+    <Scale X="10" Y="1.0" Z="10"/>
+  </Transform>
+</Prefab>
+
+<Prefab Filename="Prefabs\\GrassTile.xml">
+  <Transform>
+    <Position X="0" Y="0.0" Z="0"/>
+    <Scale X="10" Y="1.0" Z="10"/>
+  </Transform>
+</Prefab>
+
+<Prefab Filename="Prefabs\\GrassTile.xml">
+  <Transform>
+    <Position X="0" Y="0.0" Z="20"/>
+    <Scale X="10" Y="1.0" Z="10"/>
+  </Transform>
+</Prefab>
+
+<Prefab Filename="Prefabs\\GrassTile.xml">
+  <Transform>
+    <Position X="20" Y="0.0" Z="-20"/>
+    <Scale X="10" Y="1.0" Z="10"/>
+  </Transform>
+</Prefab>
+
+<Prefab Filename="Prefabs\\GrassTile.xml">
+  <Transform>
+    <Position X="20" Y="0.0" Z="0"/>
+    <Scale X="10" Y="1.0" Z="10"/>
+  </Transform>
+</Prefab>
+
+<Prefab Filename="Prefabs\\GrassTile.xml">
+  <Transform>
+    <Position X="20" Y="0.0" Z="20"/>
+    <Scale X="10" Y="1.0" Z="10"/>
+  </Transform>
+</Prefab>

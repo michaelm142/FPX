@@ -1,0 +1,173 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Xml;
+using Microsoft.Xna.Framework;
+
+namespace ComponentModel
+{
+    public class Transform : Component
+    {
+        public new Vector3 position
+        {
+            get { return GetPosition(parent, localPosition); }
+
+            set { localPosition = parent == null ? value : Vector3.Transform(value, Matrix.CreateTranslation(parent.position)); }
+        }
+
+        public new Quaternion rotation
+        {
+            get { return GetRotation(parent, localRotation); }
+
+            set { localRotation = parent == null ? value : parent.rotation * value; }
+        }
+
+        public new Vector3 localPosition = Vector3.Zero;
+        public new Quaternion localRotation = Quaternion.Identity;
+        public Vector3 localScale = Vector3.One;
+
+        public Matrix worldToLocalMatrix
+        {
+            get { return Matrix.CreateTranslation(-position) * Matrix.CreateFromQuaternion(rotation) * Matrix.CreateScale(-localScale); }
+        }
+
+        public Matrix localToWorldMatrix
+        {
+            get { return Matrix.CreateScale(localScale) * Matrix.CreateFromQuaternion(localRotation) * Matrix.CreateTranslation(localPosition); }
+        }
+
+        public Matrix worldPose
+        {
+            get { return Matrix.CreateScale(localScale) * Matrix.CreateFromQuaternion(rotation) * Matrix.CreateTranslation(position); }
+        }
+
+        public Vector3 up
+        {
+            get { return worldPose.Up; }
+        }
+
+        public Vector3 right
+        {
+            get { return worldPose.Right; }
+        }
+
+        public Vector3 forward
+        {
+            get { return worldPose.Forward; }
+        }
+
+        private Transform _parent;
+        public Transform parent
+        {
+            get { return _parent; }
+            set
+            {
+                if (value == this)
+                    return;
+
+                _parent = value;
+            }
+        }
+        private List<Transform> leafNodes = new List<Transform>();
+
+        private Vector3 GetPosition(Transform parent, Vector3 position)
+        {
+            if (parent == null)
+                return position;
+
+            return GetPosition(parent.parent, Vector3.Transform(position, parent.localToWorldMatrix));
+        }
+
+        private Quaternion GetRotation(Transform parent, Quaternion rotation)
+        {
+            if (parent == null)
+                return rotation;
+
+            return GetRotation(parent.parent, parent.localRotation * rotation);
+        }
+
+        private string parentName;
+
+        public void LoadXml(XmlElement node)
+        {
+            parentName = node.Attributes["Parent"] == null ? null : node.Attributes["Parent"].Value;
+
+            var positionNode = node.SelectSingleNode("Position") as XmlElement;
+            var rotationNode = node.SelectSingleNode("Rotation") as XmlElement;
+            var scaleNode = node.SelectSingleNode("Scale") as XmlElement;
+
+            if (positionNode != null)
+                localPosition = LinearAlgebraUtil.Vector3FromXml(positionNode);
+            if (rotationNode != null)
+                localRotation = LinearAlgebraUtil.EulerFromXml(rotationNode);
+            if (scaleNode != null)
+                localScale = LinearAlgebraUtil.Vector3FromXml(scaleNode);
+        }
+
+        public void SaveXml(XmlElement node)
+        {
+            var positionNode = node.OwnerDocument.CreateElement("Position");
+            {
+                var posX = node.OwnerDocument.CreateAttribute("X");
+                posX.Value = position.X.ToString();
+
+                var posY = node.OwnerDocument.CreateAttribute("Y");
+                posY.Value = position.Y.ToString();
+
+                var posZ = node.OwnerDocument.CreateAttribute("Z");
+                posZ.Value = position.Z.ToString();
+                positionNode.Attributes.Append(posX);
+                positionNode.Attributes.Append(posY);
+                positionNode.Attributes.Append(posZ);
+            }
+
+            var rotationNode = node.OwnerDocument.CreateElement("Rotation");
+            {
+                Vector3 eulerRotation = rotation.GetEulerAngles();
+
+                var rotX = node.OwnerDocument.CreateAttribute("X");
+                rotX.Value = rotation.X.ToString();
+
+                var rotY = node.OwnerDocument.CreateAttribute("Y");
+                rotY.Value = rotation.Y.ToString();
+
+                var rotZ = node.OwnerDocument.CreateAttribute("Z");
+                rotZ.Value = rotation.Z.ToString();
+
+                rotationNode.Attributes.Append(rotX);
+                rotationNode.Attributes.Append(rotY);
+                rotationNode.Attributes.Append(rotZ);
+            }
+
+            var scaleNode = node.OwnerDocument.CreateElement("Scale");
+            {
+                var sclX = node.OwnerDocument.CreateAttribute("X");
+                sclX.Value = scale.X.ToString();
+
+                var sclY = node.OwnerDocument.CreateAttribute("Y");
+                sclY.Value = scale.Y.ToString();
+
+                var sclZ = node.OwnerDocument.CreateAttribute("Z");
+                sclZ.Value = scale.Z.ToString();
+
+                scaleNode.Attributes.Append(sclX);
+                scaleNode.Attributes.Append(sclY);
+                scaleNode.Attributes.Append(sclZ);
+            }
+
+            node.AppendChild(positionNode);
+            node.AppendChild(rotationNode);
+            node.AppendChild(scaleNode);
+        }
+
+        public void Start()
+        {
+            if (!string.IsNullOrEmpty(parentName) && parent == null)
+            {
+                parent = GameObject.Find(parentName).transform;
+                parentName = null;
+            }
+        }
+    }
+}

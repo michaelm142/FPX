@@ -1,0 +1,107 @@
+﻿using System;
+using System.Linq;
+using System.Xml;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Graphics;
+using LodeObj;
+
+namespace ComponentModel
+{
+    public class MeshRenderer : Component
+    {
+        public Model model;
+
+        public Material material
+        {
+            get { return GetComponent<Material>(); }
+        }
+
+        public int startIndex { get; private set; }
+        public int primitiveCount { get; private set; }
+
+        public void Draw(GameTime gametime)
+        {
+            foreach (var mesh in model.Meshes)
+            {
+                foreach (BasicEffect effect in mesh.Effects)
+                {
+
+                    effect.AmbientLightColor = material.AmbientColor.ToVector3();
+                    effect.DiffuseColor = material.DiffuseColor.ToVector3();
+                    effect.SpecularColor = material.SpecularColor.ToVector3();
+                    effect.PreferPerPixelLighting = true;
+                    if (material.DiffuseMap != null)
+                    {
+                        effect.TextureEnabled = true;
+                        effect.Texture = material.DiffuseMap;
+                    }
+
+                    effect.DirectionalLight0.DiffuseColor = (Color.White * 0.1F).ToVector3();
+                    effect.DirectionalLight0.Direction = (Vector3.Down + Vector3.Left + Vector3.Forward);
+                    effect.DirectionalLight0.Direction.Normalize();
+                    effect.DirectionalLight0.Enabled = true;
+                    effect.LightingEnabled = true;
+
+                    effect.FogEnabled = true;
+                    effect.FogStart = 1.5F;
+                    effect.FogEnd = 100.0F;
+                    effect.FogColor = Color.CornflowerBlue.ToVector3();
+
+                    effect.World = GetComponent<Transform>().worldPose;
+                    effect.View = Camera.Active.ViewMatrix;
+                    effect.Projection = Camera.Active.ProjectionMatrix;
+                    effect.CurrentTechnique.Passes[0].Apply();
+                    mesh.Draw();
+                }
+            }
+        }
+
+        public void LoadXml(XmlElement node)
+        {
+            VertexDeclaration[] decl = new VertexDeclaration[]
+            {
+                VertexPositionColor.VertexDeclaration,
+                VertexPositionColorTexture.VertexDeclaration,
+                VertexPositionNormalTexture.VertexDeclaration,
+                VertexPositionNormalTextureBinormal.vertexDeclaration,
+                VertexPositionTexture.VertexDeclaration,
+            };
+
+            string modelName = node.SelectSingleNode("Model").Attributes["Name"].Value;
+            try
+            {
+                model = GameCore.content.Load<Model>(modelName);
+                foreach (var mesh in model.Meshes)
+                {
+                    foreach (var part in mesh.MeshParts)
+                    {
+                        VertexPositionNormalTexture[] vertecies = new VertexPositionNormalTexture[part.VertexBuffer.VertexCount];
+                        part.VertexBuffer.GetData(vertecies);
+
+                        VertexPositionNormalTextureBinormal[] verts = new VertexPositionNormalTextureBinormal[vertecies.Length];
+                        for (int i = 0; i < vertecies.Length; i++)
+                        {
+                            verts[i].Position = vertecies[i].Position.ToVector4();
+                            verts[i].Normal = vertecies[i].Normal;
+                            verts[i].TextureCoordinate = vertecies[i].TextureCoordinate;
+                        }
+
+                        int index = 0;
+                        // Graphics.instance.renderer.AppendVertecies(verts, out index);
+                        startIndex = index;
+                        primitiveCount = verts.Length / 2;
+                    }
+                }
+            }
+            catch (ContentLoadException)
+            {
+                Debug.LogError("Models {0} could not be found in content", modelName);
+                return;
+            }
+
+
+        }
+
+    }
+}

@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+
+<Object Name="Arrow">
+  <Transform/>
+  <LineRenderer>
+    <Positions>
+      <Position X="0.0" Y="0.0" Z="0.0"/>
+      <Position X="0.0" Y="0.0" Z="-1.0"/>
+
+      <Position X="0.0" Y="0.0" Z="-1.0"/>
+      <Position X="0.05" Y="0.05" Z="-0.5"/>
+
+      <Position X="0.0" Y="0.0" Z="-1.0"/>
+      <Position X="-0.05" Y="0.05" Z="-0.5"/>
+
+      <Position X="0.0" Y="0.0" Z="-1.0"/>
+      <Position X="0.05" Y="-0.05" Z="-0.5"/>
+
+      <Position X="0.0" Y="0.0" Z="-1.0"/>
+      <Position X="-0.05" Y="-0.05" Z="-0.5"/>
+    </Positions>
+    <UseWorldSpace>false</UseWorldSpace>
+  </LineRenderer>
+  <Material>
+    <DiffuseColor R="0.0" G="1.0" B="0.0" A="1.0"/>
+  </Material>
+</Object>

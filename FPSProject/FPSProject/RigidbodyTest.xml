@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<Scene>
+  <Objects>
+    
+    <Object Name="Camera">
+      <Transform>
+        <Position X="0" Y="0" Z="10"/>
+      </Transform>
+      <Camera>
+        <FieldOfView>60.0</FieldOfView>
+      </Camera>
+    </Object>
+
+    <Prefab Filename="Prefabs\\Box.xml" Name="Rigidbody Test">
+      <Rigidbody>
+        <AngularDrag>100.0</AngularDrag>
+        <Drag>0.01</Drag>
+      </Rigidbody>
+      <RigidbodyController/>
+    </Prefab>
+
+    <Prefab Filename="Prefabs\\Box.xml" Name="Kinematic Test">
+      <Transform>
+        <Position X="3.0" Y="0.0" Z="0.0"/>
+      </Transform>
+      <Rigidbody>
+        <IsKinematic>true</IsKinematic>
+      </Rigidbody>
+    </Prefab>
+    
+  </Objects>
+</Scene>

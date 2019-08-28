@@ -1,3 +1,4 @@
+Content\Models\Cube.xnb
 Content\Models\Sphere.xnb
 Content\Models\CubeInverse.xnb
 Content\Models\Plane.xnb
@@ -10,7 +11,6 @@ Content\Textures\Heightmap.xnb
 Content\Textures\GrassTexture.xnb
 Content\Textures\ball.xnb
 Content\Terrain.xnb
-Content\Models\Cube.xnb
 Content\Shaders\DeferredGBuffers.xnb
 Content\Shaders\Lights\AmbientLight.xnb
 Content\Shaders\Lights\DirectionalLight.xnb

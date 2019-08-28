@@ -65,10 +65,6 @@ namespace ComponentModel
                 throw new InvalidOperationException("Game instance must have a static 'Instance' property.");
             instanceProperty.GetSetMethod().Invoke(gameInstance, new object[] { gameInstance });
 
-            PropertyInfo spriteBatchProperty = gametype.GetProperties().ToList().Find(p => p.PropertyType == typeof(SpriteBatch));
-            if (spriteBatchProperty == null)
-                Debug.LogWarning("Game instance does not expose spriteBatch property");
-
             gameInstance = outval;
             gameInstance.Exiting += GameInstance_Exiting;
 
@@ -79,15 +75,17 @@ namespace ComponentModel
             outval.Components.Add(new Physics());
             outval.Components.Add(new Graphics());
 
-            typeof(Game).InvokeMember("isActive", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.SetField, null, gameInstance, new object[] { true });
-            var methods = typeof(Game).GetMethods(BindingFlags.InvokeMethod | BindingFlags.NonPublic | BindingFlags.Instance);
-            var initMethod = methods.ToList().Find(m => m.Name == "Initialize");
-            var ensureHostMethod = methods.ToList().Find(m => m.Name == "EnsureHost");
-            ensureHostMethod.Invoke(gameInstance, new object[] { });
-            initMethod.Invoke(gameInstance, new object[] { });
+            outval.Activated += Outval_Activated;
 
-            spriteBatch = gameInstance.GetType().GetProperties().ToList().Find(p => p.Name.ToLower() == "spritebatch").GetGetMethod().Invoke(gameInstance, null) as SpriteBatch;
             return outval;
+        }
+
+        private static void Outval_Activated(object sender, EventArgs e)
+        {
+            PropertyInfo spriteBatchProperty = gameInstance.GetType().GetProperties().ToList().Find(p => p.PropertyType == typeof(SpriteBatch));
+            if (spriteBatchProperty == null)
+                Debug.LogWarning("Game instance does not expose spriteBatch property");
+            spriteBatch = spriteBatchProperty.GetGetMethod().Invoke(gameInstance, null) as SpriteBatch;
         }
 
         private static void GameInstance_Exiting(object sender, EventArgs e)
@@ -102,11 +100,7 @@ namespace ComponentModel
 
             IsRunning = true;
             using (Game gameInstance = CreateGameInstance(sceneName, windowHandle))
-            {
-                Form gameForm = Form.FromHandle(gameInstance.Window.Handle) as Form;
-                gameForm.Show();
-                    gameInstance.Tick();
-            }
+                gameInstance.Run();
 
             Camera.Active = null;
             Settings.ShutDown();

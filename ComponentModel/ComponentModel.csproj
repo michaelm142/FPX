@@ -58,9 +58,6 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="LodeObj">
-      <HintPath>bin\Debug\LodeObj.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.Xna.Framework, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86" />
     <Reference Include="Microsoft.Xna.Framework.Content.Pipeline, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86" />
     <Reference Include="Microsoft.Xna.Framework.Content.Pipeline.EffectImporter, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=MSIL" />
@@ -103,6 +100,12 @@
     <Compile Include="Transform.cs" />
     <Compile Include="LinearAlgebraUtil.cs" />
     <Compile Include="Utill.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\LodeObj\LodeObj.csproj">
+      <Project>{1011caf4-54ec-405a-a387-f59cf91afcb3}</Project>
+      <Name>LodeObj</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Linq;
 using System.Collections.Generic;
 using System.Threading;
@@ -21,9 +21,18 @@ namespace FPSProject
         [SecurityPermission(SecurityAction.Demand, Flags = SecurityPermissionFlag.ControlAppDomain)]
         static void Main(string[] args)
         {
+            Title();
             Settings.Initialize();
             while (Running)
             {
+                Debug.Log(DateTime.Now);
+
+                Console.BackgroundColor = ConsoleColor.White;
+                Console.ForegroundColor = ConsoleColor.Black;
+                Console.Write("Engine Core Terminal");
+                Console.BackgroundColor = ConsoleColor.Black;
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.Write(">");
                 string line = Console.ReadLine();
                 if (string.IsNullOrEmpty(line))
                     continue;
@@ -65,6 +74,18 @@ namespace FPSProject
 
         }
 
+        static void Title()
+        {
+            Debug.Log("===================================");
+            Debug.Log("  *********   *********  ***    ***");
+            Debug.Log(" **********  *****  ****  ***  *** ");
+            Debug.Log(" ****         *****        ******  ");
+            Debug.Log(" *******        *****       *****  ");
+            Debug.Log(" *******    ****  ****     *** *** ");
+            Debug.Log(" ****        *********   ****   ***");
+            Debug.Log("===================================");
+        }
+
         static Exception getInnerException(TargetInvocationException e)
         {
             if (e.InnerException is TargetInvocationException)
@@ -95,8 +116,17 @@ namespace FPSProject
 
         public static void Editor()
         {
+            Debug.BackgroundColor = ConsoleColor.Blue;
+            Debug.Log("EDITOR");
+            Debug.ResetColors();
+
             Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(true);
+            try
+            {
+                Application.SetCompatibleTextRenderingDefault(true);
+            }
+            catch (InvalidOperationException) { }
+
             Application.Run(new EditorWindow());
         }
 

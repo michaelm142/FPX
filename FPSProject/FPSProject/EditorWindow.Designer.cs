@@ -37,6 +37,7 @@
             this.listBox1 = new System.Windows.Forms.ListBox();
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.gameView1 = new FPSProject.GameView();
+            this.RenderInterval = new System.Windows.Forms.Timer(this.components);
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -80,9 +81,8 @@
             // 
             // listBox1
             // 
-            this.listBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.listBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
             this.listBox1.FormattingEnabled = true;
             this.listBox1.Location = new System.Drawing.Point(12, 30);
             this.listBox1.Name = "listBox1";
@@ -97,10 +97,20 @@
             // 
             // gameView1
             // 
+            this.gameView1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.gameView1.BackColor = System.Drawing.SystemColors.ActiveCaption;
+            this.gameView1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.gameView1.Location = new System.Drawing.Point(151, 30);
             this.gameView1.Name = "gameView1";
             this.gameView1.Size = new System.Drawing.Size(828, 433);
             this.gameView1.TabIndex = 2;
+            // 
+            // RenderInterval
+            // 
+            this.RenderInterval.Enabled = true;
+            this.RenderInterval.Interval = 16;
+            this.RenderInterval.Tick += new System.EventHandler(this.InputUpdate);
             // 
             // EditorWindow
             // 
@@ -131,5 +141,6 @@
         private System.Windows.Forms.ListBox listBox1;
         private System.Windows.Forms.ImageList imageList1;
         private GameView gameView1;
+        private System.Windows.Forms.Timer RenderInterval;
     }
 }

@@ -17,7 +17,7 @@ namespace ComponentModel
 
         public static Game gameInstance { get; private set; }
 
-        public static SpriteBatch spriteBatch { get; private set; }
+        public static SpriteBatch spriteBatch { get; set; }
 
         public static bool IsRunning { get; private set; }
 
@@ -96,6 +96,10 @@ namespace ComponentModel
         [STAThread]
         public static void Run(string sceneName, IntPtr? windowHandle = null)
         {
+            Debug.BackgroundColor = ConsoleColor.Red;
+            Debug.Log("ENGINE LAUNCH");
+            Debug.ResetColors();
+
             Settings.Initialize();
 
             IsRunning = true;
@@ -105,6 +109,11 @@ namespace ComponentModel
             Camera.Active = null;
             Settings.ShutDown();
             Debug.DumpLog();
+
+            Debug.BackgroundColor = ConsoleColor.DarkGray;
+            Debug.ForegroundColor = ConsoleColor.Black;
+            Debug.Log("Engine Shutdown");
+            Debug.ResetColors();
         }
 
         private static void GameForm_Paint(object sender, PaintEventArgs e)

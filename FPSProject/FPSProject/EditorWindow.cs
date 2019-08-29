@@ -26,7 +26,12 @@ namespace FPSProject
             dialog.Filter = "Scenes | *.xml";
             var result = dialog.ShowDialog();
             if (result == DialogResult.OK)
-                gameView1.LoadSim(Path.GetFileNameWithoutExtension(dialog.FileName));
+                gameView1.LoadSim(dialog.FileName);
+        }
+
+        private void InputUpdate(object sender, EventArgs e)
+        {
+            gameView1.InputUpdate();
         }
 
         private void EditorWindow_Load(object sender, EventArgs e)

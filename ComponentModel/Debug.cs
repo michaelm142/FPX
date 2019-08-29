@@ -25,6 +25,12 @@ namespace ComponentModel
             set { Console.BackgroundColor = value; }
         }
 
+        public static void ResetColors()
+        {
+            Console.BackgroundColor = ConsoleColor.Black;
+            Console.ForegroundColor = ConsoleColor.White;
+        }
+
         static StringWriter writer = new StringWriter();
 
         public static void Log(object message)
@@ -76,6 +82,8 @@ namespace ComponentModel
                 writer.WriteLine(sb);
             }
             writer = new StringWriter();
+
+            Log("Output log to {0}", logFile.FullName);
         }
     }
 }

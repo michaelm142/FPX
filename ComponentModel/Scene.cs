@@ -266,6 +266,8 @@ namespace ComponentModel
                 objects.Add(obj);
             }
             IsLoaded = true;
+
+            Debug.Log("Sucessfully loaded {0} objects into scene", objects.Count);
         }
 
         public void Save(string filename)

@@ -24,7 +24,7 @@ Public Class GameControlTest
     End Sub
 
     Public Sub Update(ByVal gametime As GameTime)
-        Dim gamepadstate = GamePad.GetState(PlayerIndex.Two)
+        Dim gamepadstate = GamePad.GetState(PlayerIndex.One)
         Dim t = gameObject.GetComponent(Of Transform)
         Dim Right = gamepadstate.ThumbSticks.Left.X
         Dim Forward = gamepadstate.ThumbSticks.Left.Y

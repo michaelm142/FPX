@@ -9,6 +9,8 @@ using System.Windows.Forms;
 using ComponentModel;
 using System.IO;
 
+using Graphics = ComponentModel.Graphics;
+
 namespace FPSProject
 {
     public partial class EditorWindow : Form
@@ -36,6 +38,21 @@ namespace FPSProject
 
         private void EditorWindow_Load(object sender, EventArgs e)
         {
+        }
+
+        private void defaultToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Graphics.Mode = "Default";
+            defaultToolStripMenuItem.Checked = true;
+            deferredToolStripMenuItem.Checked = false;
+
+        }
+
+        private void deferredToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Graphics.Mode = "Deferred";
+            defaultToolStripMenuItem.Checked = false;
+            deferredToolStripMenuItem.Checked = true;
         }
     }
 }

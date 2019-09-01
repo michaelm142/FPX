@@ -171,6 +171,16 @@ namespace FPSProject
             foreach (var v in Settings.Collection)
                 Debug.Log(v.Key + ": " + v.Value.ToString());
         }
+
+        public static void Help()
+        {
+            Debug.Log("List of function names:");
+            foreach (var method in typeof(Program).GetMethods())
+            {
+                if (method.Name != "Main" && typeof(object).GetMethods().ToList().Find(m => m.Name == method.Name) == null)
+                    Debug.Log(method.Name);
+            }
+        }
     }
 #endif
 }

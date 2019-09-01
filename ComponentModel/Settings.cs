@@ -61,7 +61,7 @@ namespace ComponentModel
                 {
                     float floatVal = 0.0f;
                     int intVal = 0;
-                    string strVal = "";
+                    string strVal = setting.InnerText;
 
                     if (int.TryParse(setting.InnerText, out intVal))
                         settings.Add(setting.Name, intVal);

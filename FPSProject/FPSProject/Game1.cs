@@ -96,7 +96,8 @@ namespace FPSProject
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            GameCore.fonts.Add("SegoeUI", Content.Load<SpriteFont>("SegoeUI"));
+            if (!GameCore.fonts.ContainsKey("SegoeUI"))
+                GameCore.fonts.Add("SegoeUI", Content.Load<SpriteFont>("SegoeUI"));
             level = this.GetCurrentLevel();
             level.Load();
         }

@@ -15,6 +15,7 @@ namespace ComponentModel
     {
         public event EventHandler<EventArgs> EnabledChanged;
         public event EventHandler<EventArgs> UpdateOrderChanged;
+        public event EventHandler<EventArgs> ObjectInstanciated;
 
         private List<GameObject> spawnedObjects = new List<GameObject>();
         private List<GameObject> objects = new List<GameObject>();
@@ -39,8 +40,19 @@ namespace ComponentModel
 
         public static Scene Active { get { return GameCore.currentLevel; } }
 
+        public Scene()
+        {
+            ObjectInstanciated += Scene_ObjectInstanciated;
+        }
+
         public void Initialize()
         {
+        }
+
+        private void Scene_ObjectInstanciated(object sender, EventArgs e)
+        {
+            GameObject obj = sender as GameObject;
+            Debug.Log("Spawned object {0} in scene.", obj);
         }
 
         public GameObject Spawn(params Type[] Components)
@@ -50,6 +62,7 @@ namespace ComponentModel
                 obj.AddComponent(type);
 
             spawnedObjects.Add(obj);
+            ObjectInstanciated(obj, new EventArgs());
 
             return obj;
         }
@@ -58,6 +71,7 @@ namespace ComponentModel
         {
             var obj = prefab.SpawnObject();
             spawnedObjects.Add(obj);
+            ObjectInstanciated(obj, new EventArgs());
             return obj;
         }
 
@@ -241,6 +255,7 @@ namespace ComponentModel
             {
                 var obj = GameObject.Load(node);
                 objects.Add(obj);
+                ObjectInstanciated(obj, new EventArgs());
             }
             foreach (XmlElement node in objectCollection.ChildNodes.Cast<XmlElement>().ToList().FindAll(n => n.Name == "Prefab"))
             {
@@ -264,6 +279,7 @@ namespace ComponentModel
                     }
                 }
                 objects.Add(obj);
+                ObjectInstanciated(obj, new EventArgs());
             }
             IsLoaded = true;
 

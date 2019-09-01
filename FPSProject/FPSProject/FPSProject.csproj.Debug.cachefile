@@ -24,6 +24,7 @@ Prefabs\Roof.xml
 Prefabs\Sphere.xml
 Prefabs\Window.xml
 RigidbodyTest.xml
+Settings.xml
 Sprite2DTest.xml
 Prefabs\Room.cluster
 Prefabs\Ground.cluster

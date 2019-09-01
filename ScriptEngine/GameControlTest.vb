@@ -1,4 +1,5 @@
-﻿Imports System.Xml
+﻿Imports System
+Imports System.Xml
 Imports System.Linq
 Imports Microsoft.Xna.Framework
 Imports Microsoft.Xna.Framework.Input
@@ -24,7 +25,8 @@ Public Class GameControlTest
     End Sub
 
     Public Sub Update(ByVal gametime As GameTime)
-        Dim gamepadstate = GamePad.GetState(PlayerIndex.One)
+        Dim controllerIndex = Settings.GetSetting(Of String)("ControllerInput")
+        Dim gamepadstate = GamePad.GetState([Enum].Parse(GetType(PlayerIndex), controllerIndex))
         Dim t = gameObject.GetComponent(Of Transform)
         Dim Right = gamepadstate.ThumbSticks.Left.X
         Dim Forward = gamepadstate.ThumbSticks.Left.Y

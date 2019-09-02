@@ -87,6 +87,8 @@ namespace FPSProject
             
             ComponentEditor editor = Activator.CreateInstance(editorAttr.EditorType, new object[] { c }) as ComponentEditor;
             editor.UpdateTarget();
+            editor.Width = InspectorWindow.Width;
+            editor.BorderStyle = BorderStyle.FixedSingle;
 
             Point componentButtonLocation = addComponentButton.Location;
             componentButtonLocation.Y += editor.Height;
@@ -103,6 +105,7 @@ namespace FPSProject
             editor.Location = editorLocation;
 
             InspectorWindow.Controls.Add(editor);
+            addComponentButton.BringToFront();
         }
 
         private void listBox1_SelectedIndexChanged(object sender, EventArgs e)

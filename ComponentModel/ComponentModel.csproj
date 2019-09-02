@@ -76,6 +76,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Editors\CameraEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Editors\CameraEditor.Designer.cs">
+      <DependentUpon>CameraEditor.cs</DependentUpon>
+    </Compile>
     <Compile Include="Editors\EditorAttribute.cs" />
     <Compile Include="Editors\ComponentEditor.cs">
       <SubType>UserControl</SubType>
@@ -128,6 +134,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Editors\CameraEditor.resx">
+      <DependentUpon>CameraEditor.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Editors\MeshRendererEditor.resx">
       <DependentUpon>MeshRendererEditor.cs</DependentUpon>
     </EmbeddedResource>

@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework;
 
 namespace ComponentModel
 {
+    [Editor(typeof(CameraEditor))]
     public class Camera : Component
     {
         public static Camera Active { get; set; }

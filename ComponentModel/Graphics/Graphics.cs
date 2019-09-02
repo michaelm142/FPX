@@ -41,7 +41,7 @@ namespace ComponentModel
             }
             if (Mode == "Default")
             {
-
+                GameCore.graphicsDevice.Clear(Camera.Active.ClearColor);
                 foreach (var obj in Scene.Active.Objects)
                 {
                     if (obj.Visible)
@@ -50,12 +50,16 @@ namespace ComponentModel
             }
             else if (Mode == "Deferred")
             {
+                renderer.Draw(gameTime);
+            }
+            else if (Mode == "DeferredDebug")
+            {
                 renderer.BeginRenderGBuffers();
                 foreach (var obj in Component.g_collection.FindAll(c => c is MeshRenderer).Cast<MeshRenderer>())
                     renderer.RenderObject(obj);
                 renderer.EndRenderGBuffers();
 
-                renderer.RenderLights();
+                renderer._debug_renderGBufferResults();
             }
 
             GameCore.spriteBatch.Begin();

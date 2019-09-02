@@ -3,6 +3,7 @@ using System.CodeDom.Compiler;
 using System.Linq;
 using System.Reflection;
 using System.Collections.Generic;
+using System.Xml;
 using Microsoft.Xna.Framework;
 
 namespace ComponentModel
@@ -133,7 +134,7 @@ namespace ComponentModel
             }
         }
 
-        public static Vector3 Vector3FromXml(System.Xml.XmlElement element)
+        public static Vector3 Vector3FromXml(XmlElement element)
         {
             if (element == null)
                 return Vector3.Zero;
@@ -143,7 +144,7 @@ namespace ComponentModel
                 float.Parse(element.Attributes["Z"].Value));
         }
 
-        public static Vector4 Vector4FromXml(System.Xml.XmlElement element)
+        public static Vector4 Vector4FromXml(XmlElement element)
         {
             if (element == null)
                 return Vector4.Zero;
@@ -159,6 +160,69 @@ namespace ComponentModel
                                    float.Parse(element.Attributes["B"].Value),
                                    float.Parse(element.Attributes["A"].Value));
 
+        }
+
+        public static XmlElement Vector3ToXml(XmlDocument doc, string name, Vector3 v)
+        {
+            var element = doc.CreateElement(name);
+
+            XmlAttribute xAttr = doc.CreateAttribute("X");
+            XmlAttribute yAttr = doc.CreateAttribute("Y");
+            XmlAttribute zAttr = doc.CreateAttribute("Z");
+
+            xAttr.Value = v.X.ToString();
+            yAttr.Value = v.Y.ToString();
+            zAttr.Value = v.Z.ToString();
+
+            element.Attributes.Append(xAttr);
+            element.Attributes.Append(yAttr);
+            element.Attributes.Append(zAttr);
+
+            return element;
+        }
+
+        public static XmlElement Vector4ToXml(XmlDocument doc, string name, Vector4 v)
+        {
+            var element = doc.CreateElement(name);
+
+            XmlAttribute xAttr = doc.CreateAttribute("X");
+            XmlAttribute yAttr = doc.CreateAttribute("Y");
+            XmlAttribute zAttr = doc.CreateAttribute("Z");
+            XmlAttribute wAttr = doc.CreateAttribute("W");
+
+            xAttr.Value = v.X.ToString();
+            yAttr.Value = v.Y.ToString();
+            zAttr.Value = v.Z.ToString();
+            wAttr.Value = v.W.ToString();
+
+            element.Attributes.Append(xAttr);
+            element.Attributes.Append(yAttr);
+            element.Attributes.Append(zAttr);
+            element.Attributes.Append(wAttr);
+
+            return element;
+        }
+
+        public static XmlElement ColorToXml(XmlDocument doc, string name, Color v)
+        {
+            var element = doc.CreateElement(name);
+
+            XmlAttribute rAttr = doc.CreateAttribute("R");
+            XmlAttribute gAttr = doc.CreateAttribute("G");
+            XmlAttribute bAttr = doc.CreateAttribute("B");
+            XmlAttribute aAttr = doc.CreateAttribute("A");
+
+            rAttr.Value = v.R.ToString();
+            gAttr.Value = v.G.ToString();
+            bAttr.Value = v.B.ToString();
+            aAttr.Value = v.A.ToString();
+
+            element.Attributes.Append(rAttr);
+            element.Attributes.Append(gAttr);
+            element.Attributes.Append(bAttr);
+            element.Attributes.Append(aAttr);
+
+            return element;
         }
 
         public static Quaternion EulerFromXml(System.Xml.XmlElement element)

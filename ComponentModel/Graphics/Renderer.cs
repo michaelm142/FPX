@@ -150,7 +150,8 @@ namespace ComponentModel
             Device.Textures[1] = renderer.GetComponent<Material>().NormalMap;
             Device.Textures[2] = renderer.GetComponent<Material>().SpecularMap;
 
-            Device.DrawPrimitives(PrimitiveType.TriangleList, renderer.startIndex, renderer.primitiveCount);
+            // Device.DrawPrimitives(PrimitiveType.TriangleList, renderer.startIndex, renderer.primitiveCount);
+            Device.DrawUserPrimitives(PrimitiveType.TriangleStrip, renderer.Vertecies, 0, renderer.primitiveCount);
         }
 
         public void BeginRenderGBuffers(Camera camera = null)
@@ -168,7 +169,7 @@ namespace ComponentModel
             GBufferShader.CurrentTechnique.Passes[0].Apply();
 
             Device.Clear(Color.Transparent);
-            Device.SetVertexBuffer(vBuffer);
+            // Device.SetVertexBuffer(vBuffer);
             Device.BlendState = BlendState.Opaque;
         }
 
@@ -180,7 +181,7 @@ namespace ComponentModel
         public void RenderLights()
         {
 
-            Device.Clear(Camera.Active.clearColor);
+            Device.Clear(Camera.Active.ClearColor);
             Device.SetVertexBuffer(ScreenQuad);
             Device.BlendState = BlendState.Additive;
             Device.SamplerStates[0] = SamplerState.AnisotropicWrap;

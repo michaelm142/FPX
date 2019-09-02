@@ -21,6 +21,8 @@ namespace ComponentModel
         public int startIndex { get; private set; }
         public int primitiveCount { get; private set; }
 
+        public VertexPositionNormalTextureBinormal[] Vertecies { get; private set; }
+
         public void Draw(GameTime gametime)
         {
             foreach (var mesh in model.Meshes)
@@ -28,7 +30,7 @@ namespace ComponentModel
                 foreach (BasicEffect effect in mesh.Effects)
                 {
 
-                    effect.AmbientLightColor = material.AmbientColor.ToVector3();
+                    effect.AmbientLightColor = (g_collection.Find(c => c is AmbientLight) as AmbientLight).DiffuseColor.ToVector3();
                     effect.DiffuseColor = material.DiffuseColor.ToVector3();
                     effect.SpecularColor = material.SpecularColor.ToVector3();
                     effect.PreferPerPixelLighting = true;
@@ -87,6 +89,7 @@ namespace ComponentModel
                             verts[i].Normal = vertecies[i].Normal;
                             verts[i].TextureCoordinate = vertecies[i].TextureCoordinate;
                         }
+                        Vertecies = verts;
 
                         int index = 0;
                         // Graphics.instance.renderer.AppendVertecies(verts, out index);
@@ -101,9 +104,16 @@ namespace ComponentModel
                 Debug.LogError("Models {0} could not be found in content", modelName);
                 return;
             }
-
-
         }
 
+        public void SaveXml(XmlElement node)
+        {
+            var modelNode = node.OwnerDocument.CreateElement("Model");
+            var filenameAttr = node.OwnerDocument.CreateAttribute("Name");
+            filenameAttr.Value = model.Tag.ToString();
+            modelNode.Attributes.Append(filenameAttr);
+            node.AppendChild(modelNode);
+        }
     }
+
 }

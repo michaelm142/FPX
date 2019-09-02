@@ -20,6 +20,14 @@
       </GameControlTest>
     </Object>
 
+    <Object Name="AmbientLight">
+      <Transform/>
+      <AmbientLight>
+        <DiffuseColor R="1.0" G="1.0" B="1.0" A="1.0"/>
+        <SpecularColor R="1.0" G="1.0" B="1.0" A="1.0"/>
+      </AmbientLight>
+    </Object>
+
     <Prefab Filename="Prefabs\\Gun.xml">
       <Transform Parent="Camera">
         <Position X="1.5" Y="-0.5" Z="-2.5"/>

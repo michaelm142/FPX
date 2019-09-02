@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Xml;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace ComponentModel
 {
+    [Editor(typeof(AmbientLightEditor))]
     public class AmbientLight : Component, ILightSource
     {
         public Color DiffuseColor { get; set; }
@@ -16,5 +18,22 @@ namespace ComponentModel
         public float SpecularIntensity { get; set; }
 
         public float SpecularPower { get; set; }
+
+        public void LoadXml(XmlElement element)
+        {
+            XmlElement diffuseColorElement = element.SelectSingleNode("DiffuseColor") as XmlElement;
+            XmlElement specularColorElement = element.SelectSingleNode("SpecularColor") as XmlElement;
+            XmlElement specularIntensityelement = element.SelectSingleNode("SpecularIntensity") as XmlElement;
+            XmlElement specularPowerelement = element.SelectSingleNode("SpecularPower") as XmlElement;
+
+            if (diffuseColorElement != null)
+                DiffuseColor = new Color(LinearAlgebraUtil.Vector4FromXml(diffuseColorElement));
+            if (specularColorElement != null)
+               SpecularColor = new Color(LinearAlgebraUtil.Vector4FromXml(specularColorElement));
+            if (specularIntensityelement != null)
+                SpecularIntensity = float.Parse(specularIntensityelement.InnerText);
+            if (specularPowerelement != null)
+                SpecularPower = float.Parse(specularPowerelement.InnerText);
+        }
     }
 }

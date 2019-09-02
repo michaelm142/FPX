@@ -6,6 +6,7 @@ using System.IO;
 using System.Xml;
 using System.Reflection;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace ComponentModel
 {
@@ -59,6 +60,14 @@ namespace ComponentModel
         public static Scene GetCurrentLevel(this Game game)
         {
             return game.Components.ToList().Find(c => c is Scene) as Scene;
+        }
+
+        public static void MakeDefault(this Texture2D texture2D)
+        {
+            Color[] data = new Color[texture2D.Width * texture2D.Height];
+            for (int i = 0; i < data.Length; i++)
+                data[i] = Color.White;
+            texture2D.SetData(data);
         }
     }
 }

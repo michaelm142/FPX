@@ -20,6 +20,8 @@ namespace FPSProject
     {
         private Point AddComponentButtonStartLocation;
 
+        List<Control> inspectorWindowControls = new List<Control>();
+
         public EditorWindow(string sceneName = null)
         {
             InitializeComponent();
@@ -66,6 +68,7 @@ namespace FPSProject
             Graphics.Mode = "Default";
             defaultToolStripMenuItem.Checked = true;
             deferredToolStripMenuItem.Checked = false;
+            deferredDebugToolStripMenuItem.Checked = false;
 
         }
 
@@ -74,6 +77,20 @@ namespace FPSProject
             Graphics.Mode = "Deferred";
             defaultToolStripMenuItem.Checked = false;
             deferredToolStripMenuItem.Checked = true;
+            deferredDebugToolStripMenuItem.Checked = false;
+        }
+
+        private void deferredDebugToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Graphics.Mode = "DeferredDebug";
+            deferredDebugToolStripMenuItem.Checked = true;
+            defaultToolStripMenuItem.Checked = false;
+            deferredToolStripMenuItem.Checked = false;
+        }
+
+        private void outputGPUTexturesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Graphics.instance.renderer._debug_OutuptGBuffers();
         }
 
         public void AddComponent(Component c)
@@ -89,33 +106,68 @@ namespace FPSProject
             editor.UpdateTarget();
             editor.Width = InspectorWindow.Width;
             editor.BorderStyle = BorderStyle.FixedSingle;
+            InspectorWindow.Controls.Add(editor);
 
             Point componentButtonLocation = addComponentButton.Location;
             componentButtonLocation.Y += editor.Height;
             addComponentButton.Location = componentButtonLocation;
 
             Point editorLocation = editor.Location;
-            for (int i = 0; i < InspectorWindow.Controls.Count; i++)
+            for (int i = 0; i < inspectorWindowControls.Count; i++)
             {
-                if (!(InspectorWindow.Controls[i] is ComponentEditor))
-                    continue;
-
-                editorLocation.Y += InspectorWindow.Controls[i].Height;
+                editorLocation.Y += inspectorWindowControls[i].Height;
             }
             editor.Location = editorLocation;
-
-            InspectorWindow.Controls.Add(editor);
-            addComponentButton.BringToFront();
+            inspectorWindowControls.Add(editor);
         }
 
         private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
+            foreach (var c in inspectorWindowControls)
+                InspectorWindow.Controls.Remove(c);
+            inspectorWindowControls.Clear();
             addComponentButton.Location = AddComponentButtonStartLocation;
-            InspectorWindow.Controls.Clear();
+
+            if (listBox1.SelectedItem == null)
+            {
+                addComponentButton.Location = AddComponentButtonStartLocation;
+                return;
+            }
 
             GameObject obj = listBox1.SelectedItem as GameObject;
-            foreach (var component in obj.Components)
-                AddComponent(component);
+            foreach (var comp in obj.Components)
+                AddComponent(comp);
+        }
+
+        private void gameView1_Enter(object sender, EventArgs e)
+        {
+            listBox1.SelectedIndex = -1;
+        }
+
+        private void gameView1_MouseDown(object sender, MouseEventArgs e)
+        {
+            listBox1.SelectedIndex = -1;
+        }
+
+        private void outputButtonLocationToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Debug.Log("Button Location: {0}", addComponentButton.Location);
+        }
+
+        private void invalidateButtonToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            addComponentButton.Invalidate();
+            addComponentButton.BringToFront();
+        }
+
+        private void saveSceneToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SaveFileDialog dialog = new SaveFileDialog();
+            dialog.Filter = "Scene Files | *.xml";
+
+            var result = dialog.ShowDialog();
+            if (result == DialogResult.OK)
+                Scene.Active.Save(dialog.FileName);
         }
     }
 }

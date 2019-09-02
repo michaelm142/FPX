@@ -108,54 +108,18 @@ namespace ComponentModel
 
         public void SaveXml(XmlElement node)
         {
-            var positionNode = node.OwnerDocument.CreateElement("Position");
+            if (parent != null)
             {
-                var posX = node.OwnerDocument.CreateAttribute("X");
-                posX.Value = position.X.ToString();
-
-                var posY = node.OwnerDocument.CreateAttribute("Y");
-                posY.Value = position.Y.ToString();
-
-                var posZ = node.OwnerDocument.CreateAttribute("Z");
-                posZ.Value = position.Z.ToString();
-                positionNode.Attributes.Append(posX);
-                positionNode.Attributes.Append(posY);
-                positionNode.Attributes.Append(posZ);
+                XmlAttribute parentAttr = node.OwnerDocument.CreateAttribute("Parent");
+                parentAttr.Value = parentName;
+                node.Attributes.Append(parentAttr);
             }
+            var positionNode = LinearAlgebraUtil.Vector3ToXml(node.OwnerDocument, "Position", localPosition);
 
-            var rotationNode = node.OwnerDocument.CreateElement("Rotation");
-            {
-                Vector3 eulerRotation = rotation.GetEulerAngles();
+            Vector3 eulerRotation = rotation.GetEulerAngles();
+            var rotationNode = LinearAlgebraUtil.Vector3ToXml(node.OwnerDocument, "Rotation", eulerRotation);
 
-                var rotX = node.OwnerDocument.CreateAttribute("X");
-                rotX.Value = rotation.X.ToString();
-
-                var rotY = node.OwnerDocument.CreateAttribute("Y");
-                rotY.Value = rotation.Y.ToString();
-
-                var rotZ = node.OwnerDocument.CreateAttribute("Z");
-                rotZ.Value = rotation.Z.ToString();
-
-                rotationNode.Attributes.Append(rotX);
-                rotationNode.Attributes.Append(rotY);
-                rotationNode.Attributes.Append(rotZ);
-            }
-
-            var scaleNode = node.OwnerDocument.CreateElement("Scale");
-            {
-                var sclX = node.OwnerDocument.CreateAttribute("X");
-                sclX.Value = scale.X.ToString();
-
-                var sclY = node.OwnerDocument.CreateAttribute("Y");
-                sclY.Value = scale.Y.ToString();
-
-                var sclZ = node.OwnerDocument.CreateAttribute("Z");
-                sclZ.Value = scale.Z.ToString();
-
-                scaleNode.Attributes.Append(sclX);
-                scaleNode.Attributes.Append(sclY);
-                scaleNode.Attributes.Append(sclZ);
-            }
+            var scaleNode = LinearAlgebraUtil.Vector3ToXml(node.OwnerDocument, "Scale", localScale);
 
             node.AppendChild(positionNode);
             node.AppendChild(rotationNode);

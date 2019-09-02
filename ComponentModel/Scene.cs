@@ -52,6 +52,7 @@ namespace ComponentModel
         private void Scene_ObjectInstanciated(object sender, EventArgs e)
         {
             GameObject obj = sender as GameObject;
+            obj.BroadcastMessage("Awake");
             Debug.Log("Spawned object {0} in scene.", obj);
         }
 
@@ -247,7 +248,7 @@ namespace ComponentModel
                 }
             }
 
-            var scene = doc.FirstChild.NextSibling as XmlElement;
+            var scene = doc.SelectSingleNode("Scene");
             var objectCollection = scene.FirstChild as XmlElement;
 
             // parse xml into game scene

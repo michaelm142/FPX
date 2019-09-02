@@ -88,5 +88,27 @@ namespace ComponentModel
             if (kinematicNode != null)
                 isKinematic = bool.Parse(kinematicNode.InnerText);
         }
+
+        public void SaveXml(XmlElement element)
+        {
+            var velocityNode = LinearAlgebraUtil.Vector3ToXml(element.OwnerDocument, "Velocity", velocity);
+            var torqueNode = LinearAlgebraUtil.Vector3ToXml(element.OwnerDocument, "Torque", torque);
+            var angularDragNode = element.OwnerDocument.CreateElement("AngularDrag");
+            var massNode = element.OwnerDocument.CreateElement("Mass");
+            var dragNode = element.OwnerDocument.CreateElement("Drag");
+            var kinimaticNode = element.OwnerDocument.CreateElement("IsKinematic");
+
+            angularDragNode.Value = angularDrag.ToString();
+            massNode.Value = mass.ToString();
+            dragNode.Value = drag.ToString();
+            kinimaticNode.Value = isKinematic.ToString();
+
+            element.AppendChild(velocityNode);
+            element.AppendChild(torqueNode);
+            element.AppendChild(angularDragNode);
+            element.AppendChild(massNode);
+            element.AppendChild(dragNode);
+            element.AppendChild(kinimaticNode);
+        }
     }
 }

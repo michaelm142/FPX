@@ -18,6 +18,13 @@ namespace ComponentModel
             radius = Single.Parse(node.SelectSingleNode("Radius").InnerText);
         }
 
+        public void SaveXml(XmlElement node)
+        {
+            var radiusNode = node.OwnerDocument.CreateElement("Radius");
+            radiusNode.InnerText = radius.ToString();
+            node.AppendChild(radiusNode);
+        }
+
         public override bool Contains(Vector3 point)
         {
 

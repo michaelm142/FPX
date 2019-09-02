@@ -38,6 +38,15 @@ namespace ComponentModel
             center = LinearAlgebraUtil.Vector3FromXml(centerNode);
         }
 
+        public void SaveXml(XmlElement node)
+        {
+            var sizeNode = LinearAlgebraUtil.Vector3ToXml(node.OwnerDocument, "Size", size);
+            var centerNode = LinearAlgebraUtil.Vector3ToXml(node.OwnerDocument, "Center", center);
+
+            node.AppendChild(sizeNode);
+            node.AppendChild(centerNode);
+        }
+
         public override Vector3 ClosestPoint(Vector3 point)
         {
             var L = point - Location;

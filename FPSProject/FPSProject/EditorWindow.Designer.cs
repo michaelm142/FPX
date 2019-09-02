@@ -36,13 +36,16 @@
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.listBox1 = new System.Windows.Forms.ListBox();
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
-            this.gameView1 = new FPSProject.GameView();
             this.RenderInterval = new System.Windows.Forms.Timer(this.components);
             this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.renderModeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.defaultToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.deferredToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.gameView1 = new FPSProject.GameView();
+            this.InspectorWindow = new System.Windows.Forms.Panel();
+            this.addComponentButton = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
+            this.InspectorWindow.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -93,23 +96,13 @@
             this.listBox1.Name = "listBox1";
             this.listBox1.Size = new System.Drawing.Size(133, 433);
             this.listBox1.TabIndex = 1;
+            this.listBox1.SelectedIndexChanged += new System.EventHandler(this.listBox1_SelectedIndexChanged);
             // 
             // imageList1
             // 
             this.imageList1.ColorDepth = System.Windows.Forms.ColorDepth.Depth8Bit;
             this.imageList1.ImageSize = new System.Drawing.Size(16, 16);
             this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
-            // 
-            // gameView1
-            // 
-            this.gameView1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.gameView1.BackColor = System.Drawing.SystemColors.ActiveCaption;
-            this.gameView1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.gameView1.Location = new System.Drawing.Point(151, 30);
-            this.gameView1.Name = "gameView1";
-            this.gameView1.Size = new System.Drawing.Size(828, 433);
-            this.gameView1.TabIndex = 2;
             // 
             // RenderInterval
             // 
@@ -150,11 +143,45 @@
             this.deferredToolStripMenuItem.Text = "Deferred";
             this.deferredToolStripMenuItem.Click += new System.EventHandler(this.deferredToolStripMenuItem_Click);
             // 
+            // gameView1
+            // 
+            this.gameView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.gameView1.BackColor = System.Drawing.SystemColors.ActiveCaption;
+            this.gameView1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.gameView1.Location = new System.Drawing.Point(151, 30);
+            this.gameView1.Name = "gameView1";
+            this.gameView1.Size = new System.Drawing.Size(374, 433);
+            this.gameView1.TabIndex = 2;
+            // 
+            // InspectorWindow
+            // 
+            this.InspectorWindow.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.InspectorWindow.AutoScroll = true;
+            this.InspectorWindow.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.InspectorWindow.Controls.Add(this.addComponentButton);
+            this.InspectorWindow.Location = new System.Drawing.Point(531, 30);
+            this.InspectorWindow.Name = "InspectorWindow";
+            this.InspectorWindow.Size = new System.Drawing.Size(448, 433);
+            this.InspectorWindow.TabIndex = 3;
+            // 
+            // addComponentButton
+            // 
+            this.addComponentButton.Location = new System.Drawing.Point(74, 14);
+            this.addComponentButton.Name = "addComponentButton";
+            this.addComponentButton.Size = new System.Drawing.Size(151, 23);
+            this.addComponentButton.TabIndex = 0;
+            this.addComponentButton.Text = "Add Component";
+            this.addComponentButton.UseVisualStyleBackColor = true;
+            // 
             // EditorWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(991, 472);
+            this.Controls.Add(this.InspectorWindow);
             this.Controls.Add(this.gameView1);
             this.Controls.Add(this.listBox1);
             this.Controls.Add(this.menuStrip1);
@@ -164,6 +191,7 @@
             this.Load += new System.EventHandler(this.EditorWindow_Load);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
+            this.InspectorWindow.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -184,5 +212,7 @@
         private System.Windows.Forms.ToolStripMenuItem renderModeToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem defaultToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem deferredToolStripMenuItem;
+        private System.Windows.Forms.Panel InspectorWindow;
+        private System.Windows.Forms.Button addComponentButton;
     }
 }

@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 
-<Object Name="Roof">
+<Object Name="Gun">
   <Transform/>
   <MeshRenderer>
     <Model Name="Models//Gun"/>

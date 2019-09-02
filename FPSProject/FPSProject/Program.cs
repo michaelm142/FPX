@@ -39,7 +39,8 @@ namespace FPSProject
 
                 string[] pragma = line.Split(new char[] { ' ', ',' }, StringSplitOptions.RemoveEmptyEntries);
                 string command = pragma[0];
-                var method = typeof(Program).GetMethods().ToList().Find(m => m.Name == command);
+                var methods = typeof(Program).GetMethods().ToList().FindAll(m => m.Name == command);
+                var method = methods.Find(m => m.GetParameters().Length == pragma.Length - 1);
                 if (method == null)
                 {
                     Console.WriteLine("Unknown function: {0}", command);

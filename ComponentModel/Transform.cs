@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework;
 
 namespace ComponentModel
 {
+    [Editor(typeof(TransformEditor))]
     public class Transform : Component
     {
         public new Vector3 position

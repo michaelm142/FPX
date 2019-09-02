@@ -8,6 +8,7 @@ using LodeObj;
 
 namespace ComponentModel
 {
+    [Editor(typeof(MeshRendererEditor))]
     public class MeshRenderer : Component
     {
         public Model model;
@@ -93,6 +94,7 @@ namespace ComponentModel
                         primitiveCount = verts.Length / 2;
                     }
                 }
+                model.Tag = modelName;
             }
             catch (ContentLoadException)
             {

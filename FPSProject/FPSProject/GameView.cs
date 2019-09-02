@@ -31,6 +31,8 @@ namespace FPSProject
         [DllImport("user32.dll")]
         static extern short GetAsyncKeyState(int vKey);
 
+        public event EventHandler<EventArgs> SceneObjectInstanciated;
+
         public GameView()
         {
             DoubleBuffered = true;
@@ -38,7 +40,17 @@ namespace FPSProject
             Camera.Active = sceneCamera.AddComponent<Camera>();
             Resize += GameView_Resize;
             MouseMove += GameView_MouseMove;
+            Disposed += GameView_Disposed;
+            SceneObjectInstanciated += GameView_SceneObjectInstanciated;
+        }
 
+        private void GameView_SceneObjectInstanciated(object sender, EventArgs e)
+        {
+        }
+
+        private void GameView_Disposed(object sender, EventArgs e)
+        {
+            Camera.Active = null;
         }
 
         public void InputUpdate()
@@ -111,17 +123,16 @@ namespace FPSProject
             {
                 simulation = GameCore.CreateGameInstance(sceneName, Handle) as Game1;
                 var scene = simulation.Components.ToList().Find(c => c.GetType() == typeof(Scene)) as Scene;
-                scene.Load();
+                scene.ObjectInstanciated += Scene_ObjectInstanciated;
                 simulation.GetType().GetMethods(BindingFlags.Instance | BindingFlags.NonPublic).ToList().Find(method => method.Name == "Initialize").Invoke(simulation, new object[] { });
                 GameCore.spriteBatch = simulation.GetType().GetProperties().ToList().Find(prop => prop.Name.ToLower() == "spritebatch").GetGetMethod().Invoke(simulation, new object[] { }) as SpriteBatch;
                 Debug.Log("Loaded engine with scene name {0}", sceneName);
             }
         }
 
-        protected override void DefWndProc(ref Message m)
+        private void Scene_ObjectInstanciated(object sender, EventArgs e)
         {
-            base.DefWndProc(ref m);
-            Debug.Log(m.Msg);
+            SceneObjectInstanciated(sender, e);
         }
     }
 }

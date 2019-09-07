@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using System.Runtime;
 using System.Reflection;
 using System.Windows.Forms;
 using Microsoft.Xna.Framework;
@@ -50,34 +51,35 @@ namespace ComponentModel
 
         public static Game CreateGameInstance(string sceneName, IntPtr? windowHandle = null)
         {
-            Game outval = null;
-            var gametype = Assembly.GetEntryAssembly().GetTypes().ToList().Find(t => t.BaseType == typeof(Game));
+            var gametype = Assembly.GetEntryAssembly().GetTypes().ToList().Find(t => t.BaseType.FullName == "Microsoft.Xna.Framework.Game");
             ConstructorInfo gameConstructor = null;
             if (windowHandle != null)
                 gameConstructor = gametype.GetConstructors().ToList().Find(c => c.GetParameters().Length == 1 && c.GetParameters()[0].ParameterType == typeof(IntPtr));
             if (gameConstructor == null)
-                outval = Activator.CreateInstance(gametype) as Game;
+            {
+                var instance = Activator.CreateInstance(gametype);
+                gameInstance = (Game)instance;
+            }
             else
-                outval = Activator.CreateInstance(gametype, windowHandle) as Game;
+                gameInstance = Activator.CreateInstance(gametype, windowHandle) as Game;
 
             PropertyInfo instanceProperty = gametype.GetProperties().ToList().Find(p => p.Name == "Instance");
             if (instanceProperty == null)
                 throw new InvalidOperationException("Game instance must have a static 'Instance' property.");
             instanceProperty.GetSetMethod().Invoke(gameInstance, new object[] { gameInstance });
 
-            gameInstance = outval;
             gameInstance.Exiting += GameInstance_Exiting;
 
             Scene level = new Scene();
             level.sceneName = sceneName;
 
-            outval.Components.Add(level);
-            outval.Components.Add(new Physics());
-            outval.Components.Add(new Graphics());
+            gameInstance.Components.Add(level);
+            gameInstance.Components.Add(new Physics());
+            gameInstance.Components.Add(new Graphics());
 
-            outval.Activated += Outval_Activated;
+            gameInstance.Activated += Outval_Activated;
 
-            return outval;
+            return gameInstance;
         }
 
         private static void Outval_Activated(object sender, EventArgs e)
@@ -85,7 +87,8 @@ namespace ComponentModel
             PropertyInfo spriteBatchProperty = gameInstance.GetType().GetProperties().ToList().Find(p => p.PropertyType == typeof(SpriteBatch));
             if (spriteBatchProperty == null)
                 Debug.LogWarning("Game instance does not expose spriteBatch property");
-            spriteBatch = spriteBatchProperty.GetGetMethod().Invoke(gameInstance, null) as SpriteBatch;
+            spriteBatch = new SpriteBatch(graphicsDevice);
+            spriteBatchProperty.GetSetMethod().Invoke(gameInstance, new object[] { spriteBatch });
         }
 
         private static void GameInstance_Exiting(object sender, EventArgs e)
@@ -104,7 +107,9 @@ namespace ComponentModel
 
             IsRunning = true;
             using (Game gameInstance = CreateGameInstance(sceneName, windowHandle))
+            {
                 gameInstance.Run();
+            }
 
             Camera.Active = null;
             Settings.ShutDown();

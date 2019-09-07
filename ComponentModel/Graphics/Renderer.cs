@@ -66,10 +66,9 @@ namespace ComponentModel
                 specularMap,
                 depthMap
             };
-
-            GBufferShader = Content.Load<Effect>("Shaders\\DeferredGBuffers");
-            DirectionalLightShader = Content.Load<Effect>("Shaders\\Lights\\DirectionalLight");
-            AmbientLightShader = Content.Load<Effect>("Shaders\\Lights\\AmbientLight");
+            // GBufferShader = Content.Load<Effect>("Shaders\\DeferredGBuffers");
+            // DirectionalLightShader = Content.Load<Effect>("Shaders\\Lights\\DirectionalLight");
+            // AmbientLightShader = Content.Load<Effect>("Shaders\\Lights\\AmbientLight");
             basicEffect = new BasicEffect(Device);
             basicEffect.TextureEnabled = true;
 

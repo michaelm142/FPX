@@ -5,6 +5,7 @@ texture2D DiffuseMap : TEXTURE0;
 texture2D NormalMap : TEXTURE1;
 texture2D SpecularMap : TEXTURE2;
 texture2D DepthMap : TEXTURE3;
+TextureCube Skybox : TEXTURE4;
 
 sampler DiffuseSampler : SAMPLER0 = sampler_state
 {
@@ -37,6 +38,11 @@ sampler DepthSampler : SAMPLER3 = sampler_state
     MipFilter = LINEAR;
     MinFilter = LINEAR;
     MagFilter = LINEAR;
+};
+
+samplerCUBE SkyboxSampler : SAMPLER4 = sampler_state
+{
+	Texture = <Skybox>;
 };
 
 #endif

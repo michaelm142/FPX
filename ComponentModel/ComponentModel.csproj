@@ -115,6 +115,7 @@
     <Compile Include="Graphics\ILightSource.cs" />
     <Compile Include="Graphics\ModelReader.cs" />
     <Compile Include="Graphics\Renderer.cs" />
+    <Compile Include="Graphics\SkyboxRenderer.cs" />
     <Compile Include="Physics\Collision.cs" />
     <Compile Include="Physics\Physics.Collisions.cs" />
     <Compile Include="Physics\Physics.cs" />

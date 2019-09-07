@@ -10,10 +10,14 @@ Content\SegoeUI.xnb
 Content\Textures\Heightmap.xnb
 Content\Textures\GrassTexture.xnb
 Content\Textures\ball.xnb
+Content\Textures\CubemapTest.xnb
+Content\Textures\CubeMap.xnb
 Content\Terrain.xnb
 Content\Shaders\DeferredGBuffers.xnb
+Content\Shaders\ClearDepth.xnb
 Content\Shaders\Lights\AmbientLight.xnb
 Content\Shaders\Lights\DirectionalLight.xnb
+Content\Shaders\CubeMapRender.xnb
 Prefabs\Arrow.xml
 betaLevel.xml
 Prefabs\Box.xml

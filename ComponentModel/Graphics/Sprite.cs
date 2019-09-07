@@ -8,7 +8,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace ComponentModel
 {
-    public class Sprite : Component
+    public class Sprite : Component, IDrawable
     {
         public Texture2D image
         {
@@ -50,6 +50,18 @@ namespace ComponentModel
         public SpriteEffects spriteEffects { get; set; }
 
         public float depth { get; set; }
+
+        public bool Visible { get; set; } = true;
+
+        public int DrawOrder { get; set; }
+
+        public event EventHandler<EventArgs> VisibleChanged;
+        public event EventHandler<EventArgs> DrawOrderChanged;
+
+        public void Draw(GameTime gameTime)
+        {
+            throw new NotImplementedException();
+        }
 
         public void DrawUI(SpriteBatch spriteBatch)
         {

@@ -9,7 +9,7 @@ using LodeObj;
 namespace ComponentModel
 {
     [Editor(typeof(MeshRendererEditor))]
-    public class MeshRenderer : Component
+    public class MeshRenderer : Component, IDrawable
     {
         public Model model;
 
@@ -22,6 +22,13 @@ namespace ComponentModel
         public int primitiveCount { get; private set; }
 
         public VertexPositionNormalTextureBinormal[] Vertecies { get; private set; }
+
+        public bool Visible { get; set; } = true;
+
+        public int DrawOrder { get; set; }
+
+        public event EventHandler<EventArgs> VisibleChanged;
+        public event EventHandler<EventArgs> DrawOrderChanged;
 
         public void Draw(GameTime gametime)
         {

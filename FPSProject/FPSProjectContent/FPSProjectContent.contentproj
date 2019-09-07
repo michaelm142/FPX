@@ -146,7 +146,13 @@
       <Processor>EffectProcessor</Processor>
     </Compile>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Compile Include="Shaders\ClearDepth.fx">
+      <Name>ClearDepth</Name>
+      <Importer>EffectImporter</Importer>
+      <Processor>EffectProcessor</Processor>
+    </Compile>
+  </ItemGroup>
   <ItemGroup>
     <Compile Include="Shaders\Lights\AmbientLight.fx">
       <Name>AmbientLight</Name>
@@ -169,6 +175,28 @@
     <None Include="Shaders\Headers\Textureing.h">
       <Name>Textureing</Name>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Textures\CubemapTest.png">
+      <Name>CubemapTest</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Shaders\CubeMapRender.fx">
+      <Name>CubeMapRender</Name>
+      <Importer>EffectImporter</Importer>
+      <Processor>EffectProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Textures\CubeMap.dds">
+      <Name>CubeMap</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <ProcessorParameters_TextureFormat>DxtCompressed</ProcessorParameters_TextureFormat>
+    </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\$(XnaFrameworkVersion)\Microsoft.Xna.GameStudio.ContentPipeline.targets" />
   <!--  To modify your build process, add your task inside one of the targets below and uncomment it. 

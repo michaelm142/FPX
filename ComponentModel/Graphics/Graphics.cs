@@ -24,10 +24,35 @@ namespace ComponentModel
 
         public static string Mode = "Default";
 
+        private Effect clearDepthShader;
+
+        private Texture2D transparentTexture;
+
+
         public void Initialize()
         {
             instance = this;
             renderer = new DeferredRenderer();
+            clearDepthShader = GameCore.content.Load<Effect>("Shaders\\ClearDepth");
+            transparentTexture = new Texture2D(GameCore.graphicsDevice, 1, 1);
+            transparentTexture.SetData(new Color[] { Color.Transparent });
+            GameCore.gameInstance.Components.Add(new QuadRenderer());
+            GameCore.graphicsDevice.SamplerStates[0] = SamplerState.AnisotropicWrap;
+        }
+
+        public static void ClearDepth()
+        {
+            var device = GameCore.graphicsDevice;
+            var blendState = device.BlendState;
+
+            device.BlendState = BlendState.AlphaBlend;
+            QuadRenderer.Instance.RenderQuad(instance.transparentTexture, new Rectangle(0, 0, GameCore.viewport.Width, GameCore.viewport.Height), instance.clearDepthShader);
+            device.BlendState = blendState;
+        }
+
+        static int SortRenderables(IDrawable a, IDrawable b)
+        {
+            return a.DrawOrder.CompareTo(b.DrawOrder);
         }
 
         public void Draw(GameTime gameTime)
@@ -42,11 +67,10 @@ namespace ComponentModel
             if (Mode == "Default")
             {
                 GameCore.graphicsDevice.Clear(Camera.Active.ClearColor);
-                foreach (var obj in Scene.Active.Objects)
-                {
-                    if (obj.Visible)
-                        obj.Draw(gameTime);
-                }
+                var drawables = Component.g_collection.ToList().FindAll(c => c is IDrawable).Cast<IDrawable>().ToList();
+                drawables.Sort(SortRenderables);
+                foreach (var drawable in drawables)
+                    drawable.Draw(gameTime);
             }
             else if (Mode == "Deferred")
             {

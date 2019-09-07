@@ -11,13 +11,14 @@
       <DebugDeviceTextures/>
       <Camera>
         <FieldOfView>60</FieldOfView>
-        <NearPlaneDistance>0.01</NearPlaneDistance>
+        <NearPlaneDistance>0.001</NearPlaneDistance>
         <FarPlaneDistance>1000.0</FarPlaneDistance>
       </Camera>
       <GameControlTest>
         <MoveSpeed>100</MoveSpeed>
         <RotationSpeed>15</RotationSpeed>
       </GameControlTest>
+      <SkyboxRenderer/>
     </Object>
 
     <Object Name="AmbientLight">

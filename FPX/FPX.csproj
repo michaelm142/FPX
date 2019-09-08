@@ -64,6 +64,15 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="EditorWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="EditorWindow.Designer.cs">
+      <DependentUpon>EditorWindow.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GameView.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="World.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -73,14 +82,23 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>C:\Program Files (x86)\MonoGame\v3.0\Assemblies\Windows\MonoGame.Framework.dll</HintPath>
     </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
     <Reference Include="System" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xaml" />
     <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="betaLevel.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Icon.ico" />
+    <Content Include="OBBTest.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Prefabs\Arrow.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -105,7 +123,13 @@
     <Content Include="Prefabs\Window.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="RigidbodyTest.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Settings.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Sprite2DTest.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
@@ -125,17 +149,17 @@
     <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\FPSProject\LodeObj\LodeObj.csproj">
-      <Project>{1011caf4-54ec-405a-a387-f59cf91afcb3}</Project>
-      <Name>LodeObj</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\FPSProject\ScriptEngine\ScriptEngine.vbproj">
-      <Project>{e547f9e6-f3e2-4353-80ab-72ab591d9ed6}</Project>
-      <Name>ScriptEngine</Name>
-    </ProjectReference>
     <ProjectReference Include="..\ComponentModel\ComponentModel.csproj">
       <Project>{73a2c53f-f1ca-44ce-874f-daf8f666af89}</Project>
       <Name>ComponentModel</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\LodeObj\LodeObj.csproj">
+      <Project>{1011caf4-54ec-405a-a387-f59cf91afcb3}</Project>
+      <Name>LodeObj</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ScriptEngine\ScriptEngine.vbproj">
+      <Project>{e547f9e6-f3e2-4353-80ab-72ab591d9ed6}</Project>
+      <Name>ScriptEngine</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -36,8 +36,8 @@ namespace ComponentModel
             {
                 foreach (BasicEffect effect in mesh.Effects)
                 {
-
-                    effect.AmbientLightColor = (g_collection.Find(c => c is AmbientLight) as AmbientLight).DiffuseColor.ToVector3();
+                    AmbientLight ambient = (g_collection.Find(c => c is AmbientLight) as AmbientLight);
+                    effect.AmbientLightColor = (ambient != null ? ambient.DiffuseColor : AmbientLight.DefaultColor).ToVector3();
                     effect.DiffuseColor = material.DiffuseColor.ToVector3();
                     effect.SpecularColor = material.SpecularColor.ToVector3();
                     effect.PreferPerPixelLighting = true;

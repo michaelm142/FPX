@@ -19,11 +19,46 @@ namespace FPX
 
         public Scene Scene { get; private set; }
 
+        IntPtr targetWindowHandle = IntPtr.Zero;
+
         public World()
         {
             graphics = new GraphicsDeviceManager(this);
             graphics.GraphicsProfile = GraphicsProfile.HiDef;
             Content.RootDirectory = "Content";
+        }
+
+        public World(IntPtr windowHandle)
+        {
+            graphics = new GraphicsDeviceManager(this);
+            graphics.GraphicsProfile = GraphicsProfile.HiDef;
+            graphics.PreparingDeviceSettings += Graphics_PreparingDeviceSettings;
+            targetWindowHandle = windowHandle;
+            Content.RootDirectory = "Content";
+            this.IsMouseVisible = true;
+            var gdm = Services.GetService(typeof(IGraphicsDeviceManager)) as IGraphicsDeviceManager;
+            gdm.CreateDevice();
+        }
+
+        private void Graphics_PreparingDeviceSettings(object sender, PreparingDeviceSettingsEventArgs e)
+        {
+            var prams = e.GraphicsDeviceInformation.PresentationParameters;
+
+            if (targetWindowHandle == IntPtr.Zero)
+            {
+                prams.BackBufferWidth = Settings.GetSetting<int>("ScreenWidth");
+                prams.BackBufferHeight = Settings.GetSetting<int>("ScreenHeight");
+                prams.DeviceWindowHandle = Window.Handle;
+            }
+            else
+            {
+                System.Windows.Forms.Control window = System.Windows.Forms.Control.FromHandle(targetWindowHandle);
+                prams.BackBufferWidth = window.Width;
+                prams.BackBufferHeight = window.Height;
+                prams.DeviceWindowHandle = targetWindowHandle;
+            }
+
+            e.GraphicsDeviceInformation.PresentationParameters = prams;
         }
 
         /// <summary>
@@ -34,6 +69,9 @@ namespace FPX
         /// </summary>
         protected override void Initialize()
         {
+            foreach (var comp in Components.ToList().FindAll(c => c is IGameComponent).Cast<IGameComponent>())
+                comp.Initialize();
+
             base.Initialize();
         }
 
@@ -43,6 +81,8 @@ namespace FPX
         /// </summary>
         protected override void LoadContent()
         {
+            if (!GameCore.fonts.ContainsKey("SegoeUI"))
+                GameCore.fonts.Add("SegoeUI", GameCore.content.Load<SpriteFont>("SegoeUI"));
 
             var scene = Components.ToList().Find(c => c is Scene) as Scene;
             scene.Load();
@@ -54,7 +94,7 @@ namespace FPX
         /// </summary>
         protected override void UnloadContent()
         {
-            // TODO: Unload any non ContentManager content here
+            GameCore.fonts.Clear();
         }
 
         /// <summary>
@@ -65,9 +105,10 @@ namespace FPX
         protected override void Update(GameTime gameTime)
         {
             //if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-                //Exit();
+            //Exit();
 
-            // TODO: Add your update logic here
+            foreach (var comp in Components.ToList().FindAll(c => c is IUpdateable).Cast<IUpdateable>())
+                comp.Update(gameTime);
 
             base.Update(gameTime);
         }
@@ -78,9 +119,8 @@ namespace FPX
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
-
-            // TODO: Add your drawing code here
+            foreach (IDrawable component in Components.ToList().FindAll(c => c is IDrawable).Cast<IDrawable>())
+                component.Draw(gameTime);
 
             base.Draw(gameTime);
         }

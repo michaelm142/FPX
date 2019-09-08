@@ -1,12 +1,16 @@
 ﻿using System;
 using System.Linq;
+using System.Windows.Forms;
 using System.Collections.Generic;
 using System.Threading;
 using System.Security.Permissions;
 using System.Reflection;
+using System.Windows;
 using ComponentModel;
 
-namespace FPSProject
+using Application = System.Windows.Forms.Application;
+
+namespace FPX
 {
 #if WINDOWS || XBOX
     static class Program
@@ -114,28 +118,28 @@ namespace FPSProject
             GameCore.Run(levelName);
         }
 
-        //public static void Editor()
-        //{
-        //    Debug.BackgroundColor = ConsoleColor.Blue;
-        //    Debug.Log("EDITOR");
-        //    Debug.ResetColors();
+        public static void Editor()
+        {
+            Debug.BackgroundColor = ConsoleColor.Blue;
+            Debug.Log("EDITOR");
+            Debug.ResetColors();
 
-        //    Application.EnableVisualStyles();
-        //    try
-        //    {
-        //        Application.SetCompatibleTextRenderingDefault(true);
-        //    }
-        //    catch (InvalidOperationException) { }
+            Application.EnableVisualStyles();
+            try
+            {
+                Application.SetCompatibleTextRenderingDefault(true);
+            }
+            catch (InvalidOperationException) { }
 
-        //    Application.Run(new EditorWindow());
-        //}
+            Application.Run(new EditorWindow());
+        }
 
-        //public static void Editor(string sceneName)
-        //{
-        //    Application.EnableVisualStyles();
-        //    Application.SetCompatibleTextRenderingDefault(true);
-        //    Application.Run(new EditorWindow(sceneName));
-        //}
+        public static void Editor(string sceneName)
+        {
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(true);
+            Application.Run(new EditorWindow(sceneName));
+        }
 
         public static void Close()
         {

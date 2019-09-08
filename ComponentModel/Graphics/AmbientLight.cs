@@ -19,6 +19,8 @@ namespace ComponentModel
 
         public float SpecularPower { get; set; }
 
+        public static Color DefaultColor { get { return Color.Gray; } }
+
         public void LoadXml(XmlElement element)
         {
             XmlElement diffuseColorElement = element.SelectSingleNode("DiffuseColor") as XmlElement;

@@ -64,13 +64,23 @@ namespace ComponentModel
                 GameCore.graphicsDevice.Clear(Color.Magenta);
                 return;
             }
+
             if (Mode == "Default")
             {
-                GameCore.graphicsDevice.Clear(Camera.Active.ClearColor);
                 var drawables = Component.g_collection.ToList().FindAll(c => c is IDrawable).Cast<IDrawable>().ToList();
                 drawables.Sort(SortRenderables);
+
+                var postProcessor = Camera.Active.GetComponent<PostProcessor>();
+                if (postProcessor != null)
+                    postProcessor.Begin();
+
+                GameCore.graphicsDevice.Clear(Camera.Active.ClearColor);
+
                 foreach (var drawable in drawables)
                     drawable.Draw(gameTime);
+
+                if (postProcessor != null)
+                    postProcessor.End();
             }
             else if (Mode == "Deferred")
             {

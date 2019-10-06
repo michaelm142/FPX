@@ -9,12 +9,12 @@ FBXHeaderExtension:  {
 	CreationTimeStamp:  {
 		Version: 1000
 		Year: 2019
-		Month: 9
-		Day: 7
-		Hour: 15
-		Minute: 38
-		Second: 8
-		Millisecond: 415
+		Month: 10
+		Day: 5
+		Hour: 18
+		Minute: 3
+		Second: 10
+		Millisecond: 734
 	}
 	Creator: "FBX SDK/FBX Plugins version 2016.0"
 	SceneInfo: "SceneInfo::GlobalInfo", "UserData" {
@@ -30,19 +30,19 @@ FBXHeaderExtension:  {
 			Comment: ""
 		}
 		Properties70:  {
-			P: "DocumentUrl", "KString", "Url", "", "D:\Visual Studio Projects\FPX\FPX\Content\Models\Roof.fbx"
-			P: "SrcDocumentUrl", "KString", "Url", "", "D:\Visual Studio Projects\FPX\FPX\Content\Models\Roof.fbx"
+			P: "DocumentUrl", "KString", "Url", "", "D:\Visual Studio Projects\FPSProject\FPX\Content\Models\Roof.fbx"
+			P: "SrcDocumentUrl", "KString", "Url", "", "D:\Visual Studio Projects\FPSProject\FPX\Content\Models\Roof.fbx"
 			P: "Original", "Compound", "", ""
 			P: "Original|ApplicationVendor", "KString", "", "", "Autodesk"
 			P: "Original|ApplicationName", "KString", "", "", "Maya LT"
 			P: "Original|ApplicationVersion", "KString", "", "", "2016"
-			P: "Original|DateTime_GMT", "DateTime", "", "", "07/09/2019 19:38:08.413"
-			P: "Original|FileName", "KString", "", "", "D:/Visual Studio Projects/FPX/FPX/Content/Models/Roof.fbx"
+			P: "Original|DateTime_GMT", "DateTime", "", "", "05/10/2019 22:03:10.731"
+			P: "Original|FileName", "KString", "", "", "D:/Visual Studio Projects/FPSProject/FPX/Content/Models/Roof.fbx"
 			P: "LastSaved", "Compound", "", ""
 			P: "LastSaved|ApplicationVendor", "KString", "", "", "Autodesk"
 			P: "LastSaved|ApplicationName", "KString", "", "", "Maya LT"
 			P: "LastSaved|ApplicationVersion", "KString", "", "", "2016"
-			P: "LastSaved|DateTime_GMT", "DateTime", "", "", "07/09/2019 19:38:08.413"
+			P: "LastSaved|DateTime_GMT", "DateTime", "", "", "05/10/2019 22:03:10.731"
 		}
 	}
 }
@@ -77,7 +77,7 @@ GlobalSettings:  {
 
 Documents:  {
 	Count: 1
-	Document: 3271848118640, "", "Scene" {
+	Document: 2268487335312, "", "Scene" {
 		Properties70:  {
 			P: "SourceObject", "object", "", ""
 			P: "ActiveAnimStackName", "KString", "", "", "Take 001"
@@ -255,7 +255,7 @@ Definitions:  {
 ;------------------------------------------------------------------
 
 Objects:  {
-	Geometry: 3272398531728, "Geometry::", "Mesh" {
+	Geometry: 2269040830048, "Geometry::", "Mesh" {
 		Vertices: *48 {
 			a: -5,-0.5,5,5,-0.5,5,-5,-0.5,-5,5,-0.5,-5,-4.32655715942383,0.5,4.32655715942383,4.32655715942383,0.5,4.32655715942383,4.32655715942383,0.5,-4.32655715942383,-4.32655715942383,0.5,-4.32655715942383,-5,1.04356527328491,5,5,1.04356527328491,5,4.32655715942383,1.04356527328491,4.32655715942383,-4.32655715942383,1.04356527328491,4.32655715942383,5,1.04356527328491,-5,4.32655715942383,1.04356527328491,-4.32655715942383,-5,1.04356527328491,-5,-4.32655715942383,1.04356527328491,-4.32655715942383
 		} 
@@ -315,7 +315,7 @@ Objects:  {
 			}
 		}
 	}
-	Model: 3272394263696, "Model::Roof", "Mesh" {
+	Model: 2269030315744, "Model::Roof", "Mesh" {
 		Version: 232
 		Properties70:  {
 			P: "RotationActive", "bool", "", "",1
@@ -327,7 +327,7 @@ Objects:  {
 		Shading: T
 		Culling: "CullingOff"
 	}
-	Material: 3272506290960, "Material::phong2", "" {
+	Material: 2269109664752, "Material::phong2", "" {
 		Version: 102
 		ShadingModel: "phong"
 		MultiLayer: 0
@@ -347,7 +347,7 @@ Objects:  {
 			P: "Reflectivity", "double", "Number", "",0
 		}
 	}
-	AnimationStack: 3272500669152, "AnimStack::Take 001", "" {
+	AnimationStack: 2269068582112, "AnimStack::Take 001", "" {
 		Properties70:  {
 			P: "LocalStart", "KTime", "Time", "",1539538600
 			P: "LocalStop", "KTime", "Time", "",46186158000
@@ -355,7 +355,7 @@ Objects:  {
 			P: "ReferenceStop", "KTime", "Time", "",46186158000
 		}
 	}
-	AnimationLayer: 3272339185680, "AnimLayer::BaseLayer", "" {
+	AnimationLayer: 2269121501632, "AnimLayer::BaseLayer", "" {
 	}
 }
 
@@ -365,16 +365,16 @@ Objects:  {
 Connections:  {
 	
 	;Model::Roof, Model::RootNode
-	C: "OO",3272394263696,0
+	C: "OO",2269030315744,0
 	
 	;AnimLayer::BaseLayer, AnimStack::Take 001
-	C: "OO",3272339185680,3272500669152
+	C: "OO",2269121501632,2269068582112
 	
 	;Geometry::, Model::Roof
-	C: "OO",3272398531728,3272394263696
+	C: "OO",2269040830048,2269030315744
 	
 	;Material::phong2, Model::Roof
-	C: "OO",3272506290960,3272394263696
+	C: "OO",2269109664752,2269030315744
 }
 ;Takes section
 ;----------------------------------------------------

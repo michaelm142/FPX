@@ -22,10 +22,16 @@ namespace FPX
         public World simulation { get; set; }
 
         private SceneWindow sceneWindow;
+        private HierarchyWindow hierarchyWindow;
 
         private GameView gameView1
         {
             get { return sceneWindow == null ? null : sceneWindow.gameView1; }
+        }
+
+        private ListBox listBox1
+        {
+            get { return hierarchyWindow == null ? null : hierarchyWindow.listBox1; }
         }
 
         private Point AddComponentButtonStartLocation;
@@ -39,9 +45,18 @@ namespace FPX
             if (!DesignMode)
             {
                 sceneWindow = new SceneWindow();
-                dockContainer1.AddToolWindow(sceneWindow);
+                hierarchyWindow = new HierarchyWindow();
+
+                sceneWindow.FormClosing += DockableWindowClosing;
+                hierarchyWindow.FormClosing += DockableWindowClosing;
+                listBox1.SelectedIndexChanged += listBox1_SelectedIndexChanged;
+                gameView1.MouseDown += gameView1_MouseDown;
+
+                hierarchyWindow.Show();
                 sceneWindow.Show();
-                sceneWindow.FormClosing += SceneWindow_FormClosing;
+
+                dockContainer1.AddToolWindow(sceneWindow);
+                dockContainer1.AddToolWindow(hierarchyWindow);
             }
 
             gameView1.SceneObjectInstanciated += GameView1_SceneObjectInstanciated;
@@ -52,10 +67,11 @@ namespace FPX
             AddComponentButtonStartLocation = addComponentButton.Location;
         }
 
-        private void SceneWindow_FormClosing(object sender, FormClosingEventArgs e)
+        private void DockableWindowClosing(object sender, FormClosingEventArgs e)
         {
             e.Cancel = true;
-            sceneWindow.Hide();
+            Form f = sender as Form;
+            f.Hide();
         }
 
         private void GameView1_SceneObjectInstanciated(object sender, EventArgs e)
@@ -84,10 +100,6 @@ namespace FPX
         {
             if (sceneWindow != null)
                 gameView1.InputUpdate();
-        }
-
-        private void EditorWindow_Load(object sender, EventArgs e)
-        {
         }
 
         private void defaultToolStripMenuItem_Click(object sender, EventArgs e)
@@ -166,14 +178,10 @@ namespace FPX
                 AddComponent(comp);
         }
 
-        private void gameView1_Enter(object sender, EventArgs e)
-        {
-            listBox1.SelectedIndex = -1;
-        }
-
         private void gameView1_MouseDown(object sender, MouseEventArgs e)
         {
-            listBox1.SelectedIndex = -1;
+            if (e.Button == MouseButtons.Right)
+                listBox1.SelectedIndex = -1;
         }
 
         private void outputButtonLocationToolStripMenuItem_Click(object sender, EventArgs e)
@@ -203,6 +211,14 @@ namespace FPX
                 sceneWindow.Hide();
             else
                 sceneWindow.Show();
+        }
+
+        private void hierarchyToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (hierarchyWindow.Visible)
+                hierarchyWindow.Hide();
+            else
+                hierarchyWindow.Show();
         }
     }
 }

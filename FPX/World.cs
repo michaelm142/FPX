@@ -84,8 +84,8 @@ namespace FPX
             if (!GameCore.fonts.ContainsKey("SegoeUI"))
                 GameCore.fonts.Add("SegoeUI", GameCore.content.Load<SpriteFont>("SegoeUI"));
 
-            var scene = Components.ToList().Find(c => c is Scene) as Scene;
-            scene.Load();
+            Scene = Components.ToList().Find(c => c is Scene) as Scene;
+            Scene.Load();
         }
 
         /// <summary>

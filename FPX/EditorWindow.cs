@@ -21,6 +21,13 @@ namespace FPX
 
         public World simulation { get; set; }
 
+        private SceneWindow sceneWindow;
+
+        private GameView gameView1
+        {
+            get { return sceneWindow == null ? null : sceneWindow.gameView1; }
+        }
+
         private Point AddComponentButtonStartLocation;
 
         List<Control> inspectorWindowControls = new List<Control>();
@@ -29,11 +36,26 @@ namespace FPX
         {
             Instance = this;
             InitializeComponent();
+            if (!DesignMode)
+            {
+                sceneWindow = new SceneWindow();
+                dockContainer1.AddToolWindow(sceneWindow);
+                sceneWindow.Show();
+                sceneWindow.FormClosing += SceneWindow_FormClosing;
+            }
+
             gameView1.SceneObjectInstanciated += GameView1_SceneObjectInstanciated;
             if (!string.IsNullOrEmpty(sceneName))
                 gameView1.LoadSim(sceneName);
 
+
             AddComponentButtonStartLocation = addComponentButton.Location;
+        }
+
+        private void SceneWindow_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            e.Cancel = true;
+            sceneWindow.Hide();
         }
 
         private void GameView1_SceneObjectInstanciated(object sender, EventArgs e)
@@ -60,7 +82,8 @@ namespace FPX
 
         private void InputUpdate(object sender, EventArgs e)
         {
-            gameView1.InputUpdate();
+            if (sceneWindow != null)
+                gameView1.InputUpdate();
         }
 
         private void EditorWindow_Load(object sender, EventArgs e)
@@ -172,6 +195,14 @@ namespace FPX
             var result = dialog.ShowDialog();
             if (result == DialogResult.OK)
                 Scene.Active.Save(dialog.FileName);
+        }
+
+        private void sceneViewToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (sceneWindow.Visible)
+                sceneWindow.Hide();
+            else
+                sceneWindow.Show();
         }
     }
 }

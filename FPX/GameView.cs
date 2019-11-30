@@ -49,6 +49,14 @@ namespace FPX
             MouseMove += GameView_MouseMove;
             Disposed += GameView_Disposed;
             SceneObjectInstanciated += GameView_SceneObjectInstanciated;
+            if (simulation != null && simulation.Scene.IsLoaded)
+            {
+                PresentationParameters prams = simulation.GraphicsDevice.PresentationParameters;
+                prams.BackBufferWidth = Width;
+                prams.BackBufferHeight = Height;
+                prams.DeviceWindowHandle = Handle;
+                simulation.GraphicsDevice.Reset(prams);
+            }
         }
 
         private void GameView_SceneObjectInstanciated(object sender, EventArgs e)

@@ -32,6 +32,7 @@
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.loadSceneToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveSceneToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -48,8 +49,9 @@
             this.RenderInterval = new System.Windows.Forms.Timer(this.components);
             this.InspectorWindow = new System.Windows.Forms.Panel();
             this.addComponentButton = new System.Windows.Forms.Button();
-            this.gameView1 = new FPX.GameView();
-            this.saveSceneToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.dockContainer1 = new Crom.Controls.DockContainer();
+            this.windowsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.sceneViewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.InspectorWindow.SuspendLayout();
             this.SuspendLayout();
@@ -59,7 +61,8 @@
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem,
             this.viewToolStripMenuItem,
-            this.debugToolStripMenuItem});
+            this.debugToolStripMenuItem,
+            this.windowsToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(991, 24);
@@ -80,19 +83,26 @@
             // loadSceneToolStripMenuItem
             // 
             this.loadSceneToolStripMenuItem.Name = "loadSceneToolStripMenuItem";
-            this.loadSceneToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.loadSceneToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
             this.loadSceneToolStripMenuItem.Text = "Load Scene";
             this.loadSceneToolStripMenuItem.Click += new System.EventHandler(this.loadSceneToolStripMenuItem_Click);
+            // 
+            // saveSceneToolStripMenuItem
+            // 
+            this.saveSceneToolStripMenuItem.Name = "saveSceneToolStripMenuItem";
+            this.saveSceneToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
+            this.saveSceneToolStripMenuItem.Text = "Save Scene";
+            this.saveSceneToolStripMenuItem.Click += new System.EventHandler(this.saveSceneToolStripMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(177, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(131, 6);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
             this.exitToolStripMenuItem.Text = "Exit";
             // 
             // viewToolStripMenuItem
@@ -212,26 +222,41 @@
             this.addComponentButton.Text = "Add Component";
             this.addComponentButton.UseVisualStyleBackColor = true;
             // 
-            // gameView1
+            // dockContainer1
             // 
-            this.gameView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.gameView1.BackColor = System.Drawing.SystemColors.ActiveCaption;
-            this.gameView1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.gameView1.Location = new System.Drawing.Point(151, 30);
-            this.gameView1.Name = "gameView1";
-            this.gameView1.Size = new System.Drawing.Size(374, 433);
-            this.gameView1.TabIndex = 2;
-            this.gameView1.Enter += new System.EventHandler(this.gameView1_Enter);
-            this.gameView1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.gameView1_MouseDown);
+            this.dockContainer1.BackColor = System.Drawing.SystemColors.Window;
+            this.dockContainer1.BottomPanelHeight = 150;
+            this.dockContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dockContainer1.LeftPanelWidth = 150;
+            this.dockContainer1.Location = new System.Drawing.Point(0, 0);
+            this.dockContainer1.MinimumSize = new System.Drawing.Size(504, 485);
+            this.dockContainer1.Name = "dockContainer1";
+            this.dockContainer1.RightPanelWidth = 150;
+            this.dockContainer1.SelectToolWindowsOnHoover = false;
+            this.dockContainer1.Size = new System.Drawing.Size(991, 485);
+            this.dockContainer1.TabButtonNotSelectedColor = System.Drawing.Color.DarkGray;
+            this.dockContainer1.TabButtonSelectedBackColor1 = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(242)))), ((int)(((byte)(200)))));
+            this.dockContainer1.TabButtonSelectedBackColor2 = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(215)))), ((int)(((byte)(157)))));
+            this.dockContainer1.TabButtonSelectedBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(75)))), ((int)(((byte)(75)))), ((int)(((byte)(111)))));
+            this.dockContainer1.TabButtonSelectedColor = System.Drawing.Color.Black;
+            this.dockContainer1.TabButtonShowSelection = false;
+            this.dockContainer1.TabIndex = 4;
+            this.dockContainer1.TopPanelHeight = 150;
             // 
-            // saveSceneToolStripMenuItem
+            // windowsToolStripMenuItem
             // 
-            this.saveSceneToolStripMenuItem.Name = "saveSceneToolStripMenuItem";
-            this.saveSceneToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.saveSceneToolStripMenuItem.Text = "Save Scene";
-            this.saveSceneToolStripMenuItem.Click += new System.EventHandler(this.saveSceneToolStripMenuItem_Click);
+            this.windowsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.sceneViewToolStripMenuItem});
+            this.windowsToolStripMenuItem.Name = "windowsToolStripMenuItem";
+            this.windowsToolStripMenuItem.Size = new System.Drawing.Size(68, 20);
+            this.windowsToolStripMenuItem.Text = "Windows";
+            // 
+            // sceneViewToolStripMenuItem
+            // 
+            this.sceneViewToolStripMenuItem.Name = "sceneViewToolStripMenuItem";
+            this.sceneViewToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.sceneViewToolStripMenuItem.Text = "Scene View";
+            this.sceneViewToolStripMenuItem.Click += new System.EventHandler(this.sceneViewToolStripMenuItem_Click);
             // 
             // EditorWindow
             // 
@@ -239,9 +264,9 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(991, 472);
             this.Controls.Add(this.InspectorWindow);
-            this.Controls.Add(this.gameView1);
             this.Controls.Add(this.listBox1);
             this.Controls.Add(this.menuStrip1);
+            this.Controls.Add(this.dockContainer1);
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "EditorWindow";
             this.Text = "EditorWindow";
@@ -263,7 +288,6 @@
         private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
         private System.Windows.Forms.ListBox listBox1;
         private System.Windows.Forms.ImageList imageList1;
-        private GameView gameView1;
         private System.Windows.Forms.Timer RenderInterval;
         private System.Windows.Forms.ToolStripMenuItem viewToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem renderModeToolStripMenuItem;
@@ -277,5 +301,8 @@
         private System.Windows.Forms.ToolStripMenuItem outputButtonLocationToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem invalidateButtonToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem saveSceneToolStripMenuItem;
+        private Crom.Controls.DockContainer dockContainer1;
+        private System.Windows.Forms.ToolStripMenuItem windowsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem sceneViewToolStripMenuItem;
     }
 }

@@ -20,7 +20,12 @@ namespace FPX
     {
         private const int WM_MOUSEMOVE = 0x200;
 
-        public World simulation { get; private set; }
+        public World simulation
+        {
+            get { return EditorWindow.Instance == null ? null : EditorWindow.Instance.simulation; }
+
+            set { EditorWindow.Instance.simulation = value; }
+        }
 
         private GameObject sceneCamera;
 

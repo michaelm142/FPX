@@ -17,23 +17,28 @@ namespace FPX
 {
     public partial class EditorWindow : Form
     {
+        public static EditorWindow Instance { get; private set; }
+
+        public World simulation { get; set; }
+
         private Point AddComponentButtonStartLocation;
 
         List<Control> inspectorWindowControls = new List<Control>();
 
         public EditorWindow(string sceneName = null)
         {
+            Instance = this;
             InitializeComponent();
+            gameView1.SceneObjectInstanciated += GameView1_SceneObjectInstanciated;
             if (!string.IsNullOrEmpty(sceneName))
                 gameView1.LoadSim(sceneName);
 
-            gameView1.SceneObjectInstanciated += GameView1_SceneObjectInstanciated;
             AddComponentButtonStartLocation = addComponentButton.Location;
         }
 
         private void GameView1_SceneObjectInstanciated(object sender, EventArgs e)
         {
-            listBox1.Items.Add(sender);
+            listBox1.Items.Add(sender as GameObject);
         }
 
         private int GetHeirarchyLevel(GameObject obj, int level = 0)

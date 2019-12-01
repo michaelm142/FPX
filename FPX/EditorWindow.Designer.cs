@@ -41,19 +41,14 @@
             this.deferredToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.deferredDebugToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.outputGPUTexturesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.debugToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.outputButtonLocationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.invalidateButtonToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.windowsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.sceneViewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.hierarchyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.RenderInterval = new System.Windows.Forms.Timer(this.components);
-            this.InspectorWindow = new System.Windows.Forms.Panel();
-            this.addComponentButton = new System.Windows.Forms.Button();
             this.dockContainer1 = new Crom.Controls.DockContainer();
-            this.hierarchyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.analizerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
-            this.InspectorWindow.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -61,7 +56,6 @@
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem,
             this.viewToolStripMenuItem,
-            this.debugToolStripMenuItem,
             this.windowsToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
@@ -154,34 +148,12 @@
             this.outputGPUTexturesToolStripMenuItem.Text = "Output GPU Textures";
             this.outputGPUTexturesToolStripMenuItem.Click += new System.EventHandler(this.outputGPUTexturesToolStripMenuItem_Click);
             // 
-            // debugToolStripMenuItem
-            // 
-            this.debugToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.outputButtonLocationToolStripMenuItem,
-            this.invalidateButtonToolStripMenuItem});
-            this.debugToolStripMenuItem.Name = "debugToolStripMenuItem";
-            this.debugToolStripMenuItem.Size = new System.Drawing.Size(54, 20);
-            this.debugToolStripMenuItem.Text = "Debug";
-            // 
-            // outputButtonLocationToolStripMenuItem
-            // 
-            this.outputButtonLocationToolStripMenuItem.Name = "outputButtonLocationToolStripMenuItem";
-            this.outputButtonLocationToolStripMenuItem.Size = new System.Drawing.Size(200, 22);
-            this.outputButtonLocationToolStripMenuItem.Text = "Output Button Location";
-            this.outputButtonLocationToolStripMenuItem.Click += new System.EventHandler(this.outputButtonLocationToolStripMenuItem_Click);
-            // 
-            // invalidateButtonToolStripMenuItem
-            // 
-            this.invalidateButtonToolStripMenuItem.Name = "invalidateButtonToolStripMenuItem";
-            this.invalidateButtonToolStripMenuItem.Size = new System.Drawing.Size(200, 22);
-            this.invalidateButtonToolStripMenuItem.Text = "Invalidate Button";
-            this.invalidateButtonToolStripMenuItem.Click += new System.EventHandler(this.invalidateButtonToolStripMenuItem_Click);
-            // 
             // windowsToolStripMenuItem
             // 
             this.windowsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.sceneViewToolStripMenuItem,
-            this.hierarchyToolStripMenuItem});
+            this.hierarchyToolStripMenuItem,
+            this.analizerToolStripMenuItem});
             this.windowsToolStripMenuItem.Name = "windowsToolStripMenuItem";
             this.windowsToolStripMenuItem.Size = new System.Drawing.Size(68, 20);
             this.windowsToolStripMenuItem.Text = "Windows";
@@ -189,9 +161,16 @@
             // sceneViewToolStripMenuItem
             // 
             this.sceneViewToolStripMenuItem.Name = "sceneViewToolStripMenuItem";
-            this.sceneViewToolStripMenuItem.Size = new System.Drawing.Size(133, 22);
+            this.sceneViewToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.sceneViewToolStripMenuItem.Text = "Scene View";
             this.sceneViewToolStripMenuItem.Click += new System.EventHandler(this.sceneViewToolStripMenuItem_Click);
+            // 
+            // hierarchyToolStripMenuItem
+            // 
+            this.hierarchyToolStripMenuItem.Name = "hierarchyToolStripMenuItem";
+            this.hierarchyToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.hierarchyToolStripMenuItem.Text = "Hierarchy";
+            this.hierarchyToolStripMenuItem.Click += new System.EventHandler(this.hierarchyToolStripMenuItem_Click);
             // 
             // imageList1
             // 
@@ -204,27 +183,6 @@
             this.RenderInterval.Enabled = true;
             this.RenderInterval.Interval = 16;
             this.RenderInterval.Tick += new System.EventHandler(this.InputUpdate);
-            // 
-            // InspectorWindow
-            // 
-            this.InspectorWindow.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.InspectorWindow.AutoScroll = true;
-            this.InspectorWindow.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.InspectorWindow.Controls.Add(this.addComponentButton);
-            this.InspectorWindow.Location = new System.Drawing.Point(531, 30);
-            this.InspectorWindow.Name = "InspectorWindow";
-            this.InspectorWindow.Size = new System.Drawing.Size(448, 509);
-            this.InspectorWindow.TabIndex = 3;
-            // 
-            // addComponentButton
-            // 
-            this.addComponentButton.Location = new System.Drawing.Point(162, 3);
-            this.addComponentButton.Name = "addComponentButton";
-            this.addComponentButton.Size = new System.Drawing.Size(151, 23);
-            this.addComponentButton.TabIndex = 0;
-            this.addComponentButton.Text = "Add Component";
-            this.addComponentButton.UseVisualStyleBackColor = true;
             // 
             // dockContainer1
             // 
@@ -249,19 +207,18 @@
             this.dockContainer1.TabIndex = 4;
             this.dockContainer1.TopPanelHeight = 150;
             // 
-            // hierarchyToolStripMenuItem
+            // analizerToolStripMenuItem
             // 
-            this.hierarchyToolStripMenuItem.Name = "hierarchyToolStripMenuItem";
-            this.hierarchyToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.hierarchyToolStripMenuItem.Text = "Hierarchy";
-            this.hierarchyToolStripMenuItem.Click += new System.EventHandler(this.hierarchyToolStripMenuItem_Click);
+            this.analizerToolStripMenuItem.Name = "analizerToolStripMenuItem";
+            this.analizerToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.analizerToolStripMenuItem.Text = "Analizer";
+            this.analizerToolStripMenuItem.Click += new System.EventHandler(this.analizerToolStripMenuItem_Click);
             // 
             // EditorWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(991, 548);
-            this.Controls.Add(this.InspectorWindow);
             this.Controls.Add(this.menuStrip1);
             this.Controls.Add(this.dockContainer1);
             this.MainMenuStrip = this.menuStrip1;
@@ -269,7 +226,6 @@
             this.Text = "EditorWindow";
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
-            this.InspectorWindow.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -288,17 +244,13 @@
         private System.Windows.Forms.ToolStripMenuItem renderModeToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem defaultToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem deferredToolStripMenuItem;
-        private System.Windows.Forms.Panel InspectorWindow;
-        private System.Windows.Forms.Button addComponentButton;
         private System.Windows.Forms.ToolStripMenuItem deferredDebugToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem outputGPUTexturesToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem debugToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem outputButtonLocationToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem invalidateButtonToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem saveSceneToolStripMenuItem;
         private Crom.Controls.DockContainer dockContainer1;
         private System.Windows.Forms.ToolStripMenuItem windowsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem sceneViewToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem hierarchyToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem analizerToolStripMenuItem;
     }
 }

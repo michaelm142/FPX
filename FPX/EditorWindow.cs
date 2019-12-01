@@ -23,18 +23,17 @@ namespace FPX
 
         private SceneWindow sceneWindow;
         private HierarchyWindow hierarchyWindow;
+        private AnalizerWindow analizerWindow;
 
         private GameView gameView1
         {
             get { return sceneWindow == null ? null : sceneWindow.gameView1; }
         }
 
-        private ListBox listBox1
+        private ListBox heirarchyListBox
         {
             get { return hierarchyWindow == null ? null : hierarchyWindow.listBox1; }
         }
-
-        private Point AddComponentButtonStartLocation;
 
         List<Control> inspectorWindowControls = new List<Control>();
 
@@ -46,17 +45,21 @@ namespace FPX
             {
                 sceneWindow = new SceneWindow();
                 hierarchyWindow = new HierarchyWindow();
+                analizerWindow = new AnalizerWindow();
 
                 sceneWindow.FormClosing += DockableWindowClosing;
                 hierarchyWindow.FormClosing += DockableWindowClosing;
-                listBox1.SelectedIndexChanged += listBox1_SelectedIndexChanged;
+                analizerWindow.FormClosing += DockableWindowClosing;
+                heirarchyListBox.SelectedIndexChanged += listBox1_SelectedIndexChanged;
                 gameView1.MouseDown += gameView1_MouseDown;
 
                 hierarchyWindow.Show();
                 sceneWindow.Show();
+                analizerWindow.Show();
 
                 dockContainer1.AddToolWindow(sceneWindow);
                 dockContainer1.AddToolWindow(hierarchyWindow);
+                dockContainer1.AddToolWindow(analizerWindow);
             }
 
             gameView1.SceneObjectInstanciated += GameView1_SceneObjectInstanciated;
@@ -64,7 +67,6 @@ namespace FPX
                 gameView1.LoadSim(sceneName);
 
 
-            AddComponentButtonStartLocation = addComponentButton.Location;
         }
 
         private void DockableWindowClosing(object sender, FormClosingEventArgs e)
@@ -76,7 +78,7 @@ namespace FPX
 
         private void GameView1_SceneObjectInstanciated(object sender, EventArgs e)
         {
-            listBox1.Items.Add(sender as GameObject);
+            heirarchyListBox.Items.Add(sender as GameObject);
         }
 
         private int GetHeirarchyLevel(GameObject obj, int level = 0)
@@ -132,67 +134,16 @@ namespace FPX
             Graphics.instance.renderer._debug_OutuptGBuffers();
         }
 
-        public void AddComponent(Component c)
-        {
-            var attributes = c.GetType().GetCustomAttributes(true).ToList();
-            var editorAttr = attributes.Find(a => a is EditorAttribute) as EditorAttribute;
-
-            if (editorAttr == null)
-                return;
-
-            
-            ComponentEditor editor = Activator.CreateInstance(editorAttr.EditorType, new object[] { c }) as ComponentEditor;
-            editor.UpdateTarget();
-            editor.Width = InspectorWindow.Width;
-            editor.BorderStyle = BorderStyle.FixedSingle;
-            InspectorWindow.Controls.Add(editor);
-
-            Point componentButtonLocation = addComponentButton.Location;
-            componentButtonLocation.Y += editor.Height;
-            addComponentButton.Location = componentButtonLocation;
-
-            Point editorLocation = editor.Location;
-            for (int i = 0; i < inspectorWindowControls.Count; i++)
-            {
-                editorLocation.Y += inspectorWindowControls[i].Height;
-            }
-            editor.Location = editorLocation;
-            inspectorWindowControls.Add(editor);
-        }
-
         private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            foreach (var c in inspectorWindowControls)
-                InspectorWindow.Controls.Remove(c);
-            inspectorWindowControls.Clear();
-            addComponentButton.Location = AddComponentButtonStartLocation;
-
-            if (listBox1.SelectedItem == null)
-            {
-                addComponentButton.Location = AddComponentButtonStartLocation;
-                return;
-            }
-
-            GameObject obj = listBox1.SelectedItem as GameObject;
-            foreach (var comp in obj.Components)
-                AddComponent(comp);
+            var listbox = sender as ListBox;
+            analizerWindow.SelectedChanged(listbox.SelectedItem as GameObject);
         }
 
         private void gameView1_MouseDown(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Right)
-                listBox1.SelectedIndex = -1;
-        }
-
-        private void outputButtonLocationToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Debug.Log("Button Location: {0}", addComponentButton.Location);
-        }
-
-        private void invalidateButtonToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            addComponentButton.Invalidate();
-            addComponentButton.BringToFront();
+                heirarchyListBox.SelectedIndex = -1;
         }
 
         private void saveSceneToolStripMenuItem_Click(object sender, EventArgs e)
@@ -211,6 +162,8 @@ namespace FPX
                 sceneWindow.Hide();
             else
                 sceneWindow.Show();
+
+            sceneViewToolStripMenuItem.Checked = sceneWindow.Visible;
         }
 
         private void hierarchyToolStripMenuItem_Click(object sender, EventArgs e)
@@ -219,6 +172,18 @@ namespace FPX
                 hierarchyWindow.Hide();
             else
                 hierarchyWindow.Show();
+
+            hierarchyToolStripMenuItem.Checked = hierarchyWindow.Visible;
+        }
+
+        private void analizerToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (analizerWindow.Visible)
+                analizerWindow.Hide();
+            else
+                analizerWindow.Show();
+
+            analizerToolStripMenuItem.Checked = analizerWindow.Visible;
         }
     }
 }

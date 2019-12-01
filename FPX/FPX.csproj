@@ -64,6 +64,12 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="AnalizerWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AnalizerWindow.Designer.cs">
+      <DependentUpon>AnalizerWindow.cs</DependentUpon>
+    </Compile>
     <Compile Include="EditorWindow.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -180,6 +186,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="AnalizerWindow.resx">
+      <DependentUpon>AnalizerWindow.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="EditorWindow.resx">
       <DependentUpon>EditorWindow.cs</DependentUpon>
     </EmbeddedResource>

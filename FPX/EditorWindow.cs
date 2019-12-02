@@ -53,9 +53,9 @@ namespace FPX
                 heirarchyListBox.SelectedIndexChanged += listBox1_SelectedIndexChanged;
                 gameView1.MouseDown += gameView1_MouseDown;
 
-                hierarchyWindow.Show();
-                sceneWindow.Show();
-                analizerWindow.Show();
+                //hierarchyWindow.Show();
+                //sceneWindow.Show();
+                //analizerWindow.Show();
 
                 dockContainer1.AddToolWindow(sceneWindow);
                 dockContainer1.AddToolWindow(hierarchyWindow);

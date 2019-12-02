@@ -9,7 +9,7 @@ using Microsoft.Xna.Framework.Content.Pipeline.Processors;
 using LodeObj;
 
 // TODO: replace these with the processor input and output types.
-using TInput = Microsoft.Xna.Framework.Content.Pipeline.Graphics.NodeContent;
+using TInput = LodeObj.NodeContent;
 using TOutput = LodeObj.ModelContent;
 
 namespace ContentPiplineExtentions

@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Xml;
 using System.Windows.Forms;
 using ComponentModel;
 using System.IO;
@@ -24,6 +25,27 @@ namespace FPX
         private SceneWindow sceneWindow;
         private HierarchyWindow hierarchyWindow;
         private AnalizerWindow analizerWindow;
+        private IEnumerable<Crom.Controls.DockableToolWindow> LayoutWindows
+        {
+            get
+            {
+                for (int i = 0; i < 3; i++)
+                {
+                    switch (i)
+                    {
+                        case 0:
+                            yield return sceneWindow;
+                            break;
+                        case 1:
+                            yield return hierarchyWindow;
+                            break;
+                        case 2:
+                            yield return analizerWindow;
+                            break;
+                    }
+                }
+            }
+        }
 
         private GameView gameView1
         {
@@ -34,6 +56,8 @@ namespace FPX
         {
             get { return hierarchyWindow == null ? null : hierarchyWindow.listBox1; }
         }
+
+        static readonly string LayoutConfigFilename = "Layout.config";
 
         List<Control> inspectorWindowControls = new List<Control>();
 
@@ -184,6 +208,105 @@ namespace FPX
                 analizerWindow.Show();
 
             analizerToolStripMenuItem.Checked = analizerWindow.Visible;
+        }
+
+        private void EditorWindow_Load(object sender, EventArgs e)
+        {
+            LoadConfig(Environment.CurrentDirectory + "//" + LayoutConfigFilename);
+        }
+
+        private void LoadConfig(string filename)
+        {
+            XmlDocument configDoc = new XmlDocument();
+            using (FileStream file = new FileStream(filename, FileMode.OpenOrCreate))
+                configDoc.Load(file);
+
+            var configRoot = configDoc.SelectSingleNode("Config");
+
+            foreach (var window in LayoutWindows)
+            {
+                var windowElement = configRoot.SelectSingleNode(window.Text);
+
+                var sizeElement = windowElement.SelectSingleNode("Size");
+                var locationElement = windowElement.SelectSingleNode("Location");
+                var dockModeElement = windowElement.SelectSingleNode("DockMode");
+                var widthAttribute = sizeElement.Attributes["Width"];
+                var heightAttribute = sizeElement.Attributes["Height"];
+                var visibleAttr = windowElement.Attributes["Visible"];
+                var xAttr = locationElement.Attributes["X"];
+                var yAttr = locationElement.Attributes["Y"];
+
+                var dockModeValue = dockModeElement.InnerText;
+                var dockMode = (Crom.Controls.zDockMode)Enum.Parse(typeof(Crom.Controls.zDockMode), dockModeValue);
+                dockContainer1.DockToolWindow(window, dockMode);
+
+                var width = int.Parse(widthAttribute.InnerText);
+                window.Width = width;
+
+                var height = int.Parse(heightAttribute.InnerText);
+                window.Height = height;
+
+                bool visible = bool.Parse(visibleAttr.InnerText);
+                window.Visible = visible;
+
+                var windowLocation = Point.Empty;
+                windowLocation.X = int.Parse(xAttr.InnerText);
+                windowLocation.Y = int.Parse(yAttr.InnerText);
+                window.Location = windowLocation;
+
+            }
+        }
+
+        private void SaveConfig(string filename)
+        {
+            XmlDocument configDoc = new XmlDocument();
+
+            var configRoot = configDoc.CreateElement("Config");
+            configDoc.AppendChild(configRoot);
+
+            foreach (var window in LayoutWindows)
+            {
+                var windowElement = configDoc.CreateElement(window.Name);
+
+                var sizeElement = configDoc.CreateElement("Size");
+                var locationElement = configDoc.CreateElement("Location");
+                var dockModeElement = configDoc.CreateElement("DockMode");
+                var widthAttribute = configDoc.CreateAttribute("Width");
+                var heightAttribute = configDoc.CreateAttribute("Height");
+                var visibleAttr = configDoc.CreateAttribute("Visible");
+                var xAttr = configDoc.CreateAttribute("X");
+                var yAttr = configDoc.CreateAttribute("Y");
+
+                dockModeElement.InnerText = window.DockMode.ToString();
+                widthAttribute.InnerText = window.Width.ToString();
+                heightAttribute.InnerText = window.Height.ToString();
+                visibleAttr.InnerText = window.Visible.ToString();
+                var windowLocation = window.Location;
+                xAttr.InnerText = windowLocation.X.ToString();
+                yAttr.InnerText = windowLocation.Y.ToString();
+
+                sizeElement.Attributes.Append(widthAttribute);
+                sizeElement.Attributes.Append(heightAttribute);
+
+                locationElement.Attributes.Append(xAttr);
+                locationElement.Attributes.Append(yAttr);
+
+                windowElement.AppendChild(dockModeElement);
+                windowElement.AppendChild(sizeElement);
+                windowElement.AppendChild(locationElement);
+                windowElement.Attributes.Append(visibleAttr);
+
+                configRoot.AppendChild(windowElement);
+
+            }
+
+            using (FileStream file = new FileStream(filename, FileMode.OpenOrCreate | FileMode.Truncate))
+                configDoc.Save(file);
+        }
+
+        private void EditorWindow_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            SaveConfig(Environment.CurrentDirectory + "//" + LayoutConfigFilename);
         }
     }
 }

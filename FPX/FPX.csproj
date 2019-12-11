@@ -70,12 +70,14 @@
     <Compile Include="AnalizerWindow.Designer.cs">
       <DependentUpon>AnalizerWindow.cs</DependentUpon>
     </Compile>
-    <Compile Include="EditorWindow.cs">
+    <Compile Include="Editor\EditorGUI.cs" />
+    <Compile Include="Editor\EditorWindow.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="EditorWindow.Designer.cs">
+    <Compile Include="Editor\EditorWindow.Designer.cs">
       <DependentUpon>EditorWindow.cs</DependentUpon>
     </Compile>
+    <Compile Include="Editor\Selection.cs" />
     <Compile Include="GameView.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -193,7 +195,7 @@
     <EmbeddedResource Include="AnalizerWindow.resx">
       <DependentUpon>AnalizerWindow.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="EditorWindow.resx">
+    <EmbeddedResource Include="Editor\EditorWindow.resx">
       <DependentUpon>EditorWindow.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="HierarchyWindow.resx">

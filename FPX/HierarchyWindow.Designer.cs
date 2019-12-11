@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.listBox1 = new System.Windows.Forms.ListBox();
+            this.textBox1 = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // listBox1
@@ -40,20 +41,30 @@
             this.listBox1.Size = new System.Drawing.Size(215, 200);
             this.listBox1.TabIndex = 0;
             // 
+            // textBox1
+            // 
+            this.textBox1.Location = new System.Drawing.Point(91, 128);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(100, 20);
+            this.textBox1.TabIndex = 1;
+            // 
             // HierarchyWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(215, 200);
+            this.Controls.Add(this.textBox1);
             this.Controls.Add(this.listBox1);
             this.Name = "HierarchyWindow";
             this.Text = "HierarchyWindow";
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
         #endregion
 
         public System.Windows.Forms.ListBox listBox1;
+        private System.Windows.Forms.TextBox textBox1;
     }
 }

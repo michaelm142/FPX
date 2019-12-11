@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Crom.Controls;
 using ComponentModel;
+using FPX.Editor;
 
 using ComponentEditor = ComponentModel.ComponentEditor;
 using EditorAttribute = ComponentModel.EditorAttribute;
@@ -27,6 +28,7 @@ namespace FPX
         {
             InitializeComponent();
             AddComponentButtonStartLocation = addComponentButton.Location;
+            EditorGUI.TargetControl = this;
         }
 
         public void AddComponent(Component c)
@@ -59,19 +61,9 @@ namespace FPX
 
         public void SelectedChanged(GameObject selectedObject)
         {
-            foreach (var c in componentControls)
-                Controls.Remove(c);
-            componentControls.Clear();
-            addComponentButton.Location = AddComponentButtonStartLocation;
+            EditorGUI.Begin();
 
-            if (selectedObject == null)
-            {
-                addComponentButton.Location = AddComponentButtonStartLocation;
-                return;
-            }
-
-            foreach (var comp in selectedObject.Components)
-                AddComponent(comp);
+            EditorGUI.End();
         }
     }
 }

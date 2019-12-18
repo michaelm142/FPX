@@ -67,7 +67,7 @@ namespace ComponentModel
 
             if (Mode == "Default")
             {
-                var drawables = Component.g_collection.ToList().FindAll(c => c is IDrawable).Cast<IDrawable>().ToList();
+                var drawables = Component.g_collection.ToList().FindAll(c => c is IDrawable && c.gameObject.Visible).Cast<IDrawable>().ToList();
                 drawables.Sort(SortRenderables);
 
                 var postProcessor = Camera.Active.GetComponent<PostProcessor>();
@@ -90,7 +90,11 @@ namespace ComponentModel
             {
                 renderer.BeginRenderGBuffers();
                 foreach (var obj in Component.g_collection.FindAll(c => c is MeshRenderer).Cast<MeshRenderer>())
+                {
+                    if (!obj.gameObject.Visible)
+                        continue;
                     renderer.RenderObject(obj);
+                }
                 renderer.EndRenderGBuffers();
 
                 renderer._debug_renderGBufferResults();

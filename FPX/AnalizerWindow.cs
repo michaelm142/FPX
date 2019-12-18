@@ -37,7 +37,7 @@ namespace FPX
             if (Selection.selectedObject == null)
                 return;
 
-            EditorGUI.Begin();
+            EditorGUI.Begin(Selection.selectedObject);
 
             foreach (Component c in Selection.selectedObject.Components)
             {

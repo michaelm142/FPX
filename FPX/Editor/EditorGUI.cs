@@ -11,7 +11,25 @@ namespace FPX.Editor
 {
     public static class EditorGUI
     {
-        public static Control TargetControl { get; set; }
+        private static Control _targetControl;
+        public static Control TargetControl
+        {
+            get { return _targetControl; }
+
+            set
+            {
+                if (_targetControl == null)
+                {
+                    TitleControl = value.Controls.Find("titlePanel", true)[0];
+                    AddComponentButton = value.Controls.Find("addComponentButton", true)[0] as Button;
+                }
+
+                _targetControl = value;
+            }
+        }
+
+        private static Button AddComponentButton;
+        private static Control TitleControl;
 
         private static List<GUIValue> Values = new List<GUIValue>();
 
@@ -27,10 +45,52 @@ namespace FPX.Editor
             Values.Clear();
         }
 
-        public static void Begin()
+        public static void Begin(ComponentModel.GameObject gameObject)
         {
             UpdateValues();
+
             TargetControl.Controls.Clear();
+            TargetControl.Controls.Add(TitleControl);
+
+            CheckBox visibleCheckBox = TitleControl.Controls.Find("visibleCheckBox", true)[0] as CheckBox;
+            CheckBox enabledCheckBox = TitleControl.Controls.Find("enabledCheckBox", true)[0] as CheckBox;
+            TextBox nameTextBox = TitleControl.Controls.Find("nameTextBox", true)[0] as TextBox;
+
+            visibleCheckBox.Checked = gameObject.Visible;
+            enabledCheckBox.Checked = gameObject.Enabled;
+            nameTextBox.Text = gameObject.Name;
+
+            visibleCheckBox.Tag = gameObject;
+            enabledCheckBox.Tag = gameObject;
+            nameTextBox.Tag = gameObject;
+
+            visibleCheckBox.CheckedChanged += VisibleCheckBox_CheckedChanged;
+            enabledCheckBox.CheckedChanged += EnabledCheckBox_CheckedChanged;
+            nameTextBox.TextChanged += NameTextBox_TextChanged;
+        }
+
+        private static void NameTextBox_TextChanged(object sender, EventArgs e)
+        {
+            if (Selection.selectedObject == null) return;
+
+            TextBox nameBox = sender as TextBox;
+            Selection.selectedObject.Name = nameBox.Text;
+        }
+
+        private static void EnabledCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            if (Selection.selectedObject == null) return;
+
+            CheckBox enabledbox = sender as CheckBox;
+            Selection.selectedObject.Enabled = enabledbox.Checked;
+        }
+
+        private static void VisibleCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            if (Selection.selectedObject == null) return;
+
+            CheckBox checkbox = sender as CheckBox;
+            Selection.selectedObject.Visible = checkbox.Checked;
         }
 
         public static void End()
@@ -57,6 +117,7 @@ namespace FPX.Editor
                     panelPos += panel.Height;
                 }
             }
+
             Panel p = new Panel();
             p.Location = new Point(0, panelPos);
             p.Name = "panel1";
@@ -115,7 +176,7 @@ namespace FPX.Editor
         {
             foreach (Control c in TargetControl.Controls)
             {
-                if (c is Panel)
+                if (c is Panel && c.Tag != null)
                 {
                     var comp = c.Tag as ComponentModel.Component;
                     var componentType = comp.GetType();
@@ -130,6 +191,8 @@ namespace FPX.Editor
                     }
                 }
             }
+
+            HierarchyWindow.instance.Invalidate();
         }
 
         private static void ValueBox_TextChanged(object sender, EventArgs e)

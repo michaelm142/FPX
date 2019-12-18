@@ -13,8 +13,11 @@ namespace FPX
 {
     public partial class HierarchyWindow : DockableToolWindow
     {
+        public static HierarchyWindow instance { get; private set; }
+
         public HierarchyWindow()
         {
+            instance = this;
             InitializeComponent();
         }
     }

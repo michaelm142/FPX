@@ -68,6 +68,11 @@
       <Material>
         <DiffuseColor R="0.0" G="0.0" B="1.0" A="1.0"/>
       </Material>
+      <EditorTester>
+        <FloatValue>3.0</FloatValue>
+        <IntValue>200</IntValue>
+        <StringValue>Candy hole</StringValue>
+      </EditorTester>
     </Prefab>
 
   </Objects>

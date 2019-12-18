@@ -59,7 +59,7 @@
             this.windowsToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(991, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(1012, 24);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -204,7 +204,7 @@
             this.dockContainer1.Name = "dockContainer1";
             this.dockContainer1.RightPanelWidth = 150;
             this.dockContainer1.SelectToolWindowsOnHoover = false;
-            this.dockContainer1.Size = new System.Drawing.Size(1003, 528);
+            this.dockContainer1.Size = new System.Drawing.Size(1024, 528);
             this.dockContainer1.TabButtonNotSelectedColor = System.Drawing.Color.DarkGray;
             this.dockContainer1.TabButtonSelectedBackColor1 = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(242)))), ((int)(((byte)(200)))));
             this.dockContainer1.TabButtonSelectedBackColor2 = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(215)))), ((int)(((byte)(157)))));
@@ -218,7 +218,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(991, 548);
+            this.ClientSize = new System.Drawing.Size(1012, 548);
             this.Controls.Add(this.menuStrip1);
             this.Controls.Add(this.dockContainer1);
             this.MainMenuStrip = this.menuStrip1;

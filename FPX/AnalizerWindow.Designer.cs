@@ -50,6 +50,7 @@
             this.Controls.Add(this.addComponentButton);
             this.Name = "AnalizerWindow";
             this.Text = "AnalizerWindow";
+            this.Resize += new System.EventHandler(this.AnalizerWindow_Resize);
             this.ResumeLayout(false);
 
         }

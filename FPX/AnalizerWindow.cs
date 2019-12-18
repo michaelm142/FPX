@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
-using System.Reflection;    
+using System.Reflection;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -29,41 +29,40 @@ namespace FPX
             InitializeComponent();
             AddComponentButtonStartLocation = addComponentButton.Location;
             EditorGUI.TargetControl = this;
+            Selection.OnSelectionChanged += AnalyzerGUI;
         }
 
-        public void AddComponent(Component c)
+        public void AnalyzerGUI(object sender, SelectionEventArgs e)
         {
-            var attributes = c.GetType().GetCustomAttributes(true).ToList();
-            var editorAttr = attributes.Find(a => a is EditorAttribute) as EditorAttribute;
-
-            if (editorAttr == null)
+            if (Selection.selectedObject == null)
                 return;
 
-
-            ComponentEditor editor = Activator.CreateInstance(editorAttr.EditorType, new object[] { c }) as ComponentEditor;
-            editor.UpdateTarget();
-            editor.Width = Width;
-            editor.BorderStyle = BorderStyle.FixedSingle;
-            Controls.Add(editor);
-
-            Point componentButtonLocation = addComponentButton.Location;
-            componentButtonLocation.Y += editor.Height;
-            addComponentButton.Location = componentButtonLocation;
-
-            Point editorLocation = editor.Location;
-            for (int i = 0; i < componentControls.Count; i++)
-            {
-                editorLocation.Y += componentControls[i].Height;
-            }
-            editor.Location = editorLocation;
-            componentControls.Add(editor);
-        }
-
-        public void SelectedChanged(GameObject selectedObject)
-        {
             EditorGUI.Begin();
 
+            foreach (Component c in Selection.selectedObject.Components)
+            {
+                var componentType = c.GetType();
+
+                EditorGUI.BeginControl(c);
+                foreach (var member in componentType.GetFields())
+                {
+                    var fieldType = member.FieldType;
+                    if (fieldType == typeof(int))
+                        EditorGUI.IntField(member.Name, (int)componentType.InvokeMember(member.Name, BindingFlags.GetField, null, c, new object[] { }));
+                    if (fieldType == typeof(float))
+                        EditorGUI.FloatField(member.Name, (float)componentType.InvokeMember(member.Name, BindingFlags.GetField, null, c, new object[] { }));
+                    if (fieldType == typeof(string))
+                        EditorGUI.StringField(member.Name, (string)componentType.InvokeMember(member.Name, BindingFlags.GetField, null, c, new object[] { }));
+                }
+                EditorGUI.EndControl();
+            }
+
             EditorGUI.End();
+        }
+
+        private void AnalizerWindow_Resize(object sender, EventArgs e)
+        {
+            AnalyzerGUI(this, new SelectionEventArgs(Selection.SelectedObjects.ToArray()));
         }
     }
 }

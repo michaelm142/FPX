@@ -8,6 +8,7 @@ using System.Xml;
 using System.Windows.Forms;
 using ComponentModel;
 using System.IO;
+using FPX.Editor;
 
 using ComponentEditor = ComponentModel.ComponentEditor;
 using EditorAttribute = ComponentModel.EditorAttribute;
@@ -65,6 +66,7 @@ namespace FPX
         {
             Instance = this;
             InitializeComponent();
+            EditorGUI.Initalize();
             if (!DesignMode)
             {
                 sceneWindow = new SceneWindow();
@@ -76,6 +78,10 @@ namespace FPX
                 analizerWindow.FormClosing += DockableWindowClosing;
                 heirarchyListBox.SelectedIndexChanged += listBox1_SelectedIndexChanged;
                 gameView1.MouseDown += gameView1_MouseDown;
+
+                sceneViewToolStripMenuItem.Checked = true;
+                hierarchyToolStripMenuItem.Checked = true;
+                analizerToolStripMenuItem.Checked = true;
 
                 //hierarchyWindow.Show();
                 //sceneWindow.Show();
@@ -161,7 +167,7 @@ namespace FPX
         private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
             var listbox = sender as ListBox;
-            analizerWindow.SelectedChanged(listbox.SelectedItem as GameObject);
+            Selection.Select(listbox.SelectedItem as GameObject);
         }
 
         private void gameView1_MouseDown(object sender, MouseEventArgs e)

@@ -117,6 +117,7 @@
     <Compile Include="CameraSwitcher.vb" />
     <Compile Include="ClosestPointShower.vb" />
     <Compile Include="DebugDeviceTextures.vb" />
+    <Compile Include="EditorTester.vb" />
     <Compile Include="GameControlTest.vb" />
     <Compile Include="LineRenderer.vb" />
     <Compile Include="MatrixTester.vb" />

@@ -267,5 +267,10 @@ namespace ComponentModel
         {
             q = Quaternion.CreateFromYawPitchRoll(euler.Y, euler.X, euler.Z);
         }
+
+        public static Quaternion QuaternionFromEuler(Vector3 euler)
+        {
+            return Quaternion.CreateFromYawPitchRoll(euler.Y, euler.X, euler.Z);
+        }
     }
 }

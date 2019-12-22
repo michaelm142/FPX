@@ -160,11 +160,15 @@ namespace FPX.Editor
             {
                 if (value.valueType == ValueType.Vector3)
                     controlHeight += VectorEditor.DefaultLayoutHeight;
+                else if (value.valueType == ValueType.Quaternion)
+                    controlHeight += QuaternionEditor.DefaultLayoutHeight;
                 else
                     controlHeight += ControlHeight;
             }
             TargetControl.Height = controlHeight;
+
             var activeComponent = TargetControl.Tag as ComponentModel.Component;
+
             for (int i = 0, y = 30; i < Values.Count; i++)
             {
                 var value = Values[i];
@@ -173,6 +177,19 @@ namespace FPX.Editor
                 {
                     VectorEditor editor = new VectorEditor(activeComponent, value.Label);
                     editor.Value = (Vector3)value.Data;
+                    editor.Location = new Point(0, y);
+                    editor.Size = new Size(TargetControl.Width, editor.Size.Height);
+                    editor.Anchor = AnchorStyles.Left | AnchorStyles.Right;
+                    editor.VectorName = value.Label;
+
+                    y += editor.Height;
+
+                    TargetControl.Controls.Add(editor);
+                }
+                else if (value.valueType == ValueType.Quaternion)
+                {
+                    QuaternionEditor editor = new QuaternionEditor(activeComponent, value.Label);
+                    editor.Value = (Quaternion)value.Data;
                     editor.Location = new Point(0, y);
                     editor.Size = new Size(TargetControl.Width, editor.Size.Height);
                     editor.Anchor = AnchorStyles.Left | AnchorStyles.Right;
@@ -246,6 +263,16 @@ namespace FPX.Editor
                     if (componentType.GetFields().ToList().Find(field => field.Name == value.Label) != null)
                         componentType.InvokeMember(value.Label, BindingFlags.SetField, null, comp, new object[] { value.Data });
                 }
+                if (c is QuaternionEditor)
+                {
+                    var ve = c as QuaternionEditor;
+                    GUIValue value = c.Tag as GUIValue;
+                    var prop = componentType.GetProperties().ToList().Find(property => property.Name == value.Label);
+                    if (prop != null)
+                        prop.GetSetMethod().Invoke(comp, new object[] { value.Data });
+                    if (componentType.GetFields().ToList().Find(field => field.Name == value.Label) != null)
+                        componentType.InvokeMember(value.Label, BindingFlags.SetField, null, comp, new object[] { value.Data });
+                }
             }
 
             HierarchyWindow.instance.listBox1.Update();
@@ -257,6 +284,7 @@ namespace FPX.Editor
             Float,
             String,
             Vector3,
+            Quaternion,
         }
 
         private class ValueChangedEventArgs : EventArgs

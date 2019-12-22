@@ -78,6 +78,9 @@
     <Compile Include="Editor\EditorWindow.Designer.cs">
       <DependentUpon>EditorWindow.cs</DependentUpon>
     </Compile>
+    <Compile Include="Editor\QuaternionEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Editor\Selection.cs" />
     <Compile Include="Editor\VectorEditor.cs">
       <SubType>UserControl</SubType>
@@ -204,6 +207,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Editor\EditorWindow.resx">
       <DependentUpon>EditorWindow.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Editor\QuaternionEditor.resx">
+      <DependentUpon>QuaternionEditor.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Editor\VectorEditor.resx">
       <DependentUpon>VectorEditor.cs</DependentUpon>

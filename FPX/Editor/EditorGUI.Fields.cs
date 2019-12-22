@@ -111,5 +111,22 @@ namespace FPX.Editor
 
             return value;
         }
+
+        public static Quaternion QuaternionField(string label, Quaternion value)
+        {
+            var val = Values.Find(v => v.Label == label);
+            if (val != null)
+            {
+                Quaternion v = (Quaternion)val.Data;
+                val.Data = value;
+
+                return v;
+            }
+
+            val = new GUIValue(ValueType.Quaternion, value, label);
+            Values.Add(val);
+
+            return value;
+        }
     }
 }

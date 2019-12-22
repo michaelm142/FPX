@@ -46,6 +46,9 @@ namespace FPX
                 EditorGUI.BeginControl(c);
                 foreach (var member in componentType.GetFields())
                 {
+                    if (member.GetCustomAttribute(typeof(IgnoreInGUIAttribute)) != null)
+                        continue;
+
                     var fieldType = member.FieldType;
                     if (fieldType == typeof(int))
                         EditorGUI.IntField(member.Name, (int)componentType.InvokeMember(member.Name, BindingFlags.GetField, null, c, new object[] { }));
@@ -53,6 +56,25 @@ namespace FPX
                         EditorGUI.FloatField(member.Name, (float)componentType.InvokeMember(member.Name, BindingFlags.GetField, null, c, new object[] { }));
                     if (fieldType == typeof(string))
                         EditorGUI.StringField(member.Name, (string)componentType.InvokeMember(member.Name, BindingFlags.GetField, null, c, new object[] { }));
+                    if (fieldType == typeof(Microsoft.Xna.Framework.Vector3))
+                        EditorGUI.Vector3Field(member.Name, (Microsoft.Xna.Framework.Vector3)componentType.InvokeMember(member.Name, BindingFlags.GetField, null, c, new object[] { }));
+                }
+                foreach (var member in componentType.GetProperties())
+                {
+                    if (member.GetCustomAttribute(typeof(IgnoreInGUIAttribute)) != null)
+                        continue;
+
+                    var fieldType = member.PropertyType;
+                    if (member.GetSetMethod() == null)
+                        continue;
+                    if (fieldType == typeof(int))
+                        EditorGUI.IntField(member.Name, (int)componentType.InvokeMember(member.Name, BindingFlags.GetProperty, null, c, new object[] { }));
+                    if (fieldType == typeof(float))
+                        EditorGUI.FloatField(member.Name, (float)componentType.InvokeMember(member.Name, BindingFlags.GetProperty, null, c, new object[] { }));
+                    if (fieldType == typeof(string))
+                        EditorGUI.StringField(member.Name, (string)componentType.InvokeMember(member.Name, BindingFlags.GetProperty, null, c, new object[] { }));
+                    if (fieldType == typeof(Microsoft.Xna.Framework.Vector3))
+                        EditorGUI.Vector3Field(member.Name, (Microsoft.Xna.Framework.Vector3)componentType.InvokeMember(member.Name, BindingFlags.GetProperty, null, c, new object[] { }));
                 }
                 EditorGUI.EndControl();
             }

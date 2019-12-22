@@ -143,6 +143,7 @@
     <Compile Include="Graphics\Renderer.cs" />
     <Compile Include="Graphics\Screen.cs" />
     <Compile Include="Graphics\SkyboxRenderer.cs" />
+    <Compile Include="IgnoreInGUIAttribute.cs" />
     <Compile Include="Physics\Collision.cs" />
     <Compile Include="Physics\Physics.Collisions.cs" />
     <Compile Include="Physics\Physics.cs" />

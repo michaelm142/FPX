@@ -6,6 +6,7 @@ using System.Xml;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
+using FPX.Editor;
 
 namespace ComponentModel
 {
@@ -18,6 +19,7 @@ namespace ComponentModel
             get { return GetComponent<Transform>(); }
         }
 
+        [IgnoreInGUI]
         public Vector3 position
         {
             get { return transform.position; }
@@ -25,6 +27,7 @@ namespace ComponentModel
             set { transform.position = value; }
         }
 
+        [IgnoreInGUI]
         public Vector3 scale
         {
             get { return transform.localScale; }
@@ -32,6 +35,7 @@ namespace ComponentModel
             set { transform.localScale = value; }
         }
 
+        [IgnoreInGUI]
         public Vector3 localPosition
         {
             get { return transform.localPosition; }
@@ -39,6 +43,7 @@ namespace ComponentModel
             set { transform.localPosition = value; }
         }
 
+        [IgnoreInGUI]
         public Quaternion rotation
         {
             get { return transform.rotation; }
@@ -46,6 +51,7 @@ namespace ComponentModel
             set { transform.rotation = value; }
         }
 
+        [IgnoreInGUI]
         public Quaternion localRotation
         {
             get { return GetComponent<Transform>().localRotation; }

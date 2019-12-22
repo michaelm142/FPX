@@ -49,6 +49,8 @@
             // 
             // titlePanel
             // 
+            this.titlePanel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.titlePanel.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.titlePanel.Controls.Add(this.nameTextBox);
             this.titlePanel.Controls.Add(this.enabledCheckBox);
@@ -80,6 +82,8 @@
             // 
             // nameTextBox
             // 
+            this.nameTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.nameTextBox.Location = new System.Drawing.Point(97, 9);
             this.nameTextBox.Name = "nameTextBox";
             this.nameTextBox.Size = new System.Drawing.Size(252, 20);

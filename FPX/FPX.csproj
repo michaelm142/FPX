@@ -71,6 +71,7 @@
       <DependentUpon>AnalizerWindow.cs</DependentUpon>
     </Compile>
     <Compile Include="Editor\EditorGUI.cs" />
+    <Compile Include="Editor\EditorGUI.Fields.cs" />
     <Compile Include="Editor\EditorWindow.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -78,6 +79,12 @@
       <DependentUpon>EditorWindow.cs</DependentUpon>
     </Compile>
     <Compile Include="Editor\Selection.cs" />
+    <Compile Include="Editor\VectorEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Editor\VectorEditor.Designer.cs">
+      <DependentUpon>VectorEditor.cs</DependentUpon>
+    </Compile>
     <Compile Include="GameView.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -197,6 +204,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Editor\EditorWindow.resx">
       <DependentUpon>EditorWindow.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Editor\VectorEditor.resx">
+      <DependentUpon>VectorEditor.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="HierarchyWindow.resx">
       <DependentUpon>HierarchyWindow.cs</DependentUpon>

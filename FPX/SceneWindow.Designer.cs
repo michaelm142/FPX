@@ -36,9 +36,10 @@
             this.gameView1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.gameView1.Location = new System.Drawing.Point(0, 0);
             this.gameView1.Name = "gameView1";
-            // this.gameView1.simulation = null;
+            this.gameView1.simulation = null;
             this.gameView1.Size = new System.Drawing.Size(800, 450);
             this.gameView1.TabIndex = 0;
+            this.gameView1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.gameView1_MouseDown);
             // 
             // SceneWindow
             // 

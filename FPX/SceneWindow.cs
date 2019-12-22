@@ -17,5 +17,10 @@ namespace FPX
         {
             InitializeComponent();
         }
+
+        private void gameView1_MouseDown(object sender, MouseEventArgs e)
+        {
+            Focus();
+        }
     }
 }

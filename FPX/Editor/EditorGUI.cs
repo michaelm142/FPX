@@ -6,10 +6,15 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
 using System.Windows.Forms;
+using Microsoft.Xna.Framework;
+
+using Color = System.Drawing.Color;
+using Point = System.Drawing.Point;
+
 
 namespace FPX.Editor
 {
-    public static class EditorGUI
+    public static partial class EditorGUI
     {
         private static Control _targetControl;
         public static Control TargetControl
@@ -95,6 +100,15 @@ namespace FPX.Editor
 
         public static void End()
         {
+            int controlHeight = 0;
+            foreach (Control c in TargetControl.Controls)
+                controlHeight += c.Height;
+
+            var buttonLocation = AddComponentButton.Location;
+            buttonLocation.Y = controlHeight;
+            AddComponentButton.Location = buttonLocation;
+
+            TargetControl.Controls.Add(AddComponentButton);
             TargetControl.Invalidate(true);
         }
 
@@ -141,29 +155,54 @@ namespace FPX.Editor
 
         public static void EndControl()
         {
-            TargetControl.Height = Microsoft.Xna.Framework.MathHelper.Clamp(ControlHeight * Values.Count + 30, 10, int.MaxValue);
-            for (int i = 0; i < Values.Count; i++)
+            int controlHeight = 30;
+            foreach (var value in Values)
+            {
+                if (value.valueType == ValueType.Vector3)
+                    controlHeight += VectorEditor.DefaultLayoutHeight;
+                else
+                    controlHeight += ControlHeight;
+            }
+            TargetControl.Height = controlHeight;
+            var activeComponent = TargetControl.Tag as ComponentModel.Component;
+            for (int i = 0, y = 30; i < Values.Count; i++)
             {
                 var value = Values[i];
-                int y = i * ControlHeight + 30;
 
-                Label label = new Label();
-                label.AutoSize = true;
-                label.Location = new Point(0, y);
-                label.Name = "GUI Label";
-                label.Text = value.Label;
+                if (value.valueType == ValueType.Vector3)
+                {
+                    VectorEditor editor = new VectorEditor(activeComponent, value.Label);
+                    editor.Value = (Vector3)value.Data;
+                    editor.Location = new Point(0, y);
+                    editor.Size = new Size(TargetControl.Width, editor.Size.Height);
+                    editor.Anchor = AnchorStyles.Left | AnchorStyles.Right;
+                    editor.VectorName = value.Label;
 
-                TextBox valueBox = new TextBox();
-                valueBox.Location = new Point(TargetControl.Width / 2, y);
-                valueBox.Name = "GUI Value Box";
-                valueBox.Size = new Size(TargetControl.Width / 2, ControlHeight);
-                valueBox.TabIndex = 1;
-                valueBox.Text = value.Data.ToString();
-                valueBox.TextChanged += ValueBox_TextChanged;
-                valueBox.Tag = Values[i];
+                    y += editor.Height;
 
-                TargetControl.Controls.Add(label);
-                TargetControl.Controls.Add(valueBox);
+                    TargetControl.Controls.Add(editor);
+                }
+                else
+                {
+                    Label label = new Label();
+                    label.AutoSize = true;
+                    label.Location = new Point(0, y);
+                    label.Name = "GUI Label";
+                    label.Text = value.Label;
+
+                    TextBox valueBox = new TextBox();
+                    valueBox.Location = new Point(TargetControl.Width / 2, y);
+                    valueBox.Name = "GUI Value Box";
+                    valueBox.Size = new Size(TargetControl.Width / 2, ControlHeight);
+                    valueBox.TabIndex = 1;
+                    valueBox.Text = value.Data.ToString();
+                    valueBox.TextChanged += ValueBox_TextChanged;
+                    valueBox.Tag = value;
+                    y += ControlHeight;
+
+                    TargetControl.Controls.Add(label);
+                    TargetControl.Controls.Add(valueBox);
+                }
             }
 
             Values = new List<GUIValue>();
@@ -176,103 +215,40 @@ namespace FPX.Editor
         {
             foreach (Control c in TargetControl.Controls)
             {
-                if (c is Panel && c.Tag != null)
+                if (c.Tag == null)
+                    continue;
+
+                var comp = c.Tag as ComponentModel.Component;
+                var componentType = comp.GetType();
+                if (c is Panel)
                 {
-                    var comp = c.Tag as ComponentModel.Component;
-                    var componentType = comp.GetType();
                     foreach (Control pannelControl in c.Controls)
                     {
                         TextBox box = pannelControl as TextBox;
                         if (box != null)
                         {
                             GUIValue value = box.Tag as GUIValue;
-                            componentType.InvokeMember(value.Label, BindingFlags.SetField, null, comp, new object[] { value.Data });
+                            var prop = componentType.GetProperties().ToList().Find(property => property.Name == value.Label);
+                            if (prop != null)
+                                prop.GetSetMethod().Invoke(comp, new object[] { value.Data });
+                            if (componentType.GetFields().ToList().Find(field => field.Name == value.Label) != null)
+                                componentType.InvokeMember(value.Label, BindingFlags.SetField, null, comp, new object[] { value.Data });
                         }
                     }
                 }
+                if (c is VectorEditor)
+                {
+                    var ve = c as VectorEditor;
+                    GUIValue value = c.Tag as GUIValue;
+                    var prop = componentType.GetProperties().ToList().Find(property => property.Name == value.Label);
+                    if (prop != null)
+                        prop.GetSetMethod().Invoke(comp, new object[] { value.Data });
+                    if (componentType.GetFields().ToList().Find(field => field.Name == value.Label) != null)
+                        componentType.InvokeMember(value.Label, BindingFlags.SetField, null, comp, new object[] { value.Data });
+                }
             }
 
-            HierarchyWindow.instance.Invalidate();
-        }
-
-        private static void ValueBox_TextChanged(object sender, EventArgs e)
-        {
-            TextBox textBox = sender as TextBox;
-            textBox.BackColor = Color.LightGray;
-            GUIValue value = textBox.Tag as GUIValue;
-            string enteredData = textBox.Text;
-
-            switch (value.valueType)
-            {
-                case ValueType.Float:
-                    float floatValue = 0.0f;
-                    if (float.TryParse(enteredData, out floatValue))
-                        value.Data = floatValue;
-                    else
-                        textBox.BackColor = Color.Red;
-                    break;
-                case ValueType.Integer:
-                    int integerValue = 0;
-                    if (int.TryParse(enteredData, out integerValue))
-                        value.Data = integerValue;
-                    else
-                        textBox.BackColor = Color.Red;
-                    break;
-                case ValueType.String:
-                    value.Data = enteredData;
-                    break;
-            }
-        }
-
-        public static int IntField(string label, int value)
-        {
-            var val = Values.Find(v => v.Label == label);
-            if (val != null)
-            {
-                int i = (int)val.Data;
-                val.Data = value;
-
-                return i;
-            }
-
-            val = new GUIValue(ValueType.Integer, value, label);
-            Values.Add(val);
-
-            return value;
-        }
-
-        public static float FloatField(string label, float value)
-        {
-            var val = Values.Find(v => v.Label == label);
-            if (val != null)
-            {
-                float f = (float)val.Data;
-                val.Data = value;
-
-                return f;
-            }
-
-            val = new GUIValue(ValueType.Integer, value, label);
-            Values.Add(val);
-
-            return value;
-        }
-
-        public static string StringField(string label, string value)
-        {
-            var val = Values.Find(v => v.Label == label);
-            if (val != null)
-            {
-                string f = val.Data as string;
-                val.Data = value;
-
-                return f;
-            }
-
-            val = new GUIValue(ValueType.Integer, value, label);
-            Values.Add(val);
-
-            return value;
+            HierarchyWindow.instance.listBox1.Update();
         }
 
         public enum ValueType
@@ -280,6 +256,7 @@ namespace FPX.Editor
             Integer,
             Float,
             String,
+            Vector3,
         }
 
         private class ValueChangedEventArgs : EventArgs

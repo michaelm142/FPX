@@ -44,7 +44,7 @@ namespace ComponentModel
             {
                 SysColor = dialog.Color;
                 BackColor = SysColor;
-                ColorChanged(SysColor, new EventArgs());
+                ColorChanged(this, new EventArgs());
             }
         }
     }

@@ -10,7 +10,8 @@ using Microsoft.Xna.Framework;
 
 using Color = System.Drawing.Color;
 using Point = System.Drawing.Point;
-
+using ColorPicker = ComponentModel.ColorPicker;
+using XnaColor = Microsoft.Xna.Framework.Color;
 
 namespace FPX.Editor
 {
@@ -199,6 +200,28 @@ namespace FPX.Editor
 
                     TargetControl.Controls.Add(editor);
                 }
+                else if (value.valueType == ValueType.Color)
+                {
+                    Label label = new Label();
+                    label.AutoSize = true;
+                    label.Location = new Point(0, y);
+                    label.Name = "GUI Label";
+                    label.Text = value.Label;
+
+                    ColorPicker colorBox = new ColorPicker();
+                    colorBox.Location = new Point(TargetControl.Width / 2, y);
+                    colorBox.Name = "GUI Value Box";
+                    colorBox.Size = new Size(TargetControl.Width / 2, ControlHeight);
+                    colorBox.TabIndex = 1;
+                    colorBox.Text = value.Data.ToString();
+                    colorBox.XnaColor = (XnaColor)value.Data;
+                    colorBox.ColorChanged += ColorBox_ColorChanged;
+                    colorBox.Tag = value;
+                    y += ControlHeight;
+
+                    TargetControl.Controls.Add(label);
+                    TargetControl.Controls.Add(colorBox);
+                }
                 else
                 {
                     Label label = new Label();
@@ -228,6 +251,16 @@ namespace FPX.Editor
             TargetControl = TargetControl.Parent;
         }
 
+        private static void ColorBox_ColorChanged(object sender, EventArgs e)
+        {
+            ColorPicker picker = sender as ColorPicker;
+            GUIValue value = picker.Tag as GUIValue;
+
+            value.Data = picker.XnaColor;
+
+            UpdateValues();
+        }
+
         private static void UpdateValues()
         {
             foreach (Control c in TargetControl.Controls)
@@ -241,10 +274,9 @@ namespace FPX.Editor
                 {
                     foreach (Control pannelControl in c.Controls)
                     {
-                        TextBox box = pannelControl as TextBox;
-                        if (box != null)
+                        if (pannelControl is TextBox || pannelControl is ColorPicker)
                         {
-                            GUIValue value = box.Tag as GUIValue;
+                            GUIValue value = pannelControl.Tag as GUIValue;
                             var prop = componentType.GetProperties().ToList().Find(property => property.Name == value.Label);
                             if (prop != null)
                                 prop.GetSetMethod().Invoke(comp, new object[] { value.Data });
@@ -285,6 +317,7 @@ namespace FPX.Editor
             String,
             Vector3,
             Quaternion,
+            Color,
         }
 
         private class ValueChangedEventArgs : EventArgs

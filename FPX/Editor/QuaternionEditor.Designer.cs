@@ -1,6 +1,10 @@
-﻿namespace FPX.Editor
+﻿using System;
+using System.Windows;
+using System.Windows.Forms;
+
+namespace FPX.Editor
 {
-    partial class VectorEditor
+    public partial class QuaternionEditor : UserControl
     {
         /// <summary> 
         /// Required designer variable.

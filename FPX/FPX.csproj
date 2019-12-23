@@ -81,6 +81,9 @@
     <Compile Include="Editor\QuaternionEditor.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="Editor\QuaternionEditor.Designer.cs">
+      <DependentUpon>QuaternionEditor.cs</DependentUpon>
+    </Compile>
     <Compile Include="Editor\Selection.cs" />
     <Compile Include="Editor\VectorEditor.cs">
       <SubType>UserControl</SubType>

@@ -58,6 +58,10 @@ namespace FPX
                         EditorGUI.StringField(member.Name, (string)componentType.InvokeMember(member.Name, BindingFlags.GetField, null, c, new object[] { }));
                     if (fieldType == typeof(Microsoft.Xna.Framework.Vector3))
                         EditorGUI.Vector3Field(member.Name, (Microsoft.Xna.Framework.Vector3)componentType.InvokeMember(member.Name, BindingFlags.GetField, null, c, new object[] { }));
+                    if (fieldType == typeof(Microsoft.Xna.Framework.Quaternion))
+                        EditorGUI.QuaternionField(member.Name, (Microsoft.Xna.Framework.Quaternion)componentType.InvokeMember(member.Name, BindingFlags.GetField, null, c, new object[] { }));
+                    if (fieldType == typeof(Microsoft.Xna.Framework.Color))
+                        EditorGUI.ColorField(member.Name, (Microsoft.Xna.Framework.Color)componentType.InvokeMember(member.Name, BindingFlags.GetField, null, c, new object[] { }));
                 }
                 foreach (var member in componentType.GetProperties())
                 {
@@ -77,6 +81,8 @@ namespace FPX
                         EditorGUI.Vector3Field(member.Name, (Microsoft.Xna.Framework.Vector3)componentType.InvokeMember(member.Name, BindingFlags.GetProperty, null, c, new object[] { }));
                     if (fieldType == typeof(Microsoft.Xna.Framework.Quaternion))
                         EditorGUI.QuaternionField(member.Name, (Microsoft.Xna.Framework.Quaternion)componentType.InvokeMember(member.Name, BindingFlags.GetProperty, null, c, new object[] { }));
+                    if (fieldType == typeof(Microsoft.Xna.Framework.Color))
+                        EditorGUI.ColorField(member.Name, (Microsoft.Xna.Framework.Color)componentType.InvokeMember(member.Name, BindingFlags.GetProperty, null, c, new object[] { }));
                 }
                 EditorGUI.EndControl();
             }

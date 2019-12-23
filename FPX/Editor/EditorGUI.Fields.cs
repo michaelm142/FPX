@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using Microsoft.Xna.Framework;
 
 using Color = System.Drawing.Color;
+using XnaColor = Microsoft.Xna.Framework.Color;
 
 namespace FPX.Editor
 {
@@ -124,6 +125,23 @@ namespace FPX.Editor
             }
 
             val = new GUIValue(ValueType.Quaternion, value, label);
+            Values.Add(val);
+
+            return value;
+        }
+
+        public static XnaColor ColorField(string label, XnaColor value)
+        {
+            var val = Values.Find(v => v.Label == label);
+            if (val != null)
+            {
+                XnaColor v = (XnaColor)val.Data;
+                val.Data = value;
+
+                return v;
+            }
+
+            val = new GUIValue(ValueType.Color, value, label);
             Values.Add(val);
 
             return value;

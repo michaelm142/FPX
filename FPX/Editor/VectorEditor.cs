@@ -88,14 +88,14 @@ namespace FPX.Editor
 
         private string memberName;
 
-        private FPX.ComponentModel.Component component;
+        private FPX.Component component;
 
         private VectorEditor()
         {
             InitializeComponent();
         }
 
-        public VectorEditor(FPX.ComponentModel.Component component, string memberName)
+        public VectorEditor(FPX.Component component, string memberName)
         {
             InitializeComponent();
 

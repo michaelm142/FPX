@@ -6,7 +6,7 @@ using System.Xml;
 using Microsoft.Xna.Framework;
 using FPX.Editor;
 
-namespace FPX.ComponentModel
+namespace FPX
 {
     [Editor(typeof(TransformEditor))]
     public class Transform : Component

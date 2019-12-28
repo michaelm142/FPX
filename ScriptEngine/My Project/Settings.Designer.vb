@@ -28,7 +28,7 @@ Namespace My
 
     Private Shared addedHandlerLockObject As New Object
 
-    <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), Global.System.FPX.ComponentModel.EditorBrowsableAttribute(Global.System.FPX.ComponentModel.EditorBrowsableState.Advanced)> _
+    <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), Global.System.FPX.EditorBrowsableAttribute(Global.System.FPX.EditorBrowsableState.Advanced)> _
     Private Shared Sub AutoSaveSettings(sender As Global.System.Object, e As Global.System.EventArgs)
         If My.Application.SaveMySettingsOnExit Then
             My.Settings.Save()

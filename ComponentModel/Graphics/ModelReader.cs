@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using LodeObj;
 
-namespace FPX.ComponentModel
+namespace FPX
 {
     /// <summary>
     /// This class will be instantiated by the XNA Framework Content

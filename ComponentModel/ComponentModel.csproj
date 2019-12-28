@@ -101,6 +101,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Audio\AudioListener.cs" />
+    <Compile Include="Audio\AudioSource.cs" />
     <Compile Include="Editors\AmbientLightEditor.cs">
       <SubType>UserControl</SubType>
     </Compile>

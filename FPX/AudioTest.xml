@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<Scene>
+  <Objects>
+
+    <Object Name="Camera">
+      <Transform>
+        <Position X="0" Y="0" Z="10"/>
+      </Transform>
+      <Camera>
+        <FieldOfView>60.0</FieldOfView>
+      </Camera>
+    </Object>
+
+    <Object Name="Audio Test">
+      <Transform>
+        <Position X="0" Y="0" Z="0"/>
+      </Transform>
+
+      <AudioSource>
+        <Filename>Audio\blip1</Filename>
+      </AudioSource>
+
+      <AudioTester/>
+    </Object>
+
+  </Objects>
+</Scene>

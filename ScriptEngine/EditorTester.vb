@@ -1,5 +1,5 @@
 ﻿Imports System.Xml
-Imports FPX.ComponentModel
+Imports FPX
 
 Public Class EditorTester
     Inherits Component

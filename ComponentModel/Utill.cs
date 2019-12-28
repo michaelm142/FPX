@@ -8,7 +8,7 @@ using System.Reflection;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace FPX.ComponentModel
+namespace FPX
 {
     public static class Utill
     {

@@ -1,6 +1,6 @@
 ﻿Imports Microsoft.Xna.Framework
 Imports Microsoft.Xna.Framework.Input
-Imports FPX.ComponentModel
+Imports FPX
 
 Public Class CameraSwitch
     Inherits Component

@@ -126,6 +126,9 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="AudioTest.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="betaLevel.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

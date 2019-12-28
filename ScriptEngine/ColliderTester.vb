@@ -1,6 +1,6 @@
 ﻿Imports System.Xml
 Imports Microsoft.Xna.Framework
-Imports FPX.ComponentModel
+Imports FPX
 
 Public Class ColliderTester
     Inherits Component

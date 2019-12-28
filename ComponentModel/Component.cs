@@ -8,7 +8,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
 using FPX.Editor;
 
-namespace FPX.ComponentModel
+namespace FPX
 {
     public abstract class Component
     {

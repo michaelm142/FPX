@@ -6,7 +6,7 @@ using System.Threading;
 using System.Security.Permissions;
 using System.Reflection;
 using System.Windows;
-using FPX.ComponentModel;
+using FPX;
 
 using Application = System.Windows.Forms.Application;
 

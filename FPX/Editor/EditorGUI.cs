@@ -10,7 +10,7 @@ using Microsoft.Xna.Framework;
 
 using Color = System.Drawing.Color;
 using Point = System.Drawing.Point;
-using ColorPicker = FPX.ComponentModel.ColorPicker;
+using ColorPicker = FPX.ColorPicker;
 using XnaColor = Microsoft.Xna.Framework.Color;
 
 namespace FPX.Editor
@@ -51,7 +51,7 @@ namespace FPX.Editor
             Values.Clear();
         }
 
-        public static void Begin(FPX.ComponentModel.GameObject gameObject)
+        public static void Begin(FPX.GameObject gameObject)
         {
             UpdateValues();
 
@@ -113,7 +113,7 @@ namespace FPX.Editor
             TargetControl.Invalidate(true);
         }
 
-        public static void BeginControl(FPX.ComponentModel.Component component)
+        public static void BeginControl(FPX.Component component)
         {
             if (TargetControl is Panel)
                 throw new InvalidOperationException("EndControl must be called before BeginControl");
@@ -168,7 +168,7 @@ namespace FPX.Editor
             }
             TargetControl.Height = controlHeight;
 
-            var activeComponent = TargetControl.Tag as FPX.ComponentModel.Component;
+            var activeComponent = TargetControl.Tag as FPX.Component;
 
             for (int i = 0, y = 30; i < Values.Count; i++)
             {
@@ -301,7 +301,7 @@ namespace FPX.Editor
                 if (c.Tag == null)
                     continue;
 
-                var comp = c.Tag as FPX.ComponentModel.Component;
+                var comp = c.Tag as FPX.Component;
                 var componentType = comp.GetType();
                 if (c is Panel)
                 {

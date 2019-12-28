@@ -9,7 +9,7 @@ using System.Reflection;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 
-namespace FPX.ComponentModel
+namespace FPX
 {
     public class Scene : IGameComponent, IUpdateable
     {

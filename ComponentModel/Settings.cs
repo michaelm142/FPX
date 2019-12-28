@@ -5,7 +5,7 @@ using System.Text;
 using System.IO;
 using System.Xml;
 
-namespace FPX.ComponentModel
+namespace FPX
 {
     public static class Settings
     {

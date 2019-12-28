@@ -7,7 +7,7 @@ using System.Xml;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace FPX.ComponentModel
+namespace FPX
 {
     public class PostProcessor : Component
     {

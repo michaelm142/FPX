@@ -270,3 +270,9 @@
 /processorParam:DebugMode=Auto
 /build:Shaders/Grayscale.fx
 
+#begin Audio/blip1.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/blip1.wav
+

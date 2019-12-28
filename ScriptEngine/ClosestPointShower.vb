@@ -1,5 +1,5 @@
 ﻿Imports Microsoft.Xna.Framework
-Imports FPX.ComponentModel
+Imports FPX
 
 Public Class ClosestPointShower
     Inherits Component

@@ -1,6 +1,6 @@
 ﻿Imports Microsoft.Xna.Framework
 Imports Microsoft.Xna.Framework.Graphics
-Imports FPX.ComponentModel
+Imports FPX
 
 Public NotInheritable Class ObjectFactory
     Private Sub New()

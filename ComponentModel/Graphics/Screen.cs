@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FPX.ComponentModel
+namespace FPX
 {
     public static class Screen
     {

@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using LodeObj;
 
-namespace FPX.ComponentModel
+namespace FPX
 {
     [Editor(typeof(MeshRendererEditor))]
     public class MeshRenderer : Component, IDrawable

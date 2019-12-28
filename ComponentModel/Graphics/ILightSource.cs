@@ -1,6 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 
-namespace FPX.ComponentModel
+namespace FPX
 {
     public interface ILightSource
     {

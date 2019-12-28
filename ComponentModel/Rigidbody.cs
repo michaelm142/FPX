@@ -1,7 +1,7 @@
 ﻿using System.Xml;
 using Microsoft.Xna.Framework;
 
-namespace FPX.ComponentModel
+namespace FPX
 {
     public class Rigidbody : Component
     {

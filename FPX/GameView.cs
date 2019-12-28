@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using FPX.ComponentModel;
+using FPX;
 using System.Runtime.InteropServices;
 using System.Reflection;
 using System.Drawing;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-using Graphics = FPX.ComponentModel.Graphics;
+using Graphics = FPX.Graphics;
 
 using Point = System.Drawing.Point;
 

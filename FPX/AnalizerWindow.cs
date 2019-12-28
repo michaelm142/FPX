@@ -9,12 +9,12 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Crom.Controls;
-using FPX.ComponentModel;
+using FPX;
 using FPX.Editor;
 
-using ComponentEditor = FPX.ComponentModel.ComponentEditor;
-using EditorAttribute = FPX.ComponentModel.EditorAttribute;
-using Component = FPX.ComponentModel.Component;
+using ComponentEditor = FPX.ComponentEditor;
+using EditorAttribute = FPX.EditorAttribute;
+using Component = FPX.Component;
 
 namespace FPX
 {

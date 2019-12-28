@@ -5,7 +5,7 @@ using System.Text;
 using System.Xml;
 using Microsoft.Xna.Framework;
 
-namespace FPX.ComponentModel
+namespace FPX
 {
     [Editor(typeof(CameraEditor))]
     public class Camera : Component

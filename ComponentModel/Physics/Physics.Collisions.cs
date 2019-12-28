@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
 
-namespace FPX.ComponentModel
+namespace FPX
 {
     public partial class Physics
     {

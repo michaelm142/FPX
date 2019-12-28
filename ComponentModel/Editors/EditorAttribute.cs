@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace FPX.ComponentModel
+namespace FPX
 {
     [AttributeUsage(AttributeTargets.Class)]
     public class EditorAttribute : Attribute

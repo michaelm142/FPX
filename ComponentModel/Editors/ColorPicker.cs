@@ -9,7 +9,7 @@ using Microsoft.Xna.Framework;
 using Color = System.Drawing.Color;
 using XnaColor = Microsoft.Xna.Framework.Color;
 
-namespace FPX.ComponentModel
+namespace FPX
 {
     public class ColorPicker : Panel
     {

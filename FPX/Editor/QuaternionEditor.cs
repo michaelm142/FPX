@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Microsoft.Xna.Framework;
-using ComponentModel;
+using FPX.ComponentModel;
 
 namespace FPX.Editor
 {
@@ -95,14 +95,14 @@ namespace FPX.Editor
         private bool isProperty;
 
         private string memberName;
-        private ComponentModel.Component component;
+        private FPX.ComponentModel.Component component;
 
         private QuaternionEditor()
         {
             InitializeComponent();
         }
 
-        public QuaternionEditor(ComponentModel.Component component, string memberName)
+        public QuaternionEditor(FPX.ComponentModel.Component component, string memberName)
         {
             InitializeComponent();
 

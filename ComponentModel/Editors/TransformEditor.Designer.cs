@@ -1,4 +1,4 @@
-﻿namespace ComponentModel
+﻿namespace FPX.ComponentModel
 {
     partial class TransformEditor
     {

@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using ComponentModel;
+using FPX.ComponentModel;
 
 namespace FPX.Editor
 {

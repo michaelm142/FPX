@@ -1,7 +1,7 @@
 ﻿Imports Microsoft.Xna.Framework
 Imports Microsoft.Xna.Framework.Graphics
 Imports Microsoft.Xna.Framework.Input
-Imports ComponentModel
+Imports FPX.ComponentModel
 
 Public Class RigidbodyController
     Inherits Component

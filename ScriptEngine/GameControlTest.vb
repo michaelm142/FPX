@@ -3,7 +3,7 @@ Imports System.Xml
 Imports System.Linq
 Imports Microsoft.Xna.Framework
 Imports Microsoft.Xna.Framework.Input
-Imports ComponentModel
+Imports FPX.ComponentModel
 
 Public Class GameControlTest
     Inherits Component

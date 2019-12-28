@@ -3,7 +3,7 @@ using System.Linq;
 using System.Xml;
 using Microsoft.Xna.Framework;
 
-namespace ComponentModel
+namespace FPX.ComponentModel
 {
     public class BoxCollider : Collider
     {

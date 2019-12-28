@@ -2,7 +2,7 @@
 Imports Microsoft.Xna.Framework
 Imports Microsoft.Xna.Framework.Input
 Imports Microsoft.Xna.Framework.Graphics
-Imports ComponentModel
+Imports FPX.ComponentModel
 
 Public Class TestSpriteController
     Inherits Component

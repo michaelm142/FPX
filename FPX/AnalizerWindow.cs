@@ -9,12 +9,12 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Crom.Controls;
-using ComponentModel;
+using FPX.ComponentModel;
 using FPX.Editor;
 
-using ComponentEditor = ComponentModel.ComponentEditor;
-using EditorAttribute = ComponentModel.EditorAttribute;
-using Component = ComponentModel.Component;
+using ComponentEditor = FPX.ComponentModel.ComponentEditor;
+using EditorAttribute = FPX.ComponentModel.EditorAttribute;
+using Component = FPX.ComponentModel.Component;
 
 namespace FPX
 {
@@ -44,45 +44,55 @@ namespace FPX
                 var componentType = c.GetType();
 
                 EditorGUI.BeginControl(c);
-                foreach (var member in componentType.GetFields())
+                var analyzerMethod = componentType.GetMethod("OnAnalyzerGUI");
+                if (analyzerMethod != null)
+                    analyzerMethod.Invoke(c, new object[] { });
+                else
                 {
-                    if (member.GetCustomAttribute(typeof(IgnoreInGUIAttribute)) != null)
-                        continue;
+                    foreach (var member in componentType.GetFields())
+                    {
+                        if (member.GetCustomAttribute(typeof(IgnoreInGUIAttribute)) != null)
+                            continue;
 
-                    var fieldType = member.FieldType;
-                    if (fieldType == typeof(int))
-                        EditorGUI.IntField(member.Name, (int)componentType.InvokeMember(member.Name, BindingFlags.GetField, null, c, new object[] { }));
-                    if (fieldType == typeof(float))
-                        EditorGUI.FloatField(member.Name, (float)componentType.InvokeMember(member.Name, BindingFlags.GetField, null, c, new object[] { }));
-                    if (fieldType == typeof(string))
-                        EditorGUI.StringField(member.Name, (string)componentType.InvokeMember(member.Name, BindingFlags.GetField, null, c, new object[] { }));
-                    if (fieldType == typeof(Microsoft.Xna.Framework.Vector3))
-                        EditorGUI.Vector3Field(member.Name, (Microsoft.Xna.Framework.Vector3)componentType.InvokeMember(member.Name, BindingFlags.GetField, null, c, new object[] { }));
-                    if (fieldType == typeof(Microsoft.Xna.Framework.Quaternion))
-                        EditorGUI.QuaternionField(member.Name, (Microsoft.Xna.Framework.Quaternion)componentType.InvokeMember(member.Name, BindingFlags.GetField, null, c, new object[] { }));
-                    if (fieldType == typeof(Microsoft.Xna.Framework.Color))
-                        EditorGUI.ColorField(member.Name, (Microsoft.Xna.Framework.Color)componentType.InvokeMember(member.Name, BindingFlags.GetField, null, c, new object[] { }));
-                }
-                foreach (var member in componentType.GetProperties())
-                {
-                    if (member.GetCustomAttribute(typeof(IgnoreInGUIAttribute)) != null)
-                        continue;
+                        var fieldType = member.FieldType;
+                        if (fieldType == typeof(int))
+                            EditorGUI.IntField(member.Name, (int)componentType.InvokeMember(member.Name, BindingFlags.GetField, null, c, new object[] { }));
+                        if (fieldType == typeof(float))
+                            EditorGUI.FloatField(member.Name, (float)componentType.InvokeMember(member.Name, BindingFlags.GetField, null, c, new object[] { }));
+                        if (fieldType == typeof(string))
+                            EditorGUI.StringField(member.Name, (string)componentType.InvokeMember(member.Name, BindingFlags.GetField, null, c, new object[] { }));
+                        if (fieldType == typeof(Microsoft.Xna.Framework.Vector3))
+                            EditorGUI.Vector3Field(member.Name, (Microsoft.Xna.Framework.Vector3)componentType.InvokeMember(member.Name, BindingFlags.GetField, null, c, new object[] { }));
+                        if (fieldType == typeof(Microsoft.Xna.Framework.Quaternion))
+                            EditorGUI.QuaternionField(member.Name, (Microsoft.Xna.Framework.Quaternion)componentType.InvokeMember(member.Name, BindingFlags.GetField, null, c, new object[] { }));
+                        if (fieldType == typeof(Microsoft.Xna.Framework.Color))
+                            EditorGUI.ColorField(member.Name, (Microsoft.Xna.Framework.Color)componentType.InvokeMember(member.Name, BindingFlags.GetField, null, c, new object[] { }));
+                        if (fieldType == typeof(Enum))
+                            EditorGUI.EnumField(member.Name, (Enum)componentType.InvokeMember(member.Name, BindingFlags.GetField, null, c, new object[] { }));
+                    }
+                    foreach (var member in componentType.GetProperties())
+                    {
+                        if (member.GetCustomAttribute(typeof(IgnoreInGUIAttribute)) != null)
+                            continue;
 
-                    var fieldType = member.PropertyType;
-                    if (member.GetSetMethod() == null)
-                        continue;
-                    if (fieldType == typeof(int))
-                        EditorGUI.IntField(member.Name, (int)componentType.InvokeMember(member.Name, BindingFlags.GetProperty, null, c, new object[] { }));
-                    if (fieldType == typeof(float))
-                        EditorGUI.FloatField(member.Name, (float)componentType.InvokeMember(member.Name, BindingFlags.GetProperty, null, c, new object[] { }));
-                    if (fieldType == typeof(string))
-                        EditorGUI.StringField(member.Name, (string)componentType.InvokeMember(member.Name, BindingFlags.GetProperty, null, c, new object[] { }));
-                    if (fieldType == typeof(Microsoft.Xna.Framework.Vector3))
-                        EditorGUI.Vector3Field(member.Name, (Microsoft.Xna.Framework.Vector3)componentType.InvokeMember(member.Name, BindingFlags.GetProperty, null, c, new object[] { }));
-                    if (fieldType == typeof(Microsoft.Xna.Framework.Quaternion))
-                        EditorGUI.QuaternionField(member.Name, (Microsoft.Xna.Framework.Quaternion)componentType.InvokeMember(member.Name, BindingFlags.GetProperty, null, c, new object[] { }));
-                    if (fieldType == typeof(Microsoft.Xna.Framework.Color))
-                        EditorGUI.ColorField(member.Name, (Microsoft.Xna.Framework.Color)componentType.InvokeMember(member.Name, BindingFlags.GetProperty, null, c, new object[] { }));
+                        var fieldType = member.PropertyType;
+                        if (member.GetSetMethod() == null)
+                            continue;
+                        if (fieldType == typeof(int))
+                            EditorGUI.IntField(member.Name, (int)componentType.InvokeMember(member.Name, BindingFlags.GetProperty, null, c, new object[] { }));
+                        if (fieldType == typeof(float))
+                            EditorGUI.FloatField(member.Name, (float)componentType.InvokeMember(member.Name, BindingFlags.GetProperty, null, c, new object[] { }));
+                        if (fieldType == typeof(string))
+                            EditorGUI.StringField(member.Name, (string)componentType.InvokeMember(member.Name, BindingFlags.GetProperty, null, c, new object[] { }));
+                        if (fieldType == typeof(Microsoft.Xna.Framework.Vector3))
+                            EditorGUI.Vector3Field(member.Name, (Microsoft.Xna.Framework.Vector3)componentType.InvokeMember(member.Name, BindingFlags.GetProperty, null, c, new object[] { }));
+                        if (fieldType == typeof(Microsoft.Xna.Framework.Quaternion))
+                            EditorGUI.QuaternionField(member.Name, (Microsoft.Xna.Framework.Quaternion)componentType.InvokeMember(member.Name, BindingFlags.GetProperty, null, c, new object[] { }));
+                        if (fieldType == typeof(Microsoft.Xna.Framework.Color))
+                            EditorGUI.ColorField(member.Name, (Microsoft.Xna.Framework.Color)componentType.InvokeMember(member.Name, BindingFlags.GetProperty, null, c, new object[] { }));
+                        if (fieldType == typeof(Enum))
+                            EditorGUI.EnumField(member.Name, (Enum)componentType.InvokeMember(member.Name, BindingFlags.GetProperty, null, c, new object[] { }));
+                    }
                 }
                 EditorGUI.EndControl();
             }

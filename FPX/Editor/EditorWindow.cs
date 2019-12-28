@@ -6,14 +6,14 @@ using System.Linq;
 using System.Text;
 using System.Xml;
 using System.Windows.Forms;
-using ComponentModel;
+using FPX.ComponentModel;
 using System.IO;
 using FPX.Editor;
 
-using ComponentEditor = ComponentModel.ComponentEditor;
-using EditorAttribute = ComponentModel.EditorAttribute;
-using Component = ComponentModel.Component;
-using Graphics = ComponentModel.Graphics;
+using ComponentEditor = FPX.ComponentModel.ComponentEditor;
+using EditorAttribute = FPX.ComponentModel.EditorAttribute;
+using Component = FPX.ComponentModel.Component;
+using Graphics = FPX.ComponentModel.Graphics;
 
 namespace FPX
 {

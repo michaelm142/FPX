@@ -7,7 +7,7 @@ using System.IO;
 
 using Diagnostics = System.Diagnostics.Debug;
 
-namespace ComponentModel
+namespace FPX.ComponentModel
 {
     public static class Debug
     {

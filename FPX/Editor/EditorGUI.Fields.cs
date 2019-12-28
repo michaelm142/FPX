@@ -146,5 +146,22 @@ namespace FPX.Editor
 
             return value;
         }
+
+        public static Enum EnumField(string label, Enum value)
+        {
+            var val = Values.Find(v => v.Label == label);
+            if (val != null)
+            {
+                Enum v = (Enum)val.Data;
+                val.Data = value;
+
+                return v;
+            }
+
+            val = new GUIValue(ValueType.Enum, value, label);
+            Values.Add(val);
+
+            return value;
+        }
     }
 }

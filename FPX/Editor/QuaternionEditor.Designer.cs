@@ -63,7 +63,7 @@ namespace FPX.Editor
             // posZBox
             // 
             this.posZBox.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.posZBox.Location = new System.Drawing.Point(309, 24);
+            this.posZBox.Location = new System.Drawing.Point(312, 24);
             this.posZBox.Name = "posZBox";
             this.posZBox.Size = new System.Drawing.Size(100, 20);
             this.posZBox.TabIndex = 5;
@@ -123,12 +123,12 @@ namespace FPX.Editor
             this.label1.TabIndex = 0;
             this.label1.Text = "X";
             // 
-            // VectorEditor
+            // QuaternionEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.Title);
-            this.Name = "VectorEditor";
+            this.Name = "QuaternionEditor";
             this.Size = new System.Drawing.Size(425, 68);
             this.Title.ResumeLayout(false);
             this.Title.PerformLayout();

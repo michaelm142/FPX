@@ -4,12 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Xml;
 using Microsoft.Xna.Framework;
+using FPX.Editor;
 
-namespace ComponentModel
+namespace FPX.ComponentModel
 {
     [Editor(typeof(TransformEditor))]
     public class Transform : Component
     {
+        [IgnoreInGUI]
         public new Vector3 position
         {
             get { return GetPosition(parent, localPosition); }
@@ -17,6 +19,7 @@ namespace ComponentModel
             set { localPosition = parent == null ? value : Vector3.Transform(value, Matrix.CreateTranslation(parent.position)); }
         }
 
+        [IgnoreInGUI]
         public new Quaternion rotation
         {
             get { return GetRotation(parent, localRotation); }

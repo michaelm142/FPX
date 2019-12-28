@@ -5,7 +5,7 @@ using System.Text;
 using System.Xml;
 using Microsoft.Xna.Framework;
 
-namespace ComponentModel
+namespace FPX.ComponentModel
 {
     public class SphereCollider : Collider
     {

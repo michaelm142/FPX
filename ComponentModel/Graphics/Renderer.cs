@@ -10,7 +10,7 @@ using LodeObj;
 
 using XnaModel = Microsoft.Xna.Framework.Graphics.Model;
 
-namespace ComponentModel
+namespace FPX.ComponentModel
 {
     public class DeferredRenderer
     {

@@ -10,7 +10,7 @@ using Microsoft.Xna.Framework;
 
 using Color = System.Drawing.Color;
 using Point = System.Drawing.Point;
-using ColorPicker = ComponentModel.ColorPicker;
+using ColorPicker = FPX.ComponentModel.ColorPicker;
 using XnaColor = Microsoft.Xna.Framework.Color;
 
 namespace FPX.Editor
@@ -51,7 +51,7 @@ namespace FPX.Editor
             Values.Clear();
         }
 
-        public static void Begin(ComponentModel.GameObject gameObject)
+        public static void Begin(FPX.ComponentModel.GameObject gameObject)
         {
             UpdateValues();
 
@@ -113,7 +113,7 @@ namespace FPX.Editor
             TargetControl.Invalidate(true);
         }
 
-        public static void BeginControl(ComponentModel.Component component)
+        public static void BeginControl(FPX.ComponentModel.Component component)
         {
             if (TargetControl is Panel)
                 throw new InvalidOperationException("EndControl must be called before BeginControl");
@@ -136,7 +136,7 @@ namespace FPX.Editor
             Panel p = new Panel();
             p.Location = new Point(0, panelPos);
             p.Name = "panel1";
-            p.Size = new Size(TargetControl.Width, 100);
+            p.Size = new Size(TargetControl.Width - 20, 100);
             p.TabIndex = 5;
             p.Anchor = AnchorStyles.Left | AnchorStyles.Right;
             p.BorderStyle = BorderStyle.Fixed3D;
@@ -168,7 +168,7 @@ namespace FPX.Editor
             }
             TargetControl.Height = controlHeight;
 
-            var activeComponent = TargetControl.Tag as ComponentModel.Component;
+            var activeComponent = TargetControl.Tag as FPX.ComponentModel.Component;
 
             for (int i = 0, y = 30; i < Values.Count; i++)
             {
@@ -222,6 +222,29 @@ namespace FPX.Editor
                     TargetControl.Controls.Add(label);
                     TargetControl.Controls.Add(colorBox);
                 }
+                else if (value.valueType == ValueType.Enum)
+                {
+                    Label label = new Label();
+                    label.AutoSize = true;
+                    label.Location = new Point(0, y);
+                    label.Name = "GUI Label";
+                    label.Text = value.Label;
+
+
+                    ComboBox enumComboBox = new ComboBox();
+                    enumComboBox.Location = new Point(TargetControl.Width / 2, y);
+                    enumComboBox.Name = "GUI Value Box";
+                    enumComboBox.Size = new Size(TargetControl.Width / 2, ControlHeight);
+                    enumComboBox.TabIndex = 1;
+                    enumComboBox.Text = value.Data.ToString();
+                    enumComboBox.Tag = value;
+                    enumComboBox.Items.AddRange(Enum.GetValues(value.Data.GetType()) as object[]);
+                    enumComboBox.SelectedValueChanged += EnumComboBox_SelectedValueChanged;
+                    y += ControlHeight;
+
+                    TargetControl.Controls.Add(label);
+                    TargetControl.Controls.Add(enumComboBox);
+                }
                 else
                 {
                     Label label = new Label();
@@ -251,6 +274,16 @@ namespace FPX.Editor
             TargetControl = TargetControl.Parent;
         }
 
+        private static void EnumComboBox_SelectedValueChanged(object sender, EventArgs e)
+        {
+            ComboBox box = sender as ComboBox;
+            GUIValue value = box.Tag as GUIValue;
+
+            value.Data = Enum.Parse(value.Data.GetType(), box.Text);
+
+            UpdateValues();
+        }
+
         private static void ColorBox_ColorChanged(object sender, EventArgs e)
         {
             ColorPicker picker = sender as ColorPicker;
@@ -268,7 +301,7 @@ namespace FPX.Editor
                 if (c.Tag == null)
                     continue;
 
-                var comp = c.Tag as ComponentModel.Component;
+                var comp = c.Tag as FPX.ComponentModel.Component;
                 var componentType = comp.GetType();
                 if (c is Panel)
                 {
@@ -318,6 +351,7 @@ namespace FPX.Editor
             Vector3,
             Quaternion,
             Color,
+            Enum,
         }
 
         private class ValueChangedEventArgs : EventArgs

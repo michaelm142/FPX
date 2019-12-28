@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
-using ComponentModel;
+using FPX.ComponentModel;
 
-namespace ComponentModel
+namespace FPX.ComponentModel
 {
     public partial class Physics : IGameComponent, IUpdateable
     {

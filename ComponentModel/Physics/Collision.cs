@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace ComponentModel
+namespace FPX.ComponentModel
 {
     public class Collision
     {

@@ -1,7 +1,7 @@
 ﻿Imports System.Xml
 Imports Microsoft.Xna.Framework
 Imports Microsoft.Xna.Framework.Graphics
-Imports ComponentModel
+Imports FPX.ComponentModel
 
 Public Class LineRenderer
     Inherits Component

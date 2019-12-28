@@ -1,6 +1,6 @@
 ﻿Imports Microsoft.Xna.Framework
 Imports Microsoft.Xna.Framework.Input
-Imports ComponentModel
+Imports FPX.ComponentModel
 
 Public Class RayTester
     Inherits Component

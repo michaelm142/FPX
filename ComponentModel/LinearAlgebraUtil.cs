@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Xml;
 using Microsoft.Xna.Framework;
 
-namespace ComponentModel
+namespace FPX.ComponentModel
 {
     public static class LinearAlgebraUtil
     {
@@ -265,12 +265,12 @@ namespace ComponentModel
 
         public static void SetEulerAngles(this Quaternion q, Vector3 euler)
         {
-            q = Quaternion.CreateFromYawPitchRoll(euler.Y, euler.X, euler.Z);
+            q = Quaternion.CreateFromYawPitchRoll(MathHelper.ToRadians(euler.Y), MathHelper.ToRadians(euler.X), MathHelper.ToRadians(euler.Z));
         }
 
         public static Quaternion QuaternionFromEuler(Vector3 euler)
         {
-            return Quaternion.CreateFromYawPitchRoll(euler.Y, euler.X, euler.Z);
+            return Quaternion.CreateFromYawPitchRoll(MathHelper.ToRadians(euler.Y), MathHelper.ToRadians(euler.X), MathHelper.ToRadians(euler.Z));
         }
     }
 }

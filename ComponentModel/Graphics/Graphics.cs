@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using LodeObj;
 
-namespace ComponentModel
+namespace FPX.ComponentModel
 {
     public class Graphics : IGameComponent, IDrawable, IDisposable
     {

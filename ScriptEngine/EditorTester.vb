@@ -1,5 +1,5 @@
 ﻿Imports System.Xml
-Imports ComponentModel
+Imports FPX.ComponentModel
 
 Public Class EditorTester
     Inherits Component
@@ -24,6 +24,9 @@ Public Class EditorTester
         If Not stringNode Is Nothing Then
             StringValue = stringNode.InnerText
         End If
+    End Sub
+
+    Public Sub OnAnaylizerGUI()
     End Sub
 
 End Class

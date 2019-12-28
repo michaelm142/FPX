@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
 
-namespace ComponentModel
+namespace FPX.ComponentModel
 {
     public abstract class Collider : Component
     {

@@ -68,6 +68,7 @@ namespace FPX
         /// </summary>
         protected override void Initialize()
         {
+            AssetManager.Inilitize();
             foreach (var comp in Components.ToList().FindAll(c => c is IGameComponent).Cast<IGameComponent>())
                 comp.Initialize();
 

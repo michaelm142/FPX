@@ -53,9 +53,9 @@ namespace FPX
             get { return sceneWindow == null ? null : sceneWindow.gameView1; }
         }
 
-        private ListBox heirarchyListBox
+        private TreeView heirarchyTreeView
         {
-            get { return hierarchyWindow == null ? null : hierarchyWindow.listBox1; }
+            get { return hierarchyWindow == null ? null : hierarchyWindow.treeView1; }
         }
 
         static readonly string LayoutConfigFilename = "Layout.config";
@@ -76,7 +76,7 @@ namespace FPX
                 sceneWindow.FormClosing += DockableWindowClosing;
                 hierarchyWindow.FormClosing += DockableWindowClosing;
                 analizerWindow.FormClosing += DockableWindowClosing;
-                heirarchyListBox.SelectedIndexChanged += listBox1_SelectedIndexChanged;
+                heirarchyTreeView.AfterSelect += listBox1_SelectedIndexChanged;
                 gameView1.MouseDown += gameView1_MouseDown;
 
                 sceneViewToolStripMenuItem.Checked = true;
@@ -108,7 +108,7 @@ namespace FPX
 
         private void GameView1_SceneObjectInstanciated(object sender, EventArgs e)
         {
-            heirarchyListBox.Items.Add(sender as GameObject);
+            HierarchyWindow.instance.AddObject(sender as GameObject);
         }
 
         private int GetHeirarchyLevel(GameObject obj, int level = 0)
@@ -166,14 +166,14 @@ namespace FPX
 
         private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            var listbox = sender as ListBox;
-            Selection.Select(listbox.SelectedItem as GameObject);
+            var treeView = sender as TreeView;
+            Selection.Select(treeView.SelectedNode.Tag as GameObject);
         }
 
         private void gameView1_MouseDown(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Right)
-                heirarchyListBox.SelectedIndex = -1;
+                heirarchyTreeView.SelectedNode = null;
         }
 
         private void saveSceneToolStripMenuItem_Click(object sender, EventArgs e)

@@ -98,6 +98,7 @@
             this.label3.Size = new System.Drawing.Size(14, 13);
             this.label3.TabIndex = 2;
             this.label3.Text = "Z";
+            this.label3.MouseMove += new System.Windows.Forms.MouseEventHandler(this.ValueMouseHover);
             // 
             // label2
             // 
@@ -108,6 +109,7 @@
             this.label2.Size = new System.Drawing.Size(14, 13);
             this.label2.TabIndex = 1;
             this.label2.Text = "Y";
+            this.label2.MouseMove += new System.Windows.Forms.MouseEventHandler(this.ValueMouseHover);
             // 
             // label1
             // 
@@ -118,6 +120,7 @@
             this.label1.Size = new System.Drawing.Size(14, 13);
             this.label1.TabIndex = 0;
             this.label1.Text = "X";
+            this.label1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.ValueMouseHover);
             // 
             // VectorEditor
             // 

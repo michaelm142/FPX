@@ -10,6 +10,8 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Microsoft.Xna.Framework;
 
+using Point = System.Drawing.Point;
+
 namespace FPX.Editor
 {
     public partial class VectorEditor : UserControl
@@ -86,6 +88,8 @@ namespace FPX.Editor
 
         private bool isProperty;
 
+        private Point mousePointPrev;
+
         private string memberName;
 
         private FPX.Component component;
@@ -110,12 +114,30 @@ namespace FPX.Editor
             }
         }
 
+        private void ValueScroll(object sender, MouseEventArgs e)
+        {
+            Label l = sender as Label;
+            string valueName = l.Text;
+            int delta_x = e.Location.X - mousePointPrev.X;
+            if (valueName.IndexOf("X") != -1)
+                xValue += delta_x;
+            else if (valueName.IndexOf("Y") != -1)
+                yValue += delta_x;
+            else if (valueName.IndexOf("Z") != -1)
+                zValue += delta_x;
+        }
+
         private void ValueChanged(object sender, EventArgs e)
         {
             if (isProperty)
                 component.GetType().GetProperty(memberName).GetSetMethod().Invoke(component, new object[] { Value });
             else
                 component.GetType().GetField(memberName).SetValue(component, Value);
+        }
+
+        private void ValueMouseHover(object sender, MouseEventArgs e)
+        {
+            mousePointPrev = e.Location;
         }
 
         public static int DefaultLayoutHeight

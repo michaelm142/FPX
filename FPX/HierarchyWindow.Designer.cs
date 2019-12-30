@@ -28,24 +28,23 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.listBox1 = new System.Windows.Forms.ListBox();
+            this.treeView1 = new System.Windows.Forms.TreeView();
             this.SuspendLayout();
             // 
-            // listBox1
+            // treeView1
             // 
-            this.listBox1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.listBox1.FormattingEnabled = true;
-            this.listBox1.Location = new System.Drawing.Point(0, 0);
-            this.listBox1.Name = "listBox1";
-            this.listBox1.Size = new System.Drawing.Size(215, 200);
-            this.listBox1.TabIndex = 0;
+            this.treeView1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.treeView1.Location = new System.Drawing.Point(0, 0);
+            this.treeView1.Name = "treeView1";
+            this.treeView1.Size = new System.Drawing.Size(215, 200);
+            this.treeView1.TabIndex = 0;
             // 
             // HierarchyWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(215, 200);
-            this.Controls.Add(this.listBox1);
+            this.Controls.Add(this.treeView1);
             this.Name = "HierarchyWindow";
             this.Text = "HierarchyWindow";
             this.ResumeLayout(false);
@@ -54,6 +53,6 @@
 
         #endregion
 
-        public System.Windows.Forms.ListBox listBox1;
+        public System.Windows.Forms.TreeView treeView1;
     }
 }

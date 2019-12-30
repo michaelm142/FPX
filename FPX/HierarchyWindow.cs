@@ -13,12 +13,52 @@ namespace FPX
 {
     public partial class HierarchyWindow : DockableToolWindow
     {
+        private List<GameObject> Objects = new List<GameObject>();
+
         public static HierarchyWindow instance { get; private set; }
 
         public HierarchyWindow()
         {
             instance = this;
             InitializeComponent();
+
+            treeView1.Invalidated += TreeView1_Invalidated;
+        }
+
+        private TreeNode BuildTreeNode(GameObject obj)
+        {
+            TreeNode node = new TreeNode();
+            node.Tag = obj;
+            node.Text = obj.Name;
+
+            var childObjects = Objects.FindAll(o => o.transform.parent == obj.transform);
+            foreach (var cn in childObjects)
+            {
+                var childNode = BuildTreeNode(cn);
+                node.Nodes.Add(childNode);
+            }
+
+            return node;
+        }
+
+        private void TreeView1_Invalidated(object sender, InvalidateEventArgs e)
+        {
+            treeView1.Nodes.Clear();
+            foreach (var obj in Objects.FindAll(o => o.transform.parent == null))
+            {
+                TreeNode node = BuildTreeNode(obj);
+                treeView1.Nodes.Add(node);
+            }
+        }
+
+        public void AddObject(GameObject obj)
+        {
+            Objects.Add(obj);
+        }
+
+        public bool RemoveObject(GameObject obj)
+        {
+            return Objects.Remove(obj);
         }
     }
 }

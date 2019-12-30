@@ -340,7 +340,7 @@ namespace FPX.Editor
                 }
             }
 
-            HierarchyWindow.instance.listBox1.Update();
+            HierarchyWindow.instance.treeView1.Update();
         }
 
         public enum ValueType

@@ -93,6 +93,7 @@ namespace FPX.Editor
         }
 
         private bool isProperty;
+        private bool isLoaded;
 
         private string memberName;
         private FPX.Component component;
@@ -119,6 +120,8 @@ namespace FPX.Editor
 
         private void ValueChanged(object sender, EventArgs e)
         {
+            if (!isLoaded)
+                return;
 
             if (isProperty)
                 component.GetType().GetProperty(memberName).GetSetMethod().Invoke(component, new object[] { Value });
@@ -135,5 +138,9 @@ namespace FPX.Editor
             }
         }
 
+        private void QuaternionEditor_Load(object sender, EventArgs e)
+        {
+            isLoaded = true;
+        }
     }
 }

@@ -1,5 +1,5 @@
-#include "..\\Headers\\LightParameters.h"
-#include "..\\Headers\\Textureing.h"
+#include "Headers/LightParameters.h"
+#include "Headers/Textureing.h"
 
 struct VertexShaderInput
 {
@@ -29,7 +29,7 @@ VertexShaderOutput VertexShaderFunction(float4 position : POSITION0, float2 uv :
 
 float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 {
-	float4 diffuse = DiffuseMap.Sample(DiffuseSampler, input.uv);
+	float4 diffuse = DiffuseMap.Sample(DiffuseMapSampler, input.uv);
 	float4 finalDiffuse = diffuse * DiffuseColor;
     return finalDiffuse;
 }
@@ -40,7 +40,7 @@ technique Technique1
     {
         // TODO: set renderstates here.
 
-        VertexShader = compile vs_2_0 VertexShaderFunction();
-        PixelShader = compile ps_2_0 PixelShaderFunction();
+        VertexShader = compile vs_5_0 VertexShaderFunction();
+        PixelShader = compile ps_5_0 PixelShaderFunction();
     }
 }

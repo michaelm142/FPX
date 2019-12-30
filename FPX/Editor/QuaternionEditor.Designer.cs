@@ -130,6 +130,7 @@ namespace FPX.Editor
             this.Controls.Add(this.Title);
             this.Name = "QuaternionEditor";
             this.Size = new System.Drawing.Size(425, 68);
+            this.Load += new System.EventHandler(this.QuaternionEditor_Load);
             this.Title.ResumeLayout(false);
             this.Title.PerformLayout();
             this.ResumeLayout(false);

@@ -100,11 +100,11 @@ namespace FPX
                 renderer._debug_renderGBufferResults();
             }
 
-            GameCore.spriteBatch.Begin();
-            {
-                Scene.Active.BroadcastMessage("DrawUI", GameCore.spriteBatch);
-            }
-            GameCore.spriteBatch.End();
+            //GameCore.spriteBatch.Begin();
+            //{
+            //    Scene.Active.BroadcastMessage("DrawUI", GameCore.spriteBatch);
+            //}
+            //GameCore.spriteBatch.End();
 
             GameCore.graphicsDevice.DepthStencilState = DepthStencilState.Default;
         }

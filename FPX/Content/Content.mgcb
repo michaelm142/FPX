@@ -112,7 +112,7 @@
 #begin Shaders/ClearDepth.fx
 /importer:EffectImporter
 /processor:EffectProcessor
-/processorParam:DebugMode=Auto
+/processorParam:DebugMode=Debug
 /build:Shaders/ClearDepth.fx
 
 #begin Shaders/CubeMapRender.fx
@@ -275,4 +275,31 @@
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
 /build:Audio/blip1.wav
+
+#begin Shaders/DeferredGBuffers.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Shaders/DeferredGBuffers.fx
+
+#begin Shaders/Headers/LightParameters.h
+/copy:Shaders/Headers/LightParameters.h
+
+#begin Shaders/Headers/MaterialInfo.h
+/copy:Shaders/Headers/MaterialInfo.h
+
+#begin Shaders/Headers/Textureing.h
+/copy:Shaders/Headers/Textureing.h
+
+#begin Shaders/AmbientLight.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Shaders/AmbientLight.fx
+
+#begin Shaders/DirectionalLight.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Shaders/DirectionalLight.fx
 

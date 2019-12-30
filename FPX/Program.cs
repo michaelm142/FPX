@@ -136,8 +136,13 @@ namespace FPX
 
         public static void Editor(string sceneName)
         {
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(true);
+            try
+            {
+                Application.EnableVisualStyles();
+                Application.SetCompatibleTextRenderingDefault(true);
+            }
+            catch (Exception) { }
+
             Application.Run(new EditorWindow(sceneName));
         }
 

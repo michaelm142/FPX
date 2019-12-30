@@ -142,7 +142,7 @@
     <Compile Include="Graphics\ILightSource.cs" />
     <Compile Include="Graphics\ModelReader.cs" />
     <Compile Include="Graphics\PostProcessor.cs" />
-    <Compile Include="Graphics\Renderer.cs" />
+    <Compile Include="Graphics\DeferredRenderer.cs" />
     <Compile Include="Graphics\Screen.cs" />
     <Compile Include="Graphics\SkyboxRenderer.cs" />
     <Compile Include="IgnoreInGUIAttribute.cs" />

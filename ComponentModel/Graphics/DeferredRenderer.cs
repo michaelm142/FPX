@@ -59,6 +59,10 @@ namespace FPX
             Content = GameCore.content;
             DeviceUpdate(GameCore.graphicsDevice.Viewport.Width, GameCore.graphicsDevice.Viewport.Height);
 
+            GBufferShader = Content.Load<Effect>("Shaders\\DeferredGBuffers");
+            AmbientLightShader = Content.Load<Effect>("Shaders\\AmbientLight");
+            DirectionalLightShader = Content.Load<Effect>("Shaders\\DirectionalLight");
+
             rt_bindings = new RenderTargetBinding[4]
             {
                 diffuseMap,

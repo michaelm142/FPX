@@ -10,6 +10,10 @@ namespace FPX
 {
     public static class LinearAlgebraUtil
     {
+        public const float Rad2Deg = 180.0f / (float)Math.PI;
+        public const float Deg2Rad = (float)Math.PI / 180.0f;
+
+
         public static Vector4 ToVector4(this Vector3 v)
         {
             return new Vector4(v, 0.0f);
@@ -242,35 +246,23 @@ namespace FPX
 
         public static Vector3 GetEulerAngles(this Quaternion q)
         {
-            float yaw, pitch, roll;
-            // roll (x-axis rotation)
-            float sinr_cosp = 2.0F * (q.W * q.X + q.Y * q.Z);
-            float cosr_cosp = 1.0F - 2.0F * (q.X * q.X + q.Y * q.Y);
-            roll = (float)Math.Atan2(sinr_cosp, cosr_cosp);
+            Matrix m = Matrix.CreateFromQuaternion(q);
 
-            // pitch (y-axis rotation)
-            float sinp = 2.0f * (q.X * q.Y - q.Z * q.X);
-            if (Math.Abs(sinp) >= 1.0f)
-                pitch = (float)(Math.PI / 2.0f) * (sinp > 0.0f ? 1.0f : -1.0f);// copysign(Math.PI / 2, sinp); // use 90 degrees if out of range
-            else
-                pitch = (float)Math.Asin(sinp);
+            float pitch = (float)(Math.Acos(m.M11) * 2.0);
+            float yaw = (float)(Math.Acos(m.M12) * 2.0);
+            float roll = (float)(Math.Acos(m.M13) * 2.0);
 
-            // yaw (z-axis rotation)
-            float siny_cosp = 2.0F * (q.W * q.Z + q.X * q.Y);
-            float cosy_cosp = 1.0F - 2.0F * (q.Y * q.Y + q.Z * q.Z);
-            yaw = (float)Math.Atan2(siny_cosp, cosy_cosp);
-
-            return new Vector3(MathHelper.ToDegrees(pitch), MathHelper.ToDegrees(yaw), MathHelper.ToDegrees(roll));
+            return new Vector3(pitch * Rad2Deg, yaw * Rad2Deg, roll * Rad2Deg);
         }
 
         public static void SetEulerAngles(this Quaternion q, Vector3 euler)
         {
-            q = Quaternion.CreateFromYawPitchRoll(MathHelper.ToRadians(euler.Y), MathHelper.ToRadians(euler.X), MathHelper.ToRadians(euler.Z));
+            q = Quaternion.CreateFromYawPitchRoll(euler.Y * Deg2Rad, euler.X * Deg2Rad, euler.Z * Deg2Rad);
         }
 
         public static Quaternion QuaternionFromEuler(Vector3 euler)
         {
-            return Quaternion.CreateFromYawPitchRoll(MathHelper.ToRadians(euler.Y), MathHelper.ToRadians(euler.X), MathHelper.ToRadians(euler.Z));
+            return Quaternion.CreateFromYawPitchRoll(euler.Y * Deg2Rad, euler.X * Deg2Rad, euler.Z * Deg2Rad);
         }
     }
 }

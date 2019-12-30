@@ -1,5 +1,5 @@
-#include "..\\Headers\\LightParameters.h"
-#include "..\\Headers\\Textureing.h"
+#include "Headers/LightParameters.h"
+#include "Headers/Textureing.h"
 
 float4x4 gInvViewProj;
 
@@ -39,10 +39,10 @@ float4 CalculateWorldSpacePosition(float2 pixelPosition, float pixelDepth,
 
 float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 {
-	float4 diffuse = DiffuseMap.Sample(DiffuseSampler, input.uv);
-	float3 normal = NormalMap.Sample(NormalSampler, input.uv).xyz;
-	float4 specular = SpecularMap.Sample(SpecularSampler, input.uv);
-	float4 misc = DepthMap.Sample(DepthSampler, input.uv);
+	float4 diffuse = DiffuseMap.Sample(DiffuseMapSampler, input.uv);
+	float3 normal = NormalMap.Sample(NormalMapSampler, input.uv).xyz;
+	float4 specular = SpecularMap.Sample(SpecularMapSampler, input.uv);
+	float4 misc = DepthMap.Sample(DepthMapSampler, input.uv);
 	float depth = misc.r / misc.g;
 	float SpecularIntensity = misc.b * 10.0f;
 	float SpecularPower = misc.a * 10.0f;
@@ -69,7 +69,7 @@ technique Technique1
     {
         // TODO: set renderstates here.
 
-        VertexShader = compile vs_3_0 VertexShaderFunction();
-        PixelShader = compile ps_3_0 PixelShaderFunction();
+        VertexShader = compile vs_5_0 VertexShaderFunction();
+        PixelShader = compile ps_5_0 PixelShaderFunction();
     }
 }

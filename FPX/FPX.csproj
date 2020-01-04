@@ -71,6 +71,12 @@
       <DependentUpon>AnalizerWindow.cs</DependentUpon>
     </Compile>
     <Compile Include="AssetManager.cs" />
+    <Compile Include="AssetWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AssetWindow.Designer.cs">
+      <DependentUpon>AssetWindow.cs</DependentUpon>
+    </Compile>
     <Compile Include="Editor\EditorGUI.cs" />
     <Compile Include="Editor\EditorGUI.Fields.cs" />
     <Compile Include="Editor\EditorWindow.cs">
@@ -100,6 +106,11 @@
     </Compile>
     <Compile Include="HierarchyWindow.Designer.cs">
       <DependentUpon>HierarchyWindow.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="SceneWindow.cs">
       <SubType>Form</SubType>
@@ -212,6 +223,9 @@
     <EmbeddedResource Include="AnalizerWindow.resx">
       <DependentUpon>AnalizerWindow.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="AssetWindow.resx">
+      <DependentUpon>AssetWindow.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Editor\EditorWindow.resx">
       <DependentUpon>EditorWindow.cs</DependentUpon>
     </EmbeddedResource>
@@ -223,6 +237,10 @@
     </EmbeddedResource>
     <EmbeddedResource Include="HierarchyWindow.resx">
       <DependentUpon>HierarchyWindow.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="SceneWindow.resx">
       <DependentUpon>SceneWindow.cs</DependentUpon>

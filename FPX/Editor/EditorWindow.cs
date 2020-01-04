@@ -26,11 +26,12 @@ namespace FPX
         private SceneWindow sceneWindow;
         private HierarchyWindow hierarchyWindow;
         private AnalizerWindow analizerWindow;
+        private AssetWindow assetWindow;
         private IEnumerable<Crom.Controls.DockableToolWindow> LayoutWindows
         {
             get
             {
-                for (int i = 0; i < 3; i++)
+                for (int i = 0; i < 4; i++)
                 {
                     switch (i)
                     {
@@ -42,6 +43,9 @@ namespace FPX
                             break;
                         case 2:
                             yield return analizerWindow;
+                            break;
+                        case 3:
+                            yield return assetWindow;
                             break;
                     }
                 }
@@ -72,16 +76,14 @@ namespace FPX
                 sceneWindow = new SceneWindow();
                 hierarchyWindow = new HierarchyWindow();
                 analizerWindow = new AnalizerWindow();
+                assetWindow = new AssetWindow();
 
                 sceneWindow.FormClosing += DockableWindowClosing;
                 hierarchyWindow.FormClosing += DockableWindowClosing;
                 analizerWindow.FormClosing += DockableWindowClosing;
+                assetWindow.FormClosing += DockableWindowClosing;
                 heirarchyTreeView.AfterSelect += listBox1_SelectedIndexChanged;
                 gameView1.MouseDown += gameView1_MouseDown;
-
-                sceneViewToolStripMenuItem.Checked = true;
-                hierarchyToolStripMenuItem.Checked = true;
-                analizerToolStripMenuItem.Checked = true;
 
                 //hierarchyWindow.Show();
                 //sceneWindow.Show();
@@ -90,6 +92,7 @@ namespace FPX
                 dockContainer1.AddToolWindow(sceneWindow);
                 dockContainer1.AddToolWindow(hierarchyWindow);
                 dockContainer1.AddToolWindow(analizerWindow);
+                dockContainer1.AddToolWindow(assetWindow);
             }
 
             gameView1.SceneObjectInstanciated += GameView1_SceneObjectInstanciated;
@@ -219,6 +222,11 @@ namespace FPX
         private void EditorWindow_Load(object sender, EventArgs e)
         {
             LoadConfig(Environment.CurrentDirectory + "//" + LayoutConfigFilename);
+
+            sceneViewToolStripMenuItem.Checked = sceneWindow.Visible;
+            hierarchyToolStripMenuItem.Checked = hierarchyWindow.Visible;
+            analizerToolStripMenuItem.Checked = analizerWindow.Visible;
+            assetsToolStripMenuItem.Checked = assetWindow.Visible;
         }
 
         private void LoadConfig(string filename)
@@ -232,6 +240,8 @@ namespace FPX
             foreach (var window in LayoutWindows)
             {
                 var windowElement = configRoot.SelectSingleNode(window.Text);
+                if (windowElement == null)
+                    continue;
 
                 var sizeElement = windowElement.SelectSingleNode("Size");
                 var locationElement = windowElement.SelectSingleNode("Location");
@@ -313,6 +323,16 @@ namespace FPX
         private void EditorWindow_FormClosing(object sender, FormClosingEventArgs e)
         {
             SaveConfig(Environment.CurrentDirectory + "//" + LayoutConfigFilename);
+        }
+
+        private void assetsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (assetWindow.Visible)
+                assetWindow.Hide();
+            else
+                assetWindow.Show();
+
+            assetsToolStripMenuItem.Checked = assetWindow.Visible;
         }
     }
 }

@@ -48,6 +48,7 @@
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.RenderInterval = new System.Windows.Forms.Timer(this.components);
             this.dockContainer1 = new Crom.Controls.DockContainer();
+            this.assetsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -153,7 +154,8 @@
             this.windowsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.sceneViewToolStripMenuItem,
             this.hierarchyToolStripMenuItem,
-            this.analizerToolStripMenuItem});
+            this.analizerToolStripMenuItem,
+            this.assetsToolStripMenuItem});
             this.windowsToolStripMenuItem.Name = "windowsToolStripMenuItem";
             this.windowsToolStripMenuItem.Size = new System.Drawing.Size(68, 20);
             this.windowsToolStripMenuItem.Text = "Windows";
@@ -161,21 +163,21 @@
             // sceneViewToolStripMenuItem
             // 
             this.sceneViewToolStripMenuItem.Name = "sceneViewToolStripMenuItem";
-            this.sceneViewToolStripMenuItem.Size = new System.Drawing.Size(133, 22);
+            this.sceneViewToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.sceneViewToolStripMenuItem.Text = "Scene View";
             this.sceneViewToolStripMenuItem.Click += new System.EventHandler(this.sceneViewToolStripMenuItem_Click);
             // 
             // hierarchyToolStripMenuItem
             // 
             this.hierarchyToolStripMenuItem.Name = "hierarchyToolStripMenuItem";
-            this.hierarchyToolStripMenuItem.Size = new System.Drawing.Size(133, 22);
+            this.hierarchyToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.hierarchyToolStripMenuItem.Text = "Hierarchy";
             this.hierarchyToolStripMenuItem.Click += new System.EventHandler(this.hierarchyToolStripMenuItem_Click);
             // 
             // analizerToolStripMenuItem
             // 
             this.analizerToolStripMenuItem.Name = "analizerToolStripMenuItem";
-            this.analizerToolStripMenuItem.Size = new System.Drawing.Size(133, 22);
+            this.analizerToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.analizerToolStripMenuItem.Text = "Analizer";
             this.analizerToolStripMenuItem.Click += new System.EventHandler(this.analizerToolStripMenuItem_Click);
             // 
@@ -213,6 +215,13 @@
             this.dockContainer1.TabButtonShowSelection = false;
             this.dockContainer1.TabIndex = 4;
             this.dockContainer1.TopPanelHeight = 150;
+            // 
+            // assetsToolStripMenuItem
+            // 
+            this.assetsToolStripMenuItem.Name = "assetsToolStripMenuItem";
+            this.assetsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.assetsToolStripMenuItem.Text = "Assets";
+            this.assetsToolStripMenuItem.Click += new System.EventHandler(this.assetsToolStripMenuItem_Click);
             // 
             // EditorWindow
             // 
@@ -254,5 +263,6 @@
         private System.Windows.Forms.ToolStripMenuItem sceneViewToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem hierarchyToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem analizerToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem assetsToolStripMenuItem;
     }
 }

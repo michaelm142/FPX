@@ -51,6 +51,13 @@ namespace FPX
                             Assets.Add(file.Name, ContentType.Sound);
                             break;
                         }
+                        else
+                        {
+                            if (Assets.Keys.Contains(file.Name))
+                                break;
+                            Debug.Log("Adding asset {0} as type {1}", file.FullName, ContentType.Default);
+                            Assets.Add(file.Name, ContentType.Default);
+                        }
 
                         line = reader.ReadLine();
                     }
@@ -63,9 +70,11 @@ namespace FPX
 
         public enum ContentType
         {
-            Texture,
+            Default,
             Model,
             Sound,
+            Texture,
+            Folder,
         }
     }
 }

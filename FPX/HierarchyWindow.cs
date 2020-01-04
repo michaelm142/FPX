@@ -22,7 +22,13 @@ namespace FPX
             instance = this;
             InitializeComponent();
 
-            treeView1.Invalidated += TreeView1_Invalidated;
+            Invalidated += TreeView1_Invalidated;
+            Resize += TreeView1_Resize; ;
+        }
+
+        private void TreeView1_Resize(object sender, EventArgs e)
+        {
+            UpdateHeirarchy();
         }
 
         private TreeNode BuildTreeNode(GameObject obj)
@@ -41,14 +47,9 @@ namespace FPX
             return node;
         }
 
-        private void TreeView1_Invalidated(object sender, InvalidateEventArgs e)
+        private void TreeView1_Invalidated(object sender, EventArgs e)
         {
-            treeView1.Nodes.Clear();
-            foreach (var obj in Objects.FindAll(o => o.transform.parent == null))
-            {
-                TreeNode node = BuildTreeNode(obj);
-                treeView1.Nodes.Add(node);
-            }
+            UpdateHeirarchy();
         }
 
         public void AddObject(GameObject obj)
@@ -59,6 +60,16 @@ namespace FPX
         public bool RemoveObject(GameObject obj)
         {
             return Objects.Remove(obj);
+        }
+
+        private void UpdateHeirarchy()
+        {
+            treeView1.Nodes.Clear();
+            foreach (var obj in Objects.FindAll(o => o.transform.parent == null))
+            {
+                TreeNode node = BuildTreeNode(obj);
+                treeView1.Nodes.Add(node);
+            }
         }
     }
 }

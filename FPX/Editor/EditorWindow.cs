@@ -232,8 +232,13 @@ namespace FPX
         private void LoadConfig(string filename)
         {
             XmlDocument configDoc = new XmlDocument();
-            using (FileStream file = new FileStream(filename, FileMode.OpenOrCreate))
-                configDoc.Load(file);
+            FileInfo configFile = new FileInfo(filename);
+            if (configFile.Exists)
+            {
+                using (FileStream file = new FileStream(filename, FileMode.OpenOrCreate))
+                    configDoc.Load(file);
+            }
+            else return;
 
             var configRoot = configDoc.SelectSingleNode("Config");
 
@@ -316,8 +321,7 @@ namespace FPX
 
             }
 
-            using (FileStream file = new FileStream(filename, FileMode.OpenOrCreate | FileMode.Truncate))
-                configDoc.Save(file);
+            configDoc.Save(filename);
         }
 
         private void EditorWindow_FormClosing(object sender, FormClosingEventArgs e)

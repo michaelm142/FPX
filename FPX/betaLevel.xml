@@ -18,9 +18,6 @@
         <MoveSpeed>100</MoveSpeed>
         <RotationSpeed>15</RotationSpeed>
       </GameControlTest>
-      <PostProcessor>
-        <Layer FileName="Shaders\\Grayscale"/>
-      </PostProcessor>
     </Object>
 
     <Object Name="AmbientLight">

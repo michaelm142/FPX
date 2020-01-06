@@ -37,7 +37,7 @@ namespace FPX
                 if (!AssetManager.Assets.ContainsKey(file.Name))
                     continue;
 
-                var listItem = assetListView.Items.Add(file.Name, (int)AssetManager.Assets[file.Name]);
+                var listItem = assetListView.Items.Add(file.Name, (int)AssetManager.Assets[file.Name].contentType);
                 listItem.Tag = AssetManager.Assets[file.Name];
             }
         }

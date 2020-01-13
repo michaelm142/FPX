@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 using System.Linq;
 using System.IO;
 using Microsoft.Xna.Framework;
@@ -82,7 +83,7 @@ namespace FPX
                 AnalyzeDirectory(dir);
         }
 
-        public class ContentReference
+        public class ContentReference : ISerializable
         {
             public ContentType contentType;
 
@@ -96,6 +97,11 @@ namespace FPX
                 where T : class
             {
                 return Data as T;
+            }
+
+            public void GetObjectData(SerializationInfo info, StreamingContext context)
+            {
+                info.AddValue("Filename", filename);
             }
 
             public ContentReference(ContentType contentType, string filename, object Data)
@@ -126,8 +132,8 @@ namespace FPX
             Model,
             Sound,
             Texture,
-            SpriteFont,
             Folder,
+            SpriteFont,
         }
     }
 }

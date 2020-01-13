@@ -51,7 +51,7 @@ namespace FPX.Editor
             Values.Clear();
         }
 
-        public static void Begin(FPX.GameObject gameObject)
+        public static void Begin(GameObject gameObject)
         {
             UpdateValues();
 
@@ -182,6 +182,7 @@ namespace FPX.Editor
                     editor.Size = new Size(TargetControl.Width, editor.Size.Height);
                     editor.Anchor = AnchorStyles.Left | AnchorStyles.Right;
                     editor.VectorName = value.Label;
+                    editor.Tag = value;
 
                     y += editor.Height;
 
@@ -195,6 +196,7 @@ namespace FPX.Editor
                     editor.Size = new Size(TargetControl.Width, editor.Size.Height);
                     editor.Anchor = AnchorStyles.Left | AnchorStyles.Right;
                     editor.VectorName = value.Label;
+                    editor.Tag = value;
 
                     y += editor.Height;
 
@@ -245,6 +247,49 @@ namespace FPX.Editor
                     TargetControl.Controls.Add(label);
                     TargetControl.Controls.Add(enumComboBox);
                 }
+                else if (value.valueType == ValueType.Object)
+                {
+                    Label label = new Label();
+                    label.AutoSize = true;
+                    label.Location = new Point(0, y);
+                    label.Name = "GUI Label";
+                    label.Text = value.Label;
+
+
+                    ObjectDropField dropField = new ObjectDropField();
+                    dropField.Location = new Point(TargetControl.Width / 2, y);
+                    dropField.Name = "GUI Value Box";
+                    dropField.Size = new Size(TargetControl.Width / 2, ControlHeight);
+                    dropField.TabIndex = 1;
+                    dropField.Value = value.Data;
+                    dropField.Tag = value;
+                    y += ControlHeight;
+
+                    TargetControl.Controls.Add(label);
+                    TargetControl.Controls.Add(dropField);
+                }
+                else if (value.valueType == ValueType.Texture)
+                {
+                    Label label = new Label();
+                    label.AutoSize = true;
+                    label.Location = new Point(0, y);
+                    label.Name = "GUI Label";
+                    label.Text = value.Label;
+
+
+                    TexturePicker picker = new TexturePicker();
+                    picker.Location = new Point(TargetControl.Width / 2, y);
+                    picker.Name = "GUI Value Box";
+                    picker.Size = new Size(TargetControl.Width / 2, ControlHeight);
+                    picker.TabIndex = 1;
+                    picker.Texture = value.Data as Microsoft.Xna.Framework.Graphics.Texture2D;
+                    picker.Tag = value;
+                    picker.OnTextureChanged += Picker_OnTextureChanged;
+                    y += ControlHeight;
+
+                    TargetControl.Controls.Add(label);
+                    TargetControl.Controls.Add(picker);
+                }
                 else
                 {
                     Label label = new Label();
@@ -272,6 +317,16 @@ namespace FPX.Editor
             TargetControl.Invalidate(true);
 
             TargetControl = TargetControl.Parent;
+        }
+
+        private static void Picker_OnTextureChanged(object sender, EventArgs e)
+        {
+            TexturePicker picker = sender as TexturePicker;
+            GUIValue value = picker.Tag as GUIValue;
+
+            value.Data = picker.Texture;
+
+            UpdateValues();
         }
 
         private static void EnumComboBox_SelectedValueChanged(object sender, EventArgs e)
@@ -307,7 +362,7 @@ namespace FPX.Editor
                 {
                     foreach (Control pannelControl in c.Controls)
                     {
-                        if (pannelControl is TextBox || pannelControl is ColorPicker)
+                        if (pannelControl is TextBox || pannelControl is ColorPicker || pannelControl is VectorEditor || pannelControl is QuaternionEditor || pannelControl is TexturePicker)
                         {
                             GUIValue value = pannelControl.Tag as GUIValue;
                             var prop = componentType.GetProperties().ToList().Find(property => property.Name == value.Label);
@@ -317,26 +372,6 @@ namespace FPX.Editor
                                 componentType.InvokeMember(value.Label, BindingFlags.SetField, null, comp, new object[] { value.Data });
                         }
                     }
-                }
-                if (c is VectorEditor)
-                {
-                    var ve = c as VectorEditor;
-                    GUIValue value = c.Tag as GUIValue;
-                    var prop = componentType.GetProperties().ToList().Find(property => property.Name == value.Label);
-                    if (prop != null)
-                        prop.GetSetMethod().Invoke(comp, new object[] { value.Data });
-                    if (componentType.GetFields().ToList().Find(field => field.Name == value.Label) != null)
-                        componentType.InvokeMember(value.Label, BindingFlags.SetField, null, comp, new object[] { value.Data });
-                }
-                if (c is QuaternionEditor)
-                {
-                    var ve = c as QuaternionEditor;
-                    GUIValue value = c.Tag as GUIValue;
-                    var prop = componentType.GetProperties().ToList().Find(property => property.Name == value.Label);
-                    if (prop != null)
-                        prop.GetSetMethod().Invoke(comp, new object[] { value.Data });
-                    if (componentType.GetFields().ToList().Find(field => field.Name == value.Label) != null)
-                        componentType.InvokeMember(value.Label, BindingFlags.SetField, null, comp, new object[] { value.Data });
                 }
             }
 
@@ -352,6 +387,8 @@ namespace FPX.Editor
             Quaternion,
             Color,
             Enum,
+            Object,
+            Texture,
         }
 
         private class ValueChangedEventArgs : EventArgs

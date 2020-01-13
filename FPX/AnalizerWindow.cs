@@ -69,6 +69,10 @@ namespace FPX
                             EditorGUI.ColorField(member.Name, (Microsoft.Xna.Framework.Color)componentType.InvokeMember(member.Name, BindingFlags.GetField, null, c, new object[] { }));
                         if (fieldType == typeof(Enum))
                             EditorGUI.EnumField(member.Name, (Enum)componentType.InvokeMember(member.Name, BindingFlags.GetField, null, c, new object[] { }));
+                        if (fieldType == typeof(Microsoft.Xna.Framework.Graphics.Model) || fieldType == typeof(Microsoft.Xna.Framework.Audio.SoundEffect))
+                            EditorGUI.ObjectField(member.Name, componentType.InvokeMember(member.Name, BindingFlags.GetField, null, c, new object[] { }));
+                        if (fieldType == typeof(Microsoft.Xna.Framework.Graphics.Texture2D))
+                            EditorGUI.TextureField(member.Name, (Microsoft.Xna.Framework.Graphics.Texture2D)componentType.InvokeMember(member.Name, BindingFlags.GetField, null, c, new object[] { }));
                     }
                     foreach (var member in componentType.GetProperties())
                     {
@@ -92,6 +96,10 @@ namespace FPX
                             EditorGUI.ColorField(member.Name, (Microsoft.Xna.Framework.Color)componentType.InvokeMember(member.Name, BindingFlags.GetProperty, null, c, new object[] { }));
                         if (fieldType == typeof(Enum))
                             EditorGUI.EnumField(member.Name, (Enum)componentType.InvokeMember(member.Name, BindingFlags.GetProperty, null, c, new object[] { }));
+                        if (fieldType == typeof(Microsoft.Xna.Framework.Graphics.Model) || fieldType == typeof(Microsoft.Xna.Framework.Audio.SoundEffect) || fieldType == typeof(Microsoft.Xna.Framework.Graphics.Texture2D))
+                            EditorGUI.ObjectField(member.Name, componentType.InvokeMember(member.Name, BindingFlags.GetField, null, c, new object[] { }));
+                        if (fieldType == typeof(Microsoft.Xna.Framework.Graphics.Texture2D))
+                            EditorGUI.TextureField(member.Name, (Microsoft.Xna.Framework.Graphics.Texture2D)componentType.InvokeMember(member.Name, BindingFlags.GetField, null, c, new object[] { }));
                     }
                 }
                 EditorGUI.EndControl();

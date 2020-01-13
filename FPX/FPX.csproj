@@ -85,6 +85,12 @@
     <Compile Include="Editor\EditorWindow.Designer.cs">
       <DependentUpon>EditorWindow.cs</DependentUpon>
     </Compile>
+    <Compile Include="Editor\ObjectDropField.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Editor\ObjectDropField.Designer.cs">
+      <DependentUpon>ObjectDropField.cs</DependentUpon>
+    </Compile>
     <Compile Include="Editor\QuaternionEditor.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -92,6 +98,12 @@
       <DependentUpon>QuaternionEditor.cs</DependentUpon>
     </Compile>
     <Compile Include="Editor\Selection.cs" />
+    <Compile Include="Editor\TexturePicker.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Editor\TexturePicker.Designer.cs">
+      <DependentUpon>TexturePicker.cs</DependentUpon>
+    </Compile>
     <Compile Include="Editor\VectorEditor.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -229,8 +241,14 @@
     <EmbeddedResource Include="Editor\EditorWindow.resx">
       <DependentUpon>EditorWindow.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Editor\ObjectDropField.resx">
+      <DependentUpon>ObjectDropField.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Editor\QuaternionEditor.resx">
       <DependentUpon>QuaternionEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Editor\TexturePicker.resx">
+      <DependentUpon>TexturePicker.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Editor\VectorEditor.resx">
       <DependentUpon>VectorEditor.cs</DependentUpon>

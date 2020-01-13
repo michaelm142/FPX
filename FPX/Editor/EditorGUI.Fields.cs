@@ -163,5 +163,39 @@ namespace FPX.Editor
 
             return value;
         }
+
+        public static object ObjectField(string label, object value)
+        {
+            var val = Values.Find(v => v.Label == label);
+            if (val != null)
+            {
+                object v = (object)val.Data;
+                val.Data = value;
+
+                return v;
+            }
+
+            val = new GUIValue(ValueType.Object, value, label);
+            Values.Add(val);
+
+            return value;
+        }
+
+        public static Microsoft.Xna.Framework.Graphics.Texture2D TextureField(string label, Microsoft.Xna.Framework.Graphics.Texture2D value)
+        {
+            var val = Values.Find(v => v.Label == label);
+            if (val != null)
+            {
+                Microsoft.Xna.Framework.Graphics.Texture2D v = (Microsoft.Xna.Framework.Graphics.Texture2D)val.Data;
+                val.Data = value;
+
+                return v;
+            }
+
+            val = new GUIValue(ValueType.Texture, value, label);
+            Values.Add(val);
+
+            return value;
+        }
     }
 }

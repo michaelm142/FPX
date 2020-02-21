@@ -14,8 +14,10 @@ namespace FPX
             for (int i = 0; i < colliders.Count - 1; i++)
             {
                 Collider a = colliders[i];
-                for (int ii = i + 1; ii < colliders.Count; ii++)
+                for (int ii = 0; ii < colliders.Count; ii++)
                 {
+                    if (i == ii) continue;
+
                     Collider b = colliders[ii];
                     if (Collide(a, b))
                         collisions.Add(new Collision(a, b));
@@ -70,7 +72,7 @@ namespace FPX
             return false;
         }
 
-        #region Collision 
+        #region Collision Detection
 
         private bool SphereToSphere(SphereCollider a, SphereCollider b)
         {
@@ -201,6 +203,58 @@ namespace FPX
             }
         }
 
+
+        #endregion
+
+        #region Collision Resolution
+
+        private void ResolveCollision(Collision collision)
+        {
+            var a = collision.colliders.ToList()[0];
+            var b = collision.colliders.ToList()[1];
+
+            if (a is SphereCollider && b is SphereCollider)
+                ResoveSphereToSphere(a as SphereCollider, b as SphereCollider);
+        }
+
+        private void ResoveSphereToSphere(SphereCollider a, SphereCollider b)
+        {
+            float penetratingRadius = (a.radius + b.radius) - Vector3.Distance(a.position, b.position);
+            Vector3 L = b.position - a.position;
+            L.Normalize();
+
+            a.position -= L * penetratingRadius;
+            b.position += L * penetratingRadius;
+
+            Vector3 nPrime = Vector3.Cross(Vector3.Up, L);
+            Vector3 ContactNormal = Vector3.Cross(L, nPrime);
+            Debug.Log("Contact Normal: {0}", ContactNormal);
+
+            var bodyA = a.GetComponent<Rigidbody>();
+            var bodyB = b.GetComponent<Rigidbody>();
+
+            Debug.Log("body A start velocity: {0}", bodyA.velocity);
+            Debug.Log("body B start velocity: {0}", bodyB.velocity);
+            Debug.Log("body A start acceleration: {0}", bodyA.acceleration);
+            Debug.Log("body B start acceleration: {0}", bodyB.acceleration);
+
+            var velocityA = Vector3.Reflect(bodyB.velocity, ContactNormal);
+            var velocityB = Vector3.Reflect(bodyA.velocity, ContactNormal);
+
+            bodyA.velocity = velocityA;
+            bodyB.velocity = velocityB;
+
+            var accelerationA = Vector3.Reflect(bodyB.acceleration, ContactNormal);
+            var accelerationB = Vector3.Reflect(bodyA.acceleration, ContactNormal);
+
+            bodyA.acceleration = accelerationA;
+            bodyB.acceleration = accelerationB;
+
+            Debug.Log("body A end velocity: {0}", bodyA.velocity);
+            Debug.Log("body B end velocity: {0}", bodyB.velocity);
+            Debug.Log("body A end acceleration: {0}", bodyA.acceleration);
+            Debug.Log("body B end acceleration: {0}", bodyB.acceleration);
+        }
 
         #endregion
     }

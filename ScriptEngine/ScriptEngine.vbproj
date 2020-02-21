@@ -140,6 +140,7 @@
     </Compile>
     <Compile Include="RayTester.vb" />
     <Compile Include="RigidbodyController.vb" />
+    <Compile Include="StartringForce.vb" />
     <Compile Include="TestSpriteController.vb" />
   </ItemGroup>
   <ItemGroup>

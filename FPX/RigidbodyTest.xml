@@ -12,31 +12,26 @@
       </Camera>
     </Object>
 
-    <Prefab Filename="Prefabs\\Box.xml" Name="Rigidbody Test 1">
-      <Rigidbody>
-        <AngularDrag>100.0</AngularDrag>
-        <Drag>0.01</Drag>
-      </Rigidbody>
-      <RigidbodyController/>
-    </Prefab>
-
-    <Prefab Filename="Prefabs\\Box.xml" Name="Rigidbody Test 1">
+    <Prefab Filename="Prefabs\\Sphere.xml" Name="Rigidbody Test 1">
       <Transform>
-        <Position X="-3.0" Y="0.0" Z="0.0"/>
+        <Position X="-3.0" Y="-0.5" Z="0.0"/>
       </Transform>
       <Rigidbody>
         <AngularDrag>100.0</AngularDrag>
-        <Drag>0.01</Drag>
       </Rigidbody>
+      <StartingForce>
+        <StartingForce X="10" Y="0.0" Z="0.0"/>
+      </StartingForce>
     </Prefab>
 
-    <Prefab Filename="Prefabs\\Box.xml" Name="Kinematic Test">
+    <Prefab Filename="Prefabs\\Sphere.xml" Name="Kinematic Test">
       <Transform>
         <Position X="3.0" Y="0.0" Z="0.0"/>
       </Transform>
-      <Rigidbody>
-        <IsKinematic>true</IsKinematic>
-      </Rigidbody>
+      <Rigidbody/>
+      <StartingForce>
+        <StartingForce X="-10" Y="0.0" Z="0.0"/>
+      </StartingForce>
     </Prefab>
     
   </Objects>

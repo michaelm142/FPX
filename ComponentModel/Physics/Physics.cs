@@ -64,6 +64,7 @@ namespace FPX
             DetectCollisions(ref collisions);
 
             // resolve collisions and update physics state
+            collisions.ForEach(c => ResolveCollision(c));
 
             // Update previous positions
             foreach (var collider in colliders)
@@ -71,7 +72,7 @@ namespace FPX
                 if (previousPositions.ContainsKey(collider))
                     previousPositions[collider] = collider.Location;
                 else
-                    previousPositions.Add(collider, collider.position);
+                    previousPositions.Add(collider, collider.Location);
             }
 
             // move objects
@@ -85,8 +86,8 @@ namespace FPX
             if (rBody.isKinematic || (rBody.acceleration.Length() == 0.0f && rBody.velocity.Length() == 0.0f))
                 return;
 
-            rBody.acceleration -= rBody.velocity * rBody.drag * (float)gameTime.ElapsedGameTime.TotalSeconds;
-            rBody.torque -= rBody.angularVelocity * rBody.angularDrag * (float)gameTime.ElapsedGameTime.TotalSeconds;
+            rBody.acceleration -= rBody.acceleration * rBody.drag * (float)gameTime.ElapsedGameTime.TotalSeconds;
+            rBody.torque -= rBody.torque * rBody.angularDrag * (float)gameTime.ElapsedGameTime.TotalSeconds;
 
             rBody.velocity += rBody.acceleration * (float)gameTime.ElapsedGameTime.TotalSeconds;
             rBody.transform.position += rBody.velocity * (float)gameTime.ElapsedGameTime.TotalSeconds;

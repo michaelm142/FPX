@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Microsoft.Xna.Framework;
 
 namespace FPX
 {
@@ -23,6 +24,10 @@ namespace FPX
 
         Collider a;
         Collider b;
+
+        public Vector3 ContactNormal;
+
+        public float PenetrationDistance;
 
         public Collision(Collider a, Collider b)
         {

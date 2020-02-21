@@ -10,7 +10,7 @@ namespace FPX
         public Vector3 torque = Vector3.Zero;
         public Vector3 angularVelocity = Vector3.Zero;
 
-        public float mass = 0.0F;
+        public float mass = 1.0F;
         public float drag = 0.0F;
         public float angularDrag = 0.0f;
 
@@ -42,21 +42,17 @@ namespace FPX
 
         public void OnCollisionEnter(Collider other)
         {
-            Rigidbody otherBody = other.GetComponent<Rigidbody>();
-            if (otherBody == null)
-                return;
 
-            float e = 1.0f;
-            Vector3 p1 = collider.ClosestPoint(other.position);
-            Vector3 p2 = other.ClosestPoint(position);
-            Vector3 r1 = p1 - position;
-            Vector3 r2 = p2 - other.position;
+        }
 
-            Vector3 Vr = Vector3.Zero;
-            Vector3 normal = Vector3.Zero;
-            float mass1 = mass;
-            float mass2 = otherBody.mass;
+        public void AddForce(Vector3 force)
+        {
+            acceleration += force / mass;
+        }
 
+        public void AddTorque(Vector3 torque)
+        {
+            torque += torque / mass;
         }
 
         public void Reset()

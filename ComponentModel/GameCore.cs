@@ -74,6 +74,7 @@ namespace FPX
             level.sceneName = sceneName;
 
             gameInstance.Components.Add(level);
+            gameInstance.Components.Add(new Time());
             gameInstance.Components.Add(new Physics());
             gameInstance.Components.Add(new Graphics());
 

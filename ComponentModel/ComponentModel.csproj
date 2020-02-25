@@ -153,6 +153,7 @@
     <Compile Include="Debug.cs" />
     <Compile Include="GameObject.cs" />
     <Compile Include="GameCore.cs" />
+    <Compile Include="Physics\Time.cs" />
     <Compile Include="Prefab.cs" />
     <Compile Include="Graphics\QuadRenderer.cs" />
     <Compile Include="Graphics\Graphics.cs" />

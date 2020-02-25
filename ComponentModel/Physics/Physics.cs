@@ -86,13 +86,17 @@ namespace FPX
             if (rBody.isKinematic || (rBody.acceleration.Length() == 0.0f && rBody.velocity.Length() == 0.0f))
                 return;
 
+
             rBody.acceleration -= rBody.acceleration * rBody.drag * (float)gameTime.ElapsedGameTime.TotalSeconds;
             rBody.torque -= rBody.torque * rBody.angularDrag * (float)gameTime.ElapsedGameTime.TotalSeconds;
 
             rBody.velocity += rBody.acceleration * (float)gameTime.ElapsedGameTime.TotalSeconds;
+            rBody.velocity -= rBody.velocity * rBody.drag * Time.deltaTime;
             rBody.transform.position += rBody.velocity * (float)gameTime.ElapsedGameTime.TotalSeconds;
             rBody.angularVelocity += rBody.torque * (float)gameTime.ElapsedGameTime.TotalSeconds;
-            rBody.transform.rotation *= Quaternion.CreateFromYawPitchRoll(rBody.angularVelocity.Y, rBody.angularVelocity.X, rBody.angularVelocity.Z);
+            rBody.transform.rotation *= Quaternion.CreateFromYawPitchRoll(rBody.angularVelocity.Y * (float)gameTime.ElapsedGameTime.TotalSeconds, 
+                rBody.angularVelocity.X * (float)gameTime.ElapsedGameTime.TotalSeconds, 
+                rBody.angularVelocity.Z * (float)gameTime.ElapsedGameTime.TotalSeconds);
 
             if (LinearAlgebraUtil.isEpsilon(rBody.acceleration))
                 rBody.acceleration = Vector3.Zero;

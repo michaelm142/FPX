@@ -217,6 +217,16 @@ namespace FPX
                 ResoveSphereToSphere(a as SphereCollider, b as SphereCollider);
         }
 
+        private float AngleBetweenVectors(Vector3 u, Vector3 v)
+        {
+            double d = (double)u.Length();
+            float value = MathHelper.ToDegrees((float)Math.Acos((double)(Vector3.Dot(u, v)) / (double)(u.Length() * v.Length())));
+            if (LinearAlgebraUtil.isEpsilon(value))
+                return 0.0f;
+
+            return value;
+        }
+
         private void ResoveSphereToSphere(SphereCollider a, SphereCollider b)
         {
             float penetratingRadius = (a.radius + b.radius) - Vector3.Distance(a.position, b.position);
@@ -226,17 +236,14 @@ namespace FPX
             a.position -= L * penetratingRadius;
             b.position += L * penetratingRadius;
 
+            Vector3 Ra = L * a.radius;
+            Vector3 Rb = L * b.radius;
+
             Vector3 nPrime = Vector3.Cross(Vector3.Up, L);
             Vector3 ContactNormal = Vector3.Cross(L, nPrime);
-            Debug.Log("Contact Normal: {0}", ContactNormal);
 
             var bodyA = a.GetComponent<Rigidbody>();
             var bodyB = b.GetComponent<Rigidbody>();
-
-            Debug.Log("body A start velocity: {0}", bodyA.velocity);
-            Debug.Log("body B start velocity: {0}", bodyB.velocity);
-            Debug.Log("body A start acceleration: {0}", bodyA.acceleration);
-            Debug.Log("body B start acceleration: {0}", bodyB.acceleration);
 
             var velocityA = Vector3.Reflect(bodyB.velocity, ContactNormal);
             var velocityB = Vector3.Reflect(bodyA.velocity, ContactNormal);
@@ -250,10 +257,7 @@ namespace FPX
             bodyA.acceleration = accelerationA;
             bodyB.acceleration = accelerationB;
 
-            Debug.Log("body A end velocity: {0}", bodyA.velocity);
-            Debug.Log("body B end velocity: {0}", bodyB.velocity);
-            Debug.Log("body A end acceleration: {0}", bodyA.acceleration);
-            Debug.Log("body B end acceleration: {0}", bodyB.acceleration);
+
         }
 
         #endregion

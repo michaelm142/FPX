@@ -21,7 +21,7 @@ namespace FPX
 
         public static bool isEpsilon(float f)
         {
-            if (Math.Abs(f) < 0.01f)
+            if (Math.Abs(f) < 0.01f || float.IsNaN(f) || float.IsInfinity(f))
                 return true;
 
             return false;
@@ -136,6 +136,13 @@ namespace FPX
             {
                 return *((Vector3*)&v);
             }
+        }
+
+        public static Vector3 Normalized(this Vector3 v)
+        {
+            Vector3 _v = v;
+            _v.Normalize();
+            return _v;
         }
 
         public static Vector3 Vector3FromXml(XmlElement element)

@@ -42,6 +42,20 @@ namespace FPX
                 return *((Vector4*)(&m) + index);
             }
         }
+        public static void SetRow(this Matrix m, int index, Vector4 row)
+        {
+            unsafe
+            {
+                *((Vector4*)(&m) + index) = row;
+            }
+        }
+        public static void SetRow(this Matrix m, int index, Vector3 row)
+        {
+            unsafe
+            {
+                *((Vector4*)(&m) + index) = row.ToVector4();
+            }
+        }
         public static Matrix SetMatrixRow(Matrix m, int index, Vector4 value)
         {
             unsafe

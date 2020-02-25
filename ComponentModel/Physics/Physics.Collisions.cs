@@ -257,7 +257,41 @@ namespace FPX
             bodyA.acceleration = accelerationA;
             bodyB.acceleration = accelerationB;
 
+            Matrix contactTensorA = Matrix.Identity;
+            Matrix velocityTensorA = Matrix.Identity;
 
+            contactTensorA.Forward = Ra;
+            contactTensorA.Up = ContactNormal;
+            contactTensorA.Right = Vector3.Cross(contactTensorA.Up, contactTensorA.Forward).Normalized();
+
+            velocityTensorA.Forward = bodyA.velocity;
+            velocityTensorA.Right = Vector3.Cross(Vector3.Up, bodyA.velocity).Normalized();
+            velocityTensorA.Up = Vector3.Cross(velocityTensorA.Forward, velocityTensorA.Right).Normalized();
+
+            float yawA = Vector3.Dot(contactTensorA.Right, velocityTensorA.Forward);
+            float pitchA = Vector3.Dot(contactTensorA.Forward, velocityTensorA.Up);
+            float rollA = Vector3.Dot(contactTensorA.Up, velocityTensorA.Right);
+
+            bodyA.angularVelocity += new Vector3(pitchA, yawA, rollA);
+            Debug.Log("Yaw: {0} Pitch: {1} Roll: {2}", yawA, pitchA, rollA);
+
+            Matrix contactTensorB = Matrix.Identity;
+            Matrix velocityTensorB = Matrix.Identity;
+
+            contactTensorB.Forward = Rb;
+            contactTensorB.Up = ContactNormal;
+            contactTensorB.Right = Vector3.Cross(contactTensorB.Up, contactTensorB.Forward).Normalized();
+
+            velocityTensorB.Forward = bodyB.velocity;
+            velocityTensorB.Right = Vector3.Cross(Vector3.Up, bodyB.velocity).Normalized();
+            velocityTensorB.Up = Vector3.Cross(velocityTensorB.Forward, velocityTensorB.Right).Normalized();
+
+            float yawB = Vector3.Dot(   velocityTensorB.Right,      contactTensorB.Forward);
+            float pitchB = Vector3.Dot( velocityTensorB.Forward,    contactTensorB.Up);
+            float rollB = Vector3.Dot(  velocityTensorB.Up,         contactTensorB.Right);
+
+            bodyB.angularVelocity += new Vector3(pitchB, yawB, rollB);
+            Debug.Log("Yaw: {0} Pitch: {1} Roll: {2}", yawB, pitchB, rollB);
         }
 
         #endregion

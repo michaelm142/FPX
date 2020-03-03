@@ -3,4 +3,5 @@
   <ScreenWidth>1080</ScreenWidth>
   <ScreenHeight>720</ScreenHeight>
   <ControllerInput>One</ControllerInput>
+  <TimeScale>1.0</TimeScale>
 </Settings>

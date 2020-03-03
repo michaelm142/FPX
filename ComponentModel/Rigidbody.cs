@@ -21,8 +21,8 @@ namespace FPX
             get { return GetComponent<Collider>(); }
         }
 
-        //public void Update(GameTime gameTime)
-        //{
+        public void Update(GameTime gameTime)
+        {
         //    if (isKinematic || (acceleration.Length() == 0.0f && velocity.Length() == 0.0f))
         //        return;
 
@@ -38,7 +38,7 @@ namespace FPX
         //        acceleration = Vector3.Zero;
         //    if (LinearAlgebraUtil.isEpsilon(velocity))
         //        velocity = Vector3.Zero;
-        //}
+       }
 
         public void OnCollisionEnter(Collider other)
         {

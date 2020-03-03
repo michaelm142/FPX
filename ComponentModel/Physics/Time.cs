@@ -20,7 +20,10 @@ namespace FPX
 
         public static float deltaTime
         {
-            get { return (float)Instance.gameTime.ElapsedGameTime.TotalSeconds; }
+            get {
+                return ((float)Instance.gameTime.ElapsedGameTime.TotalSeconds *
+                  Settings.GetSetting<float>("TimeScale"));
+            }
         }
 
         public void Initialize()
@@ -35,6 +38,7 @@ namespace FPX
         public void Update(GameTime gameTime)
         {
             this.gameTime = gameTime;
+            Debug.Log(deltaTime);
         }
     }
 }

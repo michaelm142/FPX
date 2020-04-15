@@ -25,8 +25,4 @@ Public Class ColliderTester
         GetComponent(Of Material)().DiffuseColor = startColor
         Console.WriteLine("Collision exit")
     End Sub
-
-    Public Sub LoadXml(node As XmlElement)
-        Dim m = Matrix.Identity
-    End Sub
 End Class

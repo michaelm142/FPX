@@ -29,7 +29,7 @@ namespace FPX
             return true;
         }
 
-        public void LoadXml(XmlElement node)
+        public override void LoadXml(XmlElement node)
         {
             var sizeNode = node.SelectSingleNode("Size") as XmlElement;
             var centerNode = node.SelectSingleNode("Center") as XmlElement;

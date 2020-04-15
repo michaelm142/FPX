@@ -11,6 +11,11 @@ namespace FPX
     [Editor(typeof(TransformEditor))]
     public class Transform : Component
     {
+        public new Transform transform
+        {
+            get { return this; }
+        }
+
         [IgnoreInGUI]
         public new Vector3 position
         {
@@ -93,7 +98,7 @@ namespace FPX
 
         private string parentName;
 
-        public void LoadXml(XmlElement node)
+        public override void LoadXml(XmlElement node)
         {
             parentName = node.Attributes["Parent"] == null ? null : node.Attributes["Parent"].Value;
 

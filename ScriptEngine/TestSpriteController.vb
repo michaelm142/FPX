@@ -28,7 +28,7 @@ Public Class TestSpriteController
         transform.localPosition += New Vector3(horizontal, vertical, 0.0F) * MoveSpeed * gameTime.TotalGameTime.Seconds
     End Sub
 
-    Public Sub LoadXml(node As XmlElement)
+    Public Overrides Sub LoadXml(node As XmlElement)
         Dim speedNode = node.SelectSingleNode("MoveSpeed")
         If Not speedNode Is Nothing Then
             MoveSpeed = Single.Parse(speedNode.InnerText)

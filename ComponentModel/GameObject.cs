@@ -182,10 +182,11 @@ namespace FPX
                 Component c = Activator.CreateInstance(createType) as Component;
                 if (c == null)
                 {
-                    Debug.LogError("Could not load game component {0} because it does not exist", createType);
+                    Debug.LogError("Could not find type {0} in assembly", createType);
                     continue;
                 }
-                c.SendMessage("LoadXml", componentNode);
+                c.gameObject = obj;
+                c.LoadXml(componentNode);
                 obj.AddComponent(c);
             }
 

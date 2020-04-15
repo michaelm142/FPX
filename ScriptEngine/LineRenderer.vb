@@ -36,7 +36,7 @@ Public Class LineRenderer
         GameCore.graphicsDevice.DrawUserPrimitives(Microsoft.Xna.Framework.Graphics.PrimitiveType.LineList, vertecies.ToArray(), 0, vertecies.Count / 2)
     End Sub
 
-    Public Sub LoadXml(element As XmlElement)
+    Public Overrides Sub LoadXml(element As XmlElement)
         Dim positionsNode = element.SelectSingleNode("Positions")
         Dim useWorldSpaceNode = element.SelectSingleNode("UseWorldSpace")
 

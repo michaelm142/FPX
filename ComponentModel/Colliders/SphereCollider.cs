@@ -12,7 +12,7 @@ namespace FPX
 
         public float radius { get; set; }
 
-        public void LoadXml(XmlElement node)
+        public override void LoadXml(XmlElement node)
         {
 
             radius = Single.Parse(node.SelectSingleNode("Radius").InnerText);

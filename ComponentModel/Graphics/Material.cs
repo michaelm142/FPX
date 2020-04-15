@@ -18,7 +18,7 @@ namespace FPX
         public Texture2D NormalMap;
         public Texture2D SpecularMap;
 
-        public void LoadXml(XmlElement node)
+        public override void LoadXml(XmlElement node)
         {
             var ambientNode = node.SelectSingleNode("AmbientColor") as XmlElement;
             var specularNode = node.SelectSingleNode("SpecularColor") as XmlElement;

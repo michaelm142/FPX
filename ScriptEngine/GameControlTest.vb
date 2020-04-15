@@ -50,7 +50,7 @@ Public Class GameControlTest
 
     End Sub
 
-    Public Sub LoadXml(ByVal node As XmlElement)
+    Public Overrides Sub LoadXml(ByVal node As XmlElement)
         Dim moveSpeedNode = node.SelectSingleNode("MoveSpeed")
         Dim rotationSpeedNode = node.SelectSingleNode("RotationSpeed")
 

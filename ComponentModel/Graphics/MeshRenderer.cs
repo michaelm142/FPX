@@ -67,7 +67,7 @@ namespace FPX
             }
         }
 
-        public void LoadXml(XmlElement node)
+        public override void LoadXml(XmlElement node)
         {
             VertexDeclaration[] decl = new VertexDeclaration[]
             {

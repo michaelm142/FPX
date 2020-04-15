@@ -14,7 +14,7 @@ namespace FPX
             soundEffect.Play();
         }
 
-        public void LoadXml(XmlElement node)
+        public override void LoadXml(XmlElement node)
         {
             XmlElement filenameNode = node.SelectSingleNode("Filename") as XmlElement;
 

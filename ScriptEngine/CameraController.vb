@@ -59,7 +59,7 @@ Public Class CameraController
         spriteBatch.DrawString(GameCore.fonts("SegoeUI"), String.Format("Camera Rotation:{0}", transform.rotation.GetEulerAngles()), Vector2.UnitY * 20.0F, Color.Black)
     End Sub
 
-    Public Sub LoadXml(node As XmlElement)
+    Public Overrides Sub LoadXml(node As XmlElement)
         Dim moveSpeedNode = node.SelectSingleNode("MoveSpeed")
         Dim rotationSpeedNode = node.SelectSingleNode("RotationSpeed")
 

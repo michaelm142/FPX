@@ -8,7 +8,7 @@ Public Class EditorTester
     Public IntValue As Integer
     Public StringValue As String
 
-    Public Sub LoadXml(node As XmlElement)
+    Public Overrides Sub LoadXml(node As XmlElement)
         Dim floatNode = node.SelectSingleNode("FloatValue")
         Dim intNode = node.SelectSingleNode("IntValue")
         Dim stringNode = node.SelectSingleNode("StringValue")

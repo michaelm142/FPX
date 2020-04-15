@@ -22,7 +22,7 @@ Public Class ClosestPointShower
         sphere.position = GetComponent(Of Collider).ClosestPoint(target.GetComponent(Of Collider).Location)
     End Sub
 
-    Public Sub LoadXml(ByVal node As Xml.XmlElement)
+    Public Overrides Sub LoadXml(ByVal node As Xml.XmlElement)
         targetName = node.Attributes("Target").Value
     End Sub
 End Class

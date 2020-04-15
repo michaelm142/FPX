@@ -270,12 +270,12 @@ namespace FPX
                 {
                     Component comp = obj.GetComponents<Component>().Find(c => c.GetType().ToString().IndexOf(element.Name) != -1);
                     if (comp != null)
-                        comp.SendMessage("LoadXml", element);
+                        comp.LoadXml(element);
                     else
                     {
                         var createType = Utill.FindTypeFromAssemblies(element.Name);
                         comp = Activator.CreateInstance(createType) as Component;
-                        comp.SendMessage("LoadXml", element);
+                        comp.LoadXml(element);
                         obj.AddComponent(comp);
                     }
                 }

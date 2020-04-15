@@ -229,6 +229,33 @@ namespace FPX
             return element;
         }
 
+        public static Color ColorFromXml(XmlElement element)
+        {
+            XmlAttribute rAttr = element.Attributes["R"];
+            XmlAttribute gAttr = element.Attributes["G"];
+            XmlAttribute bAttr = element.Attributes["B"];
+            XmlAttribute aAttr = element.Attributes["A"];
+
+            Color outval = Color.Transparent;
+
+            float r = 0.0f, g = 0.0f, b = 0.0f, a = 0.0f;
+            if (rAttr != null)
+                r = float.Parse(rAttr.InnerText);
+            if (gAttr != null)
+                g = float.Parse(gAttr.InnerText);
+            if (bAttr != null)
+                b = float.Parse(bAttr.InnerText);
+            if (aAttr != null)
+                a = float.Parse(aAttr.InnerText);
+
+            outval.R = (byte)(r * 255.0f);
+            outval.G = (byte)(g * 255.0f);
+            outval.B = (byte)(b * 255.0f);
+            outval.A = (byte)(a * 255.0f);
+
+            return outval;
+        }
+
         public static Quaternion EulerFromXml(System.Xml.XmlElement element)
         {
             Vector3 euler = Vector3FromXml(element);

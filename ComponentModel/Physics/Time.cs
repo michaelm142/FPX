@@ -18,6 +18,11 @@ namespace FPX
 
         private static Time Instance;
 
+        public static TimeSpan ElapsedTime
+        {
+            get { return Instance.gameTime.ElapsedGameTime; }
+        }
+
         public static float deltaTime
         {
             get {
@@ -38,7 +43,6 @@ namespace FPX
         public void Update(GameTime gameTime)
         {
             this.gameTime = gameTime;
-            Debug.Log(deltaTime);
         }
     }
 }

@@ -295,5 +295,15 @@ namespace FPX
         {
             return Quaternion.CreateFromYawPitchRoll(euler.Y * Deg2Rad, euler.X * Deg2Rad, euler.Z * Deg2Rad);
         }
+
+        public static Quaternion ComponentMultiply(Quaternion q, float f)
+        {
+            q.X *= f;
+            q.Y *= f;
+            q.Z *= f;
+            q.W *= f;
+
+            return q;
+        }
     }
 }

@@ -26,8 +26,8 @@ Public Class RigidbodyController
             GetComponent(Of Rigidbody).SendMessage("Reset")
         End If
 
-        GetComponent(Of Rigidbody).acceleration = Vector3.Right * leftThumbstick.X + Vector3.Up * vertical + Vector3.Forward * leftThumbstick.Y
-        GetComponent(Of Rigidbody).torque = Vector3.Right * rightThumbstick.Y + Vector3.Up * rightThumbstick.X
+        GetComponent(Of Rigidbody).LinearMomentum = Vector3.Right * leftThumbstick.X + Vector3.Up * vertical + Vector3.Forward * leftThumbstick.Y
+        GetComponent(Of Rigidbody).AngularMomentum = Vector3.Right * rightThumbstick.Y + Vector3.Up * rightThumbstick.X
     End Sub
 
     Public Sub DrawUI(spriteBatch As SpriteBatch)

@@ -83,26 +83,102 @@ namespace FPX
 
         private void UpdateRigidbody(Rigidbody rBody)
         {
-            if (rBody.isKinematic || (rBody.acceleration.Length() == 0.0f && rBody.velocity.Length() == 0.0f))
-                return;
+            float t = (float)Time.ElapsedTime.TotalSeconds;
+            float dt = Time.deltaTime;
+            float halfDT = 0.5f * dt;
+            float sixthDT = dt / 6.0f;
+            float TpHalfDT = t + halfDT;
+            float TpDT = t + dt;
+            float mInvMass = 1.0f / rBody.mass;
 
+            Vector3 newPosition, newLinearMomentum, newAngularMomentum,
+                newLinearVelocity, newAngularVelocity;
+            Quaternion newQuatOrient;
+            Matrix newRotOrient;
+            Matrix Intertia = Matrix.CreateFromYawPitchRoll(rBody.AngularMomentum.Y, rBody.AngularMomentum.X, rBody.AngularMomentum.Z) * Matrix.CreateTranslation(rBody.LinearMomentum);
+            Matrix mInvInertia = Matrix.Invert(Intertia);
 
-            rBody.acceleration -= rBody.acceleration * rBody.drag * Time.deltaTime;
-            rBody.torque -= rBody.torque * rBody.angularDrag * Time.deltaTime;
+            // A1 = G(T,S0), B1 = S0 + (DT/2)*A1
+            Vector3 A1DXDT = rBody.velocity;
+            Quaternion W = new Quaternion(0.0f, rBody.angularVelocity.X,
+                rBody.angularVelocity.Y, rBody.angularVelocity.Z);
+            Quaternion A1DQDT = LinearAlgebraUtil.ComponentMultiply(W, 0.5f) * rBody.rotation;
 
-            rBody.velocity += rBody.acceleration * Time.deltaTime;
-            rBody.velocity -= rBody.velocity * rBody.drag * Time.deltaTime;
-            rBody.transform.position += rBody.velocity * Time.deltaTime;
-            rBody.angularVelocity += rBody.torque * Time.deltaTime;
-            rBody.transform.rotation *= Quaternion.CreateFromYawPitchRoll(
-                rBody.angularVelocity.Y * Time.deltaTime,
-                rBody.angularVelocity.Z * Time.deltaTime,
-                rBody.angularVelocity.X * Time.deltaTime);
+            // account for gravity
+            Vector3 A1DPDT = Vector3.Zero;
 
-            if (LinearAlgebraUtil.isEpsilon(rBody.acceleration))
-                rBody.acceleration = Vector3.Zero;
-            if (LinearAlgebraUtil.isEpsilon(rBody.velocity))
-                rBody.velocity = Vector3.Zero;
+            Vector3 A1DLDT = Vector3.Zero;
+
+            newPosition = rBody.position + halfDT * A1DXDT;
+            newQuatOrient = rBody.rotation + LinearAlgebraUtil.ComponentMultiply(A1DQDT, halfDT);
+            newLinearMomentum = rBody.LinearMomentum + halfDT * A1DPDT;
+            newAngularMomentum = rBody.AngularMomentum + halfDT * A1DLDT;
+            newRotOrient = Matrix.CreateFromQuaternion(newQuatOrient);
+            newLinearVelocity = mInvMass * newLinearMomentum;
+            newAngularVelocity = Vector3.Transform(newAngularMomentum, newRotOrient * mInvInertia * Matrix.Transpose(newRotOrient));
+
+            // A2 = G(T+DT/2,B1), B2 = S0 + (DT/2)*A2
+            Vector3 A2DXDT = newLinearVelocity;
+            W = new Quaternion(0.0f, newAngularVelocity.X,
+                newAngularVelocity.Y, newAngularVelocity.Z);
+            Quaternion A2DQDT = LinearAlgebraUtil.ComponentMultiply(W, 0.5f) * newQuatOrient;
+
+            // account for gravity
+            Vector3 A2DPDT = Vector3.Zero;
+
+            Vector3 A2DLDT = Vector3.Zero;
+
+            newPosition = rBody.position + halfDT * A2DXDT;
+            newQuatOrient = rBody.rotation + LinearAlgebraUtil.ComponentMultiply(A2DQDT, halfDT);
+            newLinearMomentum = rBody.LinearMomentum + halfDT * A2DPDT;
+            newAngularMomentum = rBody.AngularMomentum + halfDT * A2DLDT;
+            newRotOrient = Matrix.CreateFromQuaternion(newQuatOrient);
+            newLinearVelocity = mInvMass * newLinearMomentum;
+            newAngularVelocity = Vector3.Transform(newAngularMomentum, newRotOrient * mInvInertia * Matrix.Transpose(newRotOrient));
+
+            // A3 = G(T+DT/2,B2), B3 = S0 + DT*A3
+            Vector3 A3DXDT = newLinearVelocity;
+            W = new Quaternion(0.0f, newAngularVelocity.X,
+                newAngularVelocity.Y, newAngularVelocity.Z);
+            Quaternion A3DQDT = LinearAlgebraUtil.ComponentMultiply(W, 0.5f) * newQuatOrient;
+
+            Vector3 A3DPDT = Vector3.Zero;
+
+            Vector3 A3DLDT = Vector3.Zero;
+
+            newPosition = rBody.position + dt * A3DXDT;
+            newQuatOrient = rBody.rotation + LinearAlgebraUtil.ComponentMultiply(A3DQDT, dt);
+            newLinearMomentum = rBody.LinearMomentum + dt * A3DPDT;
+            newAngularMomentum = rBody.AngularMomentum + dt * A3DLDT;
+            newRotOrient = Matrix.CreateFromQuaternion(newQuatOrient);
+            newLinearVelocity = mInvMass * newLinearMomentum;
+            newAngularVelocity = Vector3.Transform(newAngularMomentum, newRotOrient * mInvInertia * Matrix.Transpose(newRotOrient));
+
+            // A4 = G(T+DT,B3), S1 = S0 + (DT/6)*(A1+2*(A2+A3)+A4)
+            Vector3 A4DXDT = newLinearVelocity;
+            W = new Quaternion(0.5f, newAngularVelocity.X,
+                newAngularVelocity.Y, newAngularVelocity.Z);
+            Quaternion A4DQDT = LinearAlgebraUtil.ComponentMultiply(W, 0.5f) * newQuatOrient;
+
+            Vector3 A4DPDT = Vector3.Zero;
+
+            Vector3 A4DLDT = Vector3.Zero;
+
+            rBody.position = rBody.position + sixthDT * (A1DXDT +
+                2.0f * (A2DXDT + A3DXDT) + A4DXDT);
+
+            rBody.rotation = rBody.rotation * LinearAlgebraUtil.ComponentMultiply(A1DQDT *
+                LinearAlgebraUtil.ComponentMultiply(A2DQDT * A3DQDT, 2.0f) * A4DQDT, sixthDT);
+
+            rBody.LinearMomentum = rBody.LinearMomentum + sixthDT * (A1DPDT +
+                2.0f * (A2DPDT + A3DPDT) + A4DPDT);
+
+            rBody.AngularMomentum = rBody.AngularMomentum + sixthDT * (A1DLDT +
+                2.0f * (A2DLDT + A3DLDT) + A4DLDT);
+
+            Matrix mRotOrient = Matrix.CreateFromQuaternion(rBody.rotation);
+            rBody.velocity = mInvMass * rBody.LinearMomentum;
+            rBody.angularVelocity = Vector3.Transform(rBody.AngularMomentum, mRotOrient * mInvInertia * Matrix.Transpose(mRotOrient));
         }
 
         private void SendColisionMessages(Collider a, Collider b, bool value)

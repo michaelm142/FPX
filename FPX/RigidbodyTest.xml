@@ -26,6 +26,7 @@
       </Rigidbody>
       <StartingForce>
         <StartingForce X="1" Y="0.0" Z="0.0"/>
+        <StartingTorque X="0" Y="200" Z="0"/>
       </StartingForce>
       <Material>
         <DiffuseMap FileName ="Textures\\TestTexture"/>

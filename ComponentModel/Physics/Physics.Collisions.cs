@@ -245,17 +245,11 @@ namespace FPX
             var bodyA = a.GetComponent<Rigidbody>();
             var bodyB = b.GetComponent<Rigidbody>();
 
-            var velocityA = Vector3.Reflect(bodyB.velocity, ContactNormal);
-            var velocityB = Vector3.Reflect(bodyA.velocity, ContactNormal);
+            var accelerationA = Vector3.Reflect(bodyB.LinearMomentum, ContactNormal);
+            var accelerationB = Vector3.Reflect(bodyA.LinearMomentum, ContactNormal);
 
-            bodyA.velocity = velocityA;
-            bodyB.velocity = velocityB;
-
-            var accelerationA = Vector3.Reflect(bodyB.acceleration, ContactNormal);
-            var accelerationB = Vector3.Reflect(bodyA.acceleration, ContactNormal);
-
-            bodyA.acceleration = accelerationA;
-            bodyB.acceleration = accelerationB;
+            bodyA.LinearMomentum = accelerationA;
+            bodyB.LinearMomentum = accelerationB;
 
             Matrix contactTensorA = Matrix.Identity;
             Matrix velocityTensorA = Matrix.Identity;
@@ -272,7 +266,7 @@ namespace FPX
             float pitchA = Vector3.Dot(contactTensorA.Forward, velocityTensorA.Up);
             float rollA = Vector3.Dot(contactTensorA.Up, velocityTensorA.Right);
 
-            bodyA.angularVelocity += new Vector3(pitchA, yawA, rollA);
+            bodyA.AngularMomentum += new Vector3(pitchA, yawA, rollA);
             Debug.Log("Yaw: {0} Pitch: {1} Roll: {2}", yawA, pitchA, rollA);
 
             Matrix contactTensorB = Matrix.Identity;
@@ -290,7 +284,7 @@ namespace FPX
             float pitchB = Vector3.Dot( velocityTensorB.Forward,    contactTensorB.Up);
             float rollB = Vector3.Dot(  velocityTensorB.Up,         contactTensorB.Right);
 
-            bodyB.angularVelocity += new Vector3(pitchB, yawB, rollB);
+            bodyB.AngularMomentum += new Vector3(pitchB, yawB, rollB);
             Debug.Log("Yaw: {0} Pitch: {1} Roll: {2}", yawB, pitchB, rollB);
         }
 

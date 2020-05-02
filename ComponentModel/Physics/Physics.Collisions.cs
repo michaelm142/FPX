@@ -14,10 +14,8 @@ namespace FPX
             for (int i = 0; i < colliders.Count - 1; i++)
             {
                 Collider a = colliders[i];
-                for (int ii = 0; ii < colliders.Count; ii++)
+                for (int ii = i + 1; ii < colliders.Count; ii++)
                 {
-                    if (i == ii) continue;
-
                     Collider b = colliders[ii];
                     if (Collide(a, b))
                         collisions.Add(new Collision(a, b));
@@ -76,7 +74,7 @@ namespace FPX
 
         private bool SphereToSphere(SphereCollider a, SphereCollider b)
         {
-            return Vector3.Distance(a.Location, b.localPosition) < a.radius + b.radius;
+            return Vector3.Distance(a.Location, b.Location) < a.radius + b.radius;
         }
 
         private bool SphereToBox(SphereCollider a, BoxCollider b)
@@ -229,12 +227,12 @@ namespace FPX
 
         private void ResoveSphereToSphere(SphereCollider a, SphereCollider b)
         {
-            float penetratingRadius = (a.radius + b.radius) - Vector3.Distance(a.position, b.position);
+            float penetratingRadius = Vector3.Distance(a.position, b.position) - (a.radius + b.radius);
             Vector3 L = b.position - a.position;
             L.Normalize();
 
-            a.position -= L * penetratingRadius;
-            b.position += L * penetratingRadius;
+            a.position += L * penetratingRadius;
+            b.position -= L * penetratingRadius;
 
             Vector3 Ra = L * a.radius;
             Vector3 Rb = L * b.radius;
@@ -272,6 +270,10 @@ namespace FPX
             float pitchA = Vector3.Dot(contactTensorA.Forward, velocityTensorA.Up);
             float rollA = Vector3.Dot(contactTensorA.Up, velocityTensorA.Right);
 
+            if (float.IsNaN(yawA)) yawA = 0.0f;
+            if (float.IsNaN(pitchA)) pitchA = 0.0f;
+            if (float.IsNaN(rollA)) rollA = 0.0f;
+
             bodyA.angularVelocity += new Vector3(pitchA, yawA, rollA);
             Debug.Log("Yaw: {0} Pitch: {1} Roll: {2}", yawA, pitchA, rollA);
 
@@ -289,6 +291,10 @@ namespace FPX
             float yawB = Vector3.Dot(   velocityTensorB.Right,      contactTensorB.Forward);
             float pitchB = Vector3.Dot( velocityTensorB.Forward,    contactTensorB.Up);
             float rollB = Vector3.Dot(  velocityTensorB.Up,         contactTensorB.Right);
+
+            if (float.IsNaN(yawB)) yawB = 0.0f;
+            if (float.IsNaN(pitchB)) pitchB = 0.0f;
+            if (float.IsNaN(rollB)) rollB = 0.0f;
 
             bodyB.angularVelocity += new Vector3(pitchB, yawB, rollB);
             Debug.Log("Yaw: {0} Pitch: {1} Roll: {2}", yawB, pitchB, rollB);

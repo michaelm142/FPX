@@ -62,6 +62,7 @@ namespace FPX
             // detect and cull collisions
             List<Collision> collisions = new List<Collision>();
             DetectCollisions(ref collisions);
+            activeCollisions = collisions;
 
             // resolve collisions and update physics state
             collisions.ForEach(c => ResolveCollision(c));
@@ -121,7 +122,7 @@ namespace FPX
                     b.gameObject.BroadcastMessage("OnCollision", a);
                 }
             }
-            else if (activeCollisions.Find(activeCollision => activeCollision.colliders.Contains(a) || activeCollision.colliders.Contains(b)) != null)
+            else if (activeCollisions.Find(activeCollision => activeCollision.colliders.Contains(a) && activeCollision.colliders.Contains(b)) != null)
             {
                 a.gameObject.BroadcastMessage("OnCollisionExit", b);
                 b.gameObject.BroadcastMessage("OnCollisionExit", a);

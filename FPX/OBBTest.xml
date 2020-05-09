@@ -69,14 +69,5 @@
       </Transform>
     </Prefab>
     
-    <Prefab Filename="Prefabs\\Sphere.xml" Name="Sphere">
-      <Transform>
-        <Position X="2.0" Y="0.0" Z="0.0"/>
-      </Transform>
-      <Material>
-        <DiffuseColor R="1.0" B="1.0" G="1.0" A="1.0"/>
-      </Material>
-    </Prefab>
-    
   </Objects>
 </Scene>

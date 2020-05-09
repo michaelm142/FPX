@@ -17,83 +17,90 @@ namespace FPX
                 for (int ii = i + 1; ii < colliders.Count; ii++)
                 {
                     Collider b = colliders[ii];
-                    if (Collide(a, b))
+                    var collision = Collide(a, b);
+                    if (collision != null)
                         collisions.Add(new Collision(a, b));
                 }
             }
         }
 
-        private void UpdateCollisions()
-        {
-            for (int i = 0; i < colliders.Count - 1; i++)
-            {
-                var a = colliders[i];
-                for (int ii = i + 1; ii < colliders.Count; ii++)
-                {
-                    var b = colliders[ii];
-
-                    Collide(a, b);
-                }
-            }
-        }
-
-        private bool Collide(Collider a, Collider b)
+        private Collision Collide(Collider a, Collider b)
         {
             if (previousPositions.Count == 0)
-                return false;
+                return null;
 
             if (a is SphereCollider && b is SphereCollider)
             {
-                bool value = SphereToSphere(a as SphereCollider, b as SphereCollider);
-                SendColisionMessages(a, b, value);
-                return value;
+                Collision c = SphereToSphere(a as SphereCollider, b as SphereCollider);
+                SendColisionMessages(a, b, c != null);
+                return c;
             }
             if (a is BoxCollider && b is BoxCollider)
             {
-                bool value = BoxToBox(a as BoxCollider, b as BoxCollider);
-                SendColisionMessages(a, b, value);
-                return value;
+                Collision c = BoxToBox(a as BoxCollider, b as BoxCollider);
+                SendColisionMessages(a, b, c != null);
+                return c;
             }
             if (a is BoxCollider && b is SphereCollider)
             {
-                bool value = BoxToSphere(a as BoxCollider, b as SphereCollider);
-                SendColisionMessages(a, b, value);
-                return value;
+                Collision c = BoxToSphere(a as BoxCollider, b as SphereCollider);
+                SendColisionMessages(a, b, c != null);
+                return c;
             }
             if (a is SphereCollider && b is BoxCollider)
             {
-                bool value = SphereToBox(a as SphereCollider, b as BoxCollider);
-                SendColisionMessages(a, b, value);
-                return value;
+                Collision c = SphereToBox(a as SphereCollider, b as BoxCollider);
+                SendColisionMessages(a, b, c != null);
+                return c;
             }
 
-            return false;
+            return null;
         }
 
         #region Collision Detection
 
-        private bool SphereToSphere(SphereCollider a, SphereCollider b)
+        private Collision SphereToSphere(SphereCollider a, SphereCollider b)
         {
-            return Vector3.Distance(a.Location, b.Location) < a.radius + b.radius;
+            float distance = Vector3.Distance(a.Location, b.Location);
+            if (distance > a.radius + b.radius)
+                return null;
+
+            Collision collision = new Collision(a, b);
+            float penetratingRadius = Vector3.Distance(a.position, b.position) - (a.radius + b.radius);
+            Vector3 L = b.position - a.position;
+            collision.PenetrationDistance = penetratingRadius;
+            L.Normalize();
+            collision.L = L;
+
+            Vector3 Ra = L * a.radius;
+            Vector3 Rb = L * b.radius;
+
+            Vector3 nPrime = Vector3.Cross(Vector3.Up, L);
+            collision.ContactNormal = Vector3.Cross(L, nPrime);
+
+            return collision;
         }
 
-        private bool SphereToBox(SphereCollider a, BoxCollider b)
+        private Collision SphereToBox(SphereCollider a, BoxCollider b)
         {
             var closestPoint = b.ClosestPoint(a.Location);
 
             Vector3 L = closestPoint - a.Location;
             if (Vector3.Dot(L, L) <= a.radius * a.radius)
-                return true;
+            {
+                Collision c = new Collision(a, b);
+                return c;
+            }
 
-            return false;
+            return null;
         }
 
-        private bool BoxToSphere(BoxCollider a, SphereCollider b)
+        private Collision BoxToSphere(BoxCollider a, SphereCollider b)
         {
             return SphereToBox(b, a);
         }
 
-        private bool BoxToBox(BoxCollider a, BoxCollider b)
+        private Collision BoxToBox(BoxCollider a, BoxCollider b)
         {
             float ra, rb;
             Matrix R = Matrix.Identity,
@@ -120,7 +127,7 @@ namespace FPX
                     LinearAlgebraUtil.GetVectorIndex(b.size, 1) * AbsR.GetRowColumn(i, 1) +
                     LinearAlgebraUtil.GetVectorIndex(b.size, 2) * AbsR.GetRowColumn(i, 2);
                 if (Math.Abs(LinearAlgebraUtil.GetVectorIndex(t, i)) > ra + rb)
-                    return false;
+                    return null;
             }
 
             // test axis L = B0, L = B1, L = B2
@@ -130,64 +137,64 @@ namespace FPX
                 rb = b.size.GetIndex(i);
 
                 if ((Math.Abs(t.GetIndex(0) * R.GetRowColumn(0, i)) + t.GetIndex(1) * R.GetRowColumn(1, i) + t.GetIndex(2) * R.GetRowColumn(2, i)) > ra + rb)
-                    return false;
+                    return null;
             }
 
             // Test axis L = A0 x B0
             ra = a.size.GetIndex(1) * AbsR.GetRowColumn(2, 0) + a.size.GetIndex(2) * AbsR.GetRowColumn(1, 0);
             rb = b.size.GetIndex(1) * AbsR.GetRowColumn(0, 2) + b.size.GetIndex(2) * AbsR.GetRowColumn(0, 1);
             if (Math.Abs(t.GetIndex(2) * R.GetRowColumn(1, 0) - t.GetIndex(1) * R.GetRowColumn(2, 0)) > ra + rb)
-                return false;
+                return null;
 
             // Test axis L = A0 x B1
             ra = a.size.GetIndex(1) * AbsR.GetRowColumn(2, 1) + a.size.GetIndex(2) * AbsR.GetRowColumn(1, 1);
             rb = b.size.GetIndex(0) * AbsR.GetRowColumn(0, 2) + b.size.GetIndex(2) * AbsR.GetRowColumn(0, 0);
             if (Math.Abs(t.GetIndex(2) * R.GetRowColumn(1, 1) - t.GetIndex(1) * R.GetRowColumn(2, 1)) > ra + rb)
-                return false;
+                return null;
 
             // Test axis L = A0 x B2
             ra = a.size.GetIndex(1) * AbsR.GetRowColumn(2, 2) + a.size.GetIndex(2) * AbsR.GetRowColumn(1, 2);
             rb = b.size.GetIndex(0) * AbsR.GetRowColumn(0, 1) + a.size.GetIndex(1) * AbsR.GetRowColumn(0, 0);
             if (Math.Abs(t.GetIndex(2) * R.GetRowColumn(1, 2) - t.GetIndex(1) * R.GetRowColumn(2, 2)) > ra + rb)
-                return false;
+                return null;
 
             // Test axis L = A1 x B0
             ra = a.size.GetIndex(0) * AbsR.GetRowColumn(2, 0) + a.size.GetIndex(2) * AbsR.GetRowColumn(0, 0);
             rb = b.size.GetIndex(1) * AbsR.GetRowColumn(1, 2) + a.size.GetIndex(2) * AbsR.GetRowColumn(1, 1);
             if (Math.Abs(t.GetIndex(0) * R.GetRowColumn(2, 0) - t.GetIndex(2) * R.GetRowColumn(0, 0)) > ra + rb)
-                return false;
+                return null;
 
             // Test axis L = A1 x B1
             ra = a.size.GetIndex(0) * AbsR.GetRowColumn(2, 1) + a.size.GetIndex(2) * AbsR.GetRowColumn(0, 1);
             rb = b.size.GetIndex(0) * AbsR.GetRowColumn(1, 2) + b.size.GetIndex(2) * AbsR.GetRowColumn(1, 0);
             if (Math.Abs(t.GetIndex(0) * R.GetRowColumn(2, 1) - t.GetIndex(2) * R.GetRowColumn(0, 1)) > ra + rb)
-                return false;
+                return null;
 
             // Test axis L = A1 x B2
             ra = a.size.GetIndex(0) * AbsR.GetRowColumn(2, 2) + a.size.GetIndex(2) * AbsR.GetRowColumn(0, 2);
             rb = b.size.GetIndex(0) * AbsR.GetRowColumn(1, 1) + b.size.GetIndex(1) * AbsR.GetRowColumn(1, 0);
             if (Math.Abs(t.GetIndex(0) * R.GetRowColumn(2, 2) - t.GetIndex(2) * R.GetRowColumn(0, 2)) > ra + rb)
-                return false;
+                return null;
 
             // Test axis L = A2 x B0
             ra = a.size.GetIndex(0) * AbsR.GetRowColumn(1, 0) + a.size.GetIndex(1) * AbsR.GetRowColumn(0, 0);
             rb = b.size.GetIndex(1) * AbsR.GetRowColumn(2, 2) + b.size.GetIndex(2) * AbsR.GetRowColumn(2, 1);
             if (Math.Abs(t.GetIndex(1) * R.GetRowColumn(0, 0) - t.GetIndex(0) * R.GetRowColumn(1, 0)) > ra + rb)
-                return false;
+                return null;
 
             // Test axis L = A2 x B1
             ra = a.size.GetIndex(0) * AbsR.GetRowColumn(1, 1) + a.size.GetIndex(1) * AbsR.GetRowColumn(0, 1);
             rb = b.size.GetIndex(0) * AbsR.GetRowColumn(2, 2) + b.size.GetIndex(2) * AbsR.GetRowColumn(2, 0);
             if (Math.Abs(t.GetIndex(1) * R.GetRowColumn(0, 1) - t.GetIndex(0) * R.GetRowColumn(1, 1)) > ra + rb)
-                return false;
+                return null;
 
             // Test axis L = A2 x B2
             ra = a.size.GetIndex(0) * AbsR.GetRowColumn(1, 2) + a.size.GetIndex(1) * AbsR.GetRowColumn(0, 2);
             rb = b.size.GetIndex(0) * AbsR.GetRowColumn(2, 1) + b.size.GetIndex(1) * AbsR.GetRowColumn(2, 0);
             if (Math.Abs(t.GetIndex(1) * R.GetRowColumn(0, 2) - t.GetIndex(0) * R.GetRowColumn(1, 2)) > ra + rb)
-                return false;
+                return null;
 
-            return true;
+            return new Collision(a, b);
             if (activeCollisions.Find(activeCollision => activeCollision.colliders.Contains(a) || activeCollision.colliders.Contains(b)) == null)
             {
                 activeCollisions.Add(new Collision(a, b));
@@ -211,8 +218,11 @@ namespace FPX
             var a = collision.colliders.ToList()[0];
             var b = collision.colliders.ToList()[1];
 
+            if (a.GetComponent<Rigidbody>() == null || b.GetComponent<Rigidbody>() == null)
+                return;
+
             if (a is SphereCollider && b is SphereCollider)
-                ResoveSphereToSphere(a as SphereCollider, b as SphereCollider);
+                ResoveSphereToSphere(collision);
         }
 
         private float AngleBetweenVectors(Vector3 u, Vector3 v)
@@ -225,32 +235,25 @@ namespace FPX
             return value;
         }
 
-        private void ResoveSphereToSphere(SphereCollider a, SphereCollider b)
+        private void ResoveSphereToSphere(Collision collision)
         {
-            float penetratingRadius = Vector3.Distance(a.position, b.position) - (a.radius + b.radius);
-            Vector3 L = b.position - a.position;
-            L.Normalize();
+            SphereCollider a = collision[0] as SphereCollider;
+            SphereCollider b = collision[1] as SphereCollider;
 
-            a.position += L * penetratingRadius;
-            b.position -= L * penetratingRadius;
-
-            Vector3 Ra = L * a.radius;
-            Vector3 Rb = L * b.radius;
-
-            Vector3 nPrime = Vector3.Cross(Vector3.Up, L);
-            Vector3 ContactNormal = Vector3.Cross(L, nPrime);
+            a.position += collision.L *collision.PenetrationDistance;
+            b.position -= collision.L * collision.PenetrationDistance;
 
             var bodyA = a.GetComponent<Rigidbody>();
             var bodyB = b.GetComponent<Rigidbody>();
 
-            var velocityA = Vector3.Reflect(bodyB.velocity, ContactNormal);
-            var velocityB = Vector3.Reflect(bodyA.velocity, ContactNormal);
+            var velocityA = Vector3.Reflect(bodyB.velocity, collision.ContactNormal);
+            var velocityB = Vector3.Reflect(bodyA.velocity, collision.ContactNormal);
 
             bodyA.velocity = velocityA;
             bodyB.velocity = velocityB;
 
-            var accelerationA = Vector3.Reflect(bodyB.acceleration, ContactNormal);
-            var accelerationB = Vector3.Reflect(bodyA.acceleration, ContactNormal);
+            var accelerationA = Vector3.Reflect(bodyB.acceleration, collision.ContactNormal);
+            var accelerationB = Vector3.Reflect(bodyA.acceleration, collision.ContactNormal);
 
             bodyA.acceleration = accelerationA;
             bodyB.acceleration = accelerationB;
@@ -258,8 +261,8 @@ namespace FPX
             Matrix contactTensorA = Matrix.Identity;
             Matrix velocityTensorA = Matrix.Identity;
 
-            contactTensorA.Forward = Ra;
-            contactTensorA.Up = ContactNormal;
+            contactTensorA.Forward = collision.L * a.radius;
+            contactTensorA.Up = collision.ContactNormal;
             contactTensorA.Right = Vector3.Cross(contactTensorA.Up, contactTensorA.Forward).Normalized();
 
             velocityTensorA.Forward = bodyA.velocity;
@@ -280,8 +283,8 @@ namespace FPX
             Matrix contactTensorB = Matrix.Identity;
             Matrix velocityTensorB = Matrix.Identity;
 
-            contactTensorB.Forward = Rb;
-            contactTensorB.Up = ContactNormal;
+            contactTensorB.Forward = collision.L * b.radius;
+            contactTensorB.Up = collision.ContactNormal;
             contactTensorB.Right = Vector3.Cross(contactTensorB.Up, contactTensorB.Forward).Normalized();
 
             velocityTensorB.Forward = bodyB.velocity;

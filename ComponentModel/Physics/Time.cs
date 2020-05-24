@@ -38,7 +38,6 @@ namespace FPX
         public void Update(GameTime gameTime)
         {
             this.gameTime = gameTime;
-            Debug.Log(deltaTime);
         }
     }
 }

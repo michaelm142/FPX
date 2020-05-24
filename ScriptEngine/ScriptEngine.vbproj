@@ -117,6 +117,7 @@
     <Compile Include="CameraController.vb" />
     <Compile Include="CameraSwitcher.vb" />
     <Compile Include="ClosestPointShower.vb" />
+    <Compile Include="ClosetPointFinder.vb" />
     <Compile Include="DebugDeviceTextures.vb" />
     <Compile Include="EditorTester.vb" />
     <Compile Include="GameControlTest.vb" />

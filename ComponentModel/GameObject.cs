@@ -165,6 +165,11 @@ namespace FPX
             return _instances.Find(g => g.Name == name);
         }
 
+        public static GameObject Find(uint Id)
+        {
+            return _instances.Find(g => g.transform.Id == Id);
+        }
+
         public static GameObject Load(XmlElement node)
         {
             GameObject obj = Empty;
@@ -188,6 +193,10 @@ namespace FPX
                 c.SendMessage("LoadXml", componentNode);
                 obj.AddComponent(c);
             }
+
+            var transform = obj.GetComponent<Transform>();
+            if (transform == null)
+                obj.AddComponent<Transform>();
 
             return obj;
         }

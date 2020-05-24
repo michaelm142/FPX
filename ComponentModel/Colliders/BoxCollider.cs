@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Linq;
 using System.Xml;
 using Microsoft.Xna.Framework;
@@ -84,9 +85,24 @@ namespace FPX
             outval += dist_y * transform.worldPose.Up;
             outval += dist_z * transform.worldPose.Forward;
 
-            normal = Vector3.Zero;
+            normal = GetNormal(point);
 
             return outval;
+        }
+
+        private Vector3 GetNormal(Vector3 point)
+        {
+            Vector3 localNormal = Vector3.TransformNormal(point, transform.worldToLocalMatrix);
+
+            float largest = MathHelper.Max(MathHelper.Max(Math.Abs(localNormal.X), Math.Abs(localNormal.Y)), Math.Abs(localNormal.Z));
+            if (largest == localNormal.X)
+                return transform.right;
+            if (largest == localNormal.Y)
+                return transform.up;
+            if (largest == localNormal.Z)
+                return transform.forward;
+
+            return Vector3.Zero;
         }
     }
 }

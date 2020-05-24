@@ -75,6 +75,8 @@ namespace FPX
         }
         private List<Transform> leafNodes = new List<Transform>();
 
+        public uint Id { get; private set; }
+
         private Vector3 GetPosition(Transform parent, Vector3 position)
         {
             if (parent == null)
@@ -96,6 +98,11 @@ namespace FPX
         public void LoadXml(XmlElement node)
         {
             parentName = node.Attributes["Parent"] == null ? null : node.Attributes["Parent"].Value;
+            var idAttr = node.Attributes["Id"];
+            if (idAttr != null)
+                Id = uint.Parse(idAttr.Value);
+            else
+                Id = (uint)FindObjectsOfType<Transform>().Count;
 
             var positionNode = node.SelectSingleNode("Position") as XmlElement;
             var rotationNode = node.SelectSingleNode("Rotation") as XmlElement;
@@ -123,6 +130,10 @@ namespace FPX
             var rotationNode = LinearAlgebraUtil.Vector3ToXml(node.OwnerDocument, "Rotation", eulerRotation);
 
             var scaleNode = LinearAlgebraUtil.Vector3ToXml(node.OwnerDocument, "Scale", localScale);
+
+            var idAttr = node.OwnerDocument.CreateAttribute("Id");
+            idAttr.Value = Id.ToString();
+            node.Attributes.Append(idAttr);
 
             node.AppendChild(positionNode);
             node.AppendChild(rotationNode);

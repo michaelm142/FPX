@@ -19,7 +19,7 @@ namespace FPX
                     Collider b = colliders[ii];
                     var collision = Collide(a, b);
                     if (collision != null)
-                        collisions.Add(new Collision(a, b));
+                        collisions.Add(collision);
                 }
             }
         }
@@ -194,18 +194,16 @@ namespace FPX
             if (Math.Abs(t.GetIndex(1) * R.GetRowColumn(0, 2) - t.GetIndex(0) * R.GetRowColumn(1, 2)) > ra + rb)
                 return null;
 
-            return new Collision(a, b);
-            if (activeCollisions.Find(activeCollision => activeCollision.colliders.Contains(a) || activeCollision.colliders.Contains(b)) == null)
-            {
-                activeCollisions.Add(new Collision(a, b));
-                a.gameObject.BroadcastMessage("OnCollisionEnter", b);
-                b.gameObject.BroadcastMessage("OnCollisionEnter", a);
-            }
-            else
-            {
-                a.gameObject.BroadcastMessage("OnCollision", b);
-                b.gameObject.BroadcastMessage("OnCollision", a);
-            }
+            Collision c = new Collision(a, b);
+            Vector3 normalA = Vector3.Zero;
+            Vector3 normalB = Vector3.Zero;
+
+            a.ClosestPoint(b.position, out normalA);
+            b.ClosestPoint(a.position, out normalB);
+
+            c.ContactNormal = (normalA + normalB) * 0.5f;
+
+            return c;
         }
 
 
@@ -223,6 +221,8 @@ namespace FPX
 
             if (a is SphereCollider && b is SphereCollider)
                 ResoveSphereToSphere(collision);
+            if (a is BoxCollider && b is BoxCollider)
+                ResolveBoxToBox(collision);
         }
 
         private float AngleBetweenVectors(Vector3 u, Vector3 v)
@@ -245,6 +245,9 @@ namespace FPX
 
             var bodyA = a.GetComponent<Rigidbody>();
             var bodyB = b.GetComponent<Rigidbody>();
+
+            if (bodyA == null || bodyB == null)
+                return;
 
             var velocityA = Vector3.Reflect(bodyB.velocity, collision.ContactNormal);
             var velocityB = Vector3.Reflect(bodyA.velocity, collision.ContactNormal);
@@ -301,6 +304,39 @@ namespace FPX
 
             bodyB.angularVelocity += new Vector3(pitchB, yawB, rollB);
             Debug.Log("Yaw: {0} Pitch: {1} Roll: {2}", yawB, pitchB, rollB);
+        }
+
+        private void ResolveBoxToBox(Collision collision)
+        {
+            BoxCollider a = collision[0] as BoxCollider;
+            BoxCollider b = collision[1] as BoxCollider;
+
+            Vector3 closestPointA = a.ClosestPoint(b.position);
+            Vector3 closestPointB = b.ClosestPoint(a.position);
+
+            Vector3 L_a = a.position - closestPointA;
+            Vector3 L_b = b.position - closestPointB;
+
+            a.position += L_a;
+            b.position += L_b;
+
+            var bodyA = a.GetComponent<Rigidbody>();
+            var bodyB = b.GetComponent<Rigidbody>();
+
+            if (bodyA == null || bodyB == null)
+                return;
+
+            var velocityA = Vector3.Reflect(bodyB.velocity, collision.ContactNormal);
+            var velocityB = Vector3.Reflect(bodyA.velocity, collision.ContactNormal);
+
+            bodyA.velocity = velocityA;
+            bodyB.velocity = velocityB;
+
+            var accelerationA = Vector3.Reflect(bodyB.acceleration, collision.ContactNormal);
+            var accelerationB = Vector3.Reflect(bodyA.acceleration, collision.ContactNormal);
+
+            bodyA.acceleration = accelerationA;
+            bodyB.acceleration = accelerationB;
         }
 
         #endregion

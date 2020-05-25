@@ -95,12 +95,27 @@ namespace FPX
             Vector3 localNormal = Vector3.TransformNormal(point, transform.worldToLocalMatrix);
 
             float largest = MathHelper.Max(MathHelper.Max(Math.Abs(localNormal.X), Math.Abs(localNormal.Y)), Math.Abs(localNormal.Z));
-            if (largest == localNormal.X)
-                return transform.right;
-            if (largest == localNormal.Y)
-                return transform.up;
-            if (largest == localNormal.Z)
-                return transform.forward;
+            if (largest == Math.Abs(localNormal.X))
+            {
+                if (localNormal.X < 0.0f)
+                    return -transform.right;
+                else
+                    return transform.right;
+            }
+            if (largest == Math.Abs(localNormal.Y))
+            {
+                if (localNormal.Y < 0.0f)
+                    return -transform.up;
+                else
+                    return transform.up;
+            }
+            if (largest == Math.Abs(localNormal.Z))
+            {
+                if (localNormal.Z < 0.0f)
+                    return -transform.forward;
+                else
+                    return transform.forward;
+            }
 
             return Vector3.Zero;
         }

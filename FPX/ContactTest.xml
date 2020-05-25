@@ -21,7 +21,6 @@
         <MoveSpeed>5.0</MoveSpeed>
         <RotationSpeed>10.0</RotationSpeed>
       </CameraController>
-      <MatrixTester/>
     </Object>
 
     <Prefab Filename="Prefabs\\Arrow.xml"/>
@@ -42,6 +41,10 @@
       <ClosestPointFinder>
         <Target>22</Target>
       </ClosestPointFinder>
+      <GameControlTest>
+        <MoveSpeed>1</MoveSpeed>
+        <RotationSpeed>2</RotationSpeed>
+      </GameControlTest>
     </Prefab>
     
   </Objects>

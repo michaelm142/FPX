@@ -16,7 +16,7 @@
       </GameControlTest>
     </Object>
 
-    <Prefab Filename="Prefabs\\Sphere.xml" Name="Rigidbody1">
+    <Prefab Filename="Prefabs\\Box.xml" Name="Rigidbody1">
       <Transform>
         <Position X="-3.0" Y="0" Z="0.0"/>
       </Transform>
@@ -32,9 +32,9 @@
       </Material>
     </Prefab>
 
-    <Prefab Filename="Prefabs\\Sphere.xml" Name="Rigidbody2">
+    <Prefab Filename="Prefabs\\Box.xml" Name="Rigidbody2">
       <Transform>
-        <Position X="3.0" Y="0" Z="0"/>
+        <Position X="3.0" Y="0.5" Z="0"/>
       </Transform>
       <Rigidbody>
         <Drag>0.1</Drag>

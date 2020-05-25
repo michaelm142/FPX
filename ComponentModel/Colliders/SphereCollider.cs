@@ -41,7 +41,7 @@ namespace FPX
             var length = MathHelper.Clamp(L.Length(), 0.0F, radius);
             L.Normalize();
 
-            return L * length;
+            return position + L * length;
         }
 
         public override Vector3 ClosestPoint(Vector3 point, out Vector3 normal)

@@ -13,6 +13,7 @@ Public Class ClosestPointFinder
     Public Sub Start()
         target = GameObject.Find(targetId)
         sphere = ObjectFactory.Create(PrimitiveType.Sphere, Scene.Active)
+        sphere.transform.localScale = Vector3.One * 0.05
     End Sub
 
     Public Sub LoadXml(node As XmlElement)
@@ -21,7 +22,7 @@ Public Class ClosestPointFinder
     End Sub
 
     Public Sub Update(gameTime As GameTime)
-
+        sphere.transform.position = GetComponent(Of BoxCollider).ClosestPoint(target.position)
     End Sub
 
 End Class

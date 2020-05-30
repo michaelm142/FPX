@@ -4,4 +4,5 @@
   <ScreenHeight>720</ScreenHeight>
   <ControllerInput>One</ControllerInput>
   <TimeScale>1.0</TimeScale>
+  <FillMode>TriangleList</FillMode>
 </Settings>

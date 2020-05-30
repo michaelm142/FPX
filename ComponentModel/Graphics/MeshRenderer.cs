@@ -62,7 +62,13 @@ namespace FPX
                     effect.View = Camera.Active.ViewMatrix;
                     effect.Projection = Camera.Active.ProjectionMatrix;
                     effect.CurrentTechnique.Passes[0].Apply();
-                    mesh.Draw();
+
+                    foreach (var meshPart in mesh.MeshParts)
+                    {
+                        GameCore.graphicsDevice.SetVertexBuffer(meshPart.VertexBuffer, meshPart.VertexOffset);
+                        GameCore.graphicsDevice.Indices = meshPart.IndexBuffer;
+                        GameCore.graphicsDevice.DrawIndexedPrimitives(Graphics.instance.fillMode, 0, 0, meshPart.NumVertices, meshPart.StartIndex, meshPart.PrimitiveCount);
+                    }
                 }
             }
         }

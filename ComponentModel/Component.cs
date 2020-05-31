@@ -119,6 +119,11 @@ namespace FPX
             return g_collection.Find(o => o is T) as T;
         }
 
+        public static GameObject Instanciate(GameObject @object)
+        {
+            return GameCore.currentLevel.Spawn(@object);
+        }
+
         public static GameObject Instantiate(Prefab prefab)
         {
             return GameCore.currentLevel.Spawn(prefab);
@@ -127,6 +132,20 @@ namespace FPX
         public override string ToString()
         {
             return string.Format("{0} of {1}", GetType().ToString(), gameObject.Name);
+        }
+
+        private bool _firstFrame = true;
+
+        internal  void Run()
+        {
+            if (_firstFrame && KnowsMessage("Start"))
+            {
+                SendMessage("Start");
+                _firstFrame = false;
+            }
+
+            if (KnowsMessage("Update"))
+                SendMessage("Update", Time.GameTime);
         }
     }
 }

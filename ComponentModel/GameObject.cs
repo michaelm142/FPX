@@ -100,13 +100,8 @@ namespace FPX
 
         public void Run(GameTime gameTime)
         {
-            if (firstFrame)
-            {
-                BroadcastMessage("Start");
-                firstFrame = false;
-            }
-            else
-                BroadcastMessage("Update", new object[] { gameTime });
+            for (int i = 0; i < components.Count; i++)
+                components[i].Run();
         }
 
         public void Draw(GameTime gameTime)
@@ -187,7 +182,7 @@ namespace FPX
                 Component c = Activator.CreateInstance(createType) as Component;
                 if (c == null)
                 {
-                    Debug.LogError("Could not load game component {0} because it does not exist", createType);
+                    Debug.LogError("No type named {0} does not exist", createType);
                     continue;
                 }
                 c.SendMessage("LoadXml", componentNode);

@@ -14,14 +14,18 @@ namespace FPX
         public event EventHandler<EventArgs> EnabledChanged;
         public event EventHandler<EventArgs> UpdateOrderChanged;
 
-        private GameTime gameTime;
+        private GameTime _gameTime;
+        public static GameTime GameTime
+        {
+            get { return Instance._gameTime; }
+        }
 
         private static Time Instance;
 
         public static float deltaTime
         {
             get {
-                return ((float)Instance.gameTime.ElapsedGameTime.TotalSeconds *
+                return ((float)Instance._gameTime.ElapsedGameTime.TotalSeconds *
                   Settings.GetSetting<float>("TimeScale"));
             }
         }
@@ -32,12 +36,12 @@ namespace FPX
                 throw new InvalidOperationException("There is more than one instance of time!");
 
             Instance = this;
-            gameTime = new GameTime();
+            _gameTime = new GameTime();
         }
 
         public void Update(GameTime gameTime)
         {
-            this.gameTime = gameTime;
+            this._gameTime = gameTime;
         }
     }
 }

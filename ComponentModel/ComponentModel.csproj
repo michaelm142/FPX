@@ -140,6 +140,7 @@
     <Compile Include="Colliders\BoxCollider.cs" />
     <Compile Include="Colliders\SphereCollider.cs" />
     <Compile Include="Graphics\ILightSource.cs" />
+    <Compile Include="Graphics\LineRenderer.cs" />
     <Compile Include="Graphics\ModelReader.cs" />
     <Compile Include="Graphics\PostProcessor.cs" />
     <Compile Include="Graphics\DeferredRenderer.cs" />

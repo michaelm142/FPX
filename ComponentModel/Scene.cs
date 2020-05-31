@@ -56,6 +56,14 @@ namespace FPX
             Debug.Log("Spawned object {0} in scene.", obj);
         }
 
+        public GameObject Spawn(GameObject obj)
+        {
+            spawnedObjects.Add(obj);
+            ObjectInstanciated(obj, new EventArgs());
+
+            return obj;
+        }
+
         public GameObject Spawn(params Type[] Components)
         {
             GameObject obj = new GameObject();

@@ -20,12 +20,16 @@
       </CameraController>
     </Object>
 
-    <Object Name="Box 1">
+    <Object Name="Box 1" Id="0">
       <LocalAxisRenderer/>
       <GameControlTest>
         <MoveSpeed>5.0</MoveSpeed>
         <RotationSpeed>10.0</RotationSpeed>
       </GameControlTest>
+      <AxisAlignedTester>
+        <Target>0</Target>
+      </AxisAlignedTester>
+      <BoxRenderer/>
     </Object>
     
   </Objects>

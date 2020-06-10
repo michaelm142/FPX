@@ -75,8 +75,6 @@ namespace FPX
         }
         private List<Transform> leafNodes = new List<Transform>();
 
-        public uint Id { get; private set; }
-
         private Vector3 GetPosition(Transform parent, Vector3 position)
         {
             if (parent == null)

@@ -61,9 +61,12 @@ namespace FPX
 
         internal static List<Component> g_collection = new List<Component>();
 
+        public uint Id { get; protected set; }
+
         public Component()
         {
             g_collection.Add(this);
+            Id = (uint)GetHashCode();
         }
 
         public T GetComponent<T>()

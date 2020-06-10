@@ -10,6 +10,8 @@ namespace FPX
 {
     public class Material : Component
     {
+        public BlendState blendState = BlendState.Opaque;
+
         public Color AmbientColor = Color.White;
         public Color SpecularColor;
         public Color DiffuseColor = Color.White;

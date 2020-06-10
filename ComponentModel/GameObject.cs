@@ -69,17 +69,21 @@ namespace FPX
             set { transform.rotation = value; }
         }
 
+        internal uint Id { get; private set; }
+
         private static List<GameObject> _instances = new List<GameObject>();
 
         private GameObject(bool isEmpty)
         {
             _instances.Add(this);
+            Id = (uint)GetHashCode();
         }
 
         public GameObject()
         {
             _instances.Add(this);
             AddComponent<Transform>();
+            Id = (uint)GetHashCode();
         }
 
         ~GameObject()
@@ -162,7 +166,7 @@ namespace FPX
 
         public static GameObject Find(uint Id)
         {
-            return _instances.Find(g => g.transform.Id == Id);
+            return _instances.Find(g => g.Id == Id);
         }
 
         public static GameObject Load(XmlElement node)
@@ -175,6 +179,9 @@ namespace FPX
             var enabledAttribute = node.Attributes["Enabled"];
             if (enabledAttribute != null)
                 obj.Enabled = bool.Parse(enabledAttribute.InnerText);
+            var idAttr = node.Attributes["Id"];
+            if (idAttr != null)
+                obj.Id = uint.Parse(idAttr.Value);
 
             foreach (XmlElement componentNode in node.ChildNodes)
             {

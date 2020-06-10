@@ -7,6 +7,8 @@ using System;
 
 public class LineRenderer : Component, IDrawable
 {
+    private const float UpdateInterval = 0.1f;
+    private float updateTimer = UpdateInterval;
 
     public bool useWorldSpace = true;
 
@@ -25,6 +27,7 @@ public class LineRenderer : Component, IDrawable
 
     public bool Visible { get; set; }
 
+
     public void Start()
     {
         if (material == null)
@@ -36,8 +39,27 @@ public class LineRenderer : Component, IDrawable
         effect = new BasicEffect(GameCore.graphicsDevice);
     }
 
+    public void Update(GameTime gameTime)
+    {
+        updateTimer -= Time.deltaTime;
+        if (updateTimer < 0.0f)
+        {
+            for (int i = 0; i < vertecies.Count; i++)
+            {
+                var vertex = vertecies[i];
+                vertex.Position = positions[i];
+                vertecies[i] = vertex;
+            }
+
+            updateTimer = UpdateInterval;
+        }
+    }
+
     public void Draw(GameTime gameTime)
     {
+        var bs = GameCore.graphicsDevice.BlendState;
+        GameCore.graphicsDevice.BlendState = material.blendState;
+
         effect.View = Camera.Active.ViewMatrix;
         effect.Projection = Camera.Active.ProjectionMatrix;
         if (useWorldSpace)
@@ -47,7 +69,8 @@ public class LineRenderer : Component, IDrawable
         effect.SpecularColor = material.SpecularColor.ToVector3();
         effect.CurrentTechnique.Passes[0].Apply();
 
-        GameCore.graphicsDevice.DrawUserPrimitives(PrimitiveType.LineStrip, vertecies.ToArray(), 0, vertecies.Count / 2);
+        GameCore.graphicsDevice.DrawUserPrimitives(PrimitiveType.LineStrip, vertecies.ToArray(), 0, vertecies.Count - 1);
+        GameCore.graphicsDevice.BlendState = bs;
     }
 
     public void LoadXml(XmlElement element)

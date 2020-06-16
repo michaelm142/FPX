@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Settings>
-  <ScreenWidth>1080</ScreenWidth>
-  <ScreenHeight>720</ScreenHeight>
+  <ScreenWidth>1600</ScreenWidth>
+  <ScreenHeight>1200</ScreenHeight>
   <ControllerInput>One</ControllerInput>
   <TimeScale>1.0</TimeScale>
   <FillMode>TriangleList</FillMode>

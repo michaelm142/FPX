@@ -60,7 +60,6 @@ namespace FPX
 
         public void Draw(GameTime gameTime)
         {
-            throw new NotImplementedException();
         }
 
         public void DrawUI(SpriteBatch spriteBatch)

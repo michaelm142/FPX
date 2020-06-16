@@ -29,6 +29,15 @@
       <AxisAlignedTester>
         <Target>0</Target>
       </AxisAlignedTester>
+      <BoxRenderer>
+        <Color B="255" G="255"/>
+      </BoxRenderer>
+      <BoxCollider>
+        <Size X="1" Y="1" Z="1"/>
+      </BoxCollider>
+    </Object>
+
+    <Object Name="WorldBox">
       <BoxRenderer/>
     </Object>
     

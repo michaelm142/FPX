@@ -260,6 +260,51 @@ namespace FPX
             return element;
         }
 
+        public static Color ColorFromXml(System.Xml.XmlElement node)
+        {
+            XmlAttribute rAttr = node.Attributes["R"];
+            XmlAttribute gAttr = node.Attributes["G"];
+            XmlAttribute bAttr = node.Attributes["B"];
+            XmlAttribute aAttr = node.Attributes["A"];
+
+            Color outval = Color.Transparent;
+
+            if (rAttr != null)
+            {
+                byte v = 0x0;
+                if (!byte.TryParse(rAttr.Value, out v))
+                    throw new Exception("Failed to parse color from xml");
+
+                outval.R = v;
+            }
+            if (gAttr != null)
+            {
+                byte v = 0x0;
+                if (!byte.TryParse(gAttr.Value, out v))
+                    throw new Exception("Failed to parse color from xml");
+
+                outval.G = v;
+            }
+            if (bAttr != null)
+            {
+                byte v = 0x0;
+                if (!byte.TryParse(bAttr.Value, out v))
+                    throw new Exception("Failed to parse color from xml");
+
+                outval.B = v;
+            }
+            if (aAttr != null)
+            {
+                byte v = 0x0;
+                if (!byte.TryParse(aAttr.Value, out v))
+                    throw new Exception("Failed to parse color from xml");
+
+                outval.A = v;
+            }
+
+            return outval;
+        }
+
         public static Quaternion EulerFromXml(System.Xml.XmlElement element)
         {
             Vector3 euler = Vector3FromXml(element);

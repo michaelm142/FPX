@@ -13,19 +13,7 @@ Public Class BoxRenderer
     Dim legBackLeft As LineRenderer
     Dim legBackRight As LineRenderer
 
-    Public Property Color As Color
-        Get
-            Return top.material.DiffuseColor
-        End Get
-        Set(value As Color)
-            top.material.DiffuseColor = value
-            bottom.material.DiffuseColor = value
-            legBackLeft.material.DiffuseColor = value
-            legBackRight.material.DiffuseColor = value
-            legFrontLeft.material.DiffuseColor = value
-            legFrontRight.material.DiffuseColor = value
-        End Set
-    End Property
+    Public Color As Color
 
     Public Sub Start()
         top = gameObject.AddComponent(Of LineRenderer)
@@ -54,8 +42,27 @@ Public Class BoxRenderer
         legBackLeft.positions.Add(Vector3.Backward + Vector3.Left + Vector3.Up)
         legBackLeft.positions.Add(Vector3.Backward + Vector3.Left + Vector3.Down)
 
-        legBackLeft = gameObject.AddComponent(Of LineRenderer)
-        legBackLeft.positions.Add(Vector3.Backward + Vector3.Right + Vector3.Up)
-        legBackLeft.positions.Add(Vector3.Backward + Vector3.Right + Vector3.Down)
+        legBackRight = gameObject.AddComponent(Of LineRenderer)
+        legBackRight.positions.Add(Vector3.Backward + Vector3.Right + Vector3.Up)
+        legBackRight.positions.Add(Vector3.Backward + Vector3.Right + Vector3.Down)
+    End Sub
+
+    Public Sub Update(gameTime As GameTime)
+        If top.material Is Nothing Then
+            Return
+        End If
+        top.material.DiffuseColor = Color
+        bottom.material.DiffuseColor = Color
+        legBackLeft.material.DiffuseColor = Color
+        legBackRight.material.DiffuseColor = Color
+        legFrontLeft.material.DiffuseColor = Color
+        legFrontRight.material.DiffuseColor = Color
+    End Sub
+
+    Public Sub LoadXml(node As XmlElement)
+        Dim colorNode = node.SelectSingleNode("Color")
+        If Not colorNode Is Nothing Then
+            Color = LinearAlgebraUtil.ColorFromXml(colorNode)
+        End If
     End Sub
 End Class

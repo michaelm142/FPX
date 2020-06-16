@@ -92,6 +92,7 @@ namespace FPX
         /// </summary>
         protected override void UnloadContent()
         {
+            base.UnloadContent();
             GameCore.fonts.Clear();
         }
 

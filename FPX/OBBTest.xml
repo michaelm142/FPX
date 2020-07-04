@@ -27,7 +27,7 @@
         <RotationSpeed>10.0</RotationSpeed>
       </GameControlTest>
       <AxisAlignedTester>
-        <Target>0</Target>
+        <Target>1</Target>
       </AxisAlignedTester>
       <BoxRenderer>
         <Color B="255" G="255"/>
@@ -37,7 +37,10 @@
       </BoxCollider>
     </Object>
 
-    <Object Name="WorldBox">
+    <Object Name="WorldBox" Id="1">
+      <BoxCollider>
+        <Size X="1" Y="1" Z="1"/>
+      </BoxCollider>
       <BoxRenderer/>
     </Object>
     

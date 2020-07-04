@@ -156,6 +156,14 @@ namespace FPX
         {
             Vector3 _v = v;
             _v.Normalize();
+
+            if (float.IsNaN(_v.X))
+                _v.X = 0.0f;
+            if (float.IsNaN(_v.Y))
+                _v.Y = 0.0f;
+            if (float.IsNaN(_v.Z))
+                _v.Z = 0.0f;
+
             return _v;
         }
 

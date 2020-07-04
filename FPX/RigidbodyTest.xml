@@ -10,10 +10,10 @@
       <Camera>
         <FieldOfView>60.0</FieldOfView>
       </Camera>
-      <GameControlTest>
+      <CameraController>
         <MoveSpeed>10</MoveSpeed>
         <RotationSpeed>5</RotationSpeed>
-      </GameControlTest>
+      </CameraController>
     </Object>
 
     <Prefab Filename="Prefabs\\Sphere.xml" Name="Rigidbody1">
@@ -34,7 +34,7 @@
 
     <Prefab Filename="Prefabs\\Sphere.xml" Name="Rigidbody2">
       <Transform>
-        <Position X="3.0" Y="0" Z="0"/>
+        <Position X="3.0" Y="0" Z="0.5"/>
       </Transform>
       <Rigidbody>
         <Drag>0.1</Drag>

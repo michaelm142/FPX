@@ -6,7 +6,10 @@ Imports FPX
 Public Class AxisAlignedTester
     Inherits Component
 
-    Private pointSphere As GameObject
+    Private pointSphereA As GameObject
+    Private pointSphereB As GameObject
+
+    Private targetId As UInt32
 
     Private target As GameObject
 
@@ -14,16 +17,23 @@ Public Class AxisAlignedTester
 
 
     Public Sub Start()
+        pointSphereA = ObjectFactory.Create(PrimitiveType.Sphere, Scene.Active)
+        pointSphereA.transform.localScale = Vector3.One * 0.2F
+        pointSphereA.GetComponent(Of Material).DiffuseColor = Color.Purple
 
-        pointSphere = ObjectFactory.Create(PrimitiveType.Sphere, Scene.Active)
-        pointSphere.transform.localScale = Vector3.One * 0.2F
-        pointSphere.GetComponent(Of Material).DiffuseColor = Color.Purple
+        pointSphereB = ObjectFactory.Create(PrimitiveType.Sphere, Scene.Active)
+        pointSphereB.transform.localScale = Vector3.One * 0.2F
+        pointSphereB.GetComponent(Of Material).DiffuseColor = Color.Purple
+
+        target = GameObject.Find(targetId)
     End Sub
 
     Public Sub Update(gameTime As GameTime)
-        Dim closestPoint = target.GetComponent(Of BoxCollider).ClosestPoint(Vector3.Zero)
+        Dim closestPointA = GetComponent(Of BoxCollider).ClosestPoint(Vector3.Zero)
+        Dim closestPointB = target.GetComponent(Of BoxCollider).ClosestPoint(closestPointA)
 
-        pointSphere.position = closestPoint
+        pointSphereA.position = closestPointA
+        pointSphereB.position = closestPointB
     End Sub
 
     Public Sub LoadXml(node As XmlElement)
@@ -31,8 +41,7 @@ Public Class AxisAlignedTester
         Dim sizeNode = node.SelectSingleNode("Size")
 
         If Not targetNode Is Nothing Then
-            Dim targetId As UInt32 = UInt32.Parse(targetNode.InnerText)
-            target = GameObject.Find(targetId)
+            targetId = UInt32.Parse(targetNode.InnerText)
         End If
 
         If Not sizeNode Is Nothing Then

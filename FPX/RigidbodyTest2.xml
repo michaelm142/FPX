@@ -6,14 +6,15 @@
     <Object Name="Camera">
       <Transform>
         <Position X="0" Y="0" Z="10"/>
+        <Rotation X="0" Y="0" Z="0"/>
       </Transform>
       <Camera>
         <FieldOfView>60.0</FieldOfView>
       </Camera>
-      <GameControlTest>
+      <CameraController>
         <MoveSpeed>10</MoveSpeed>
         <RotationSpeed>5</RotationSpeed>
-      </GameControlTest>
+      </CameraController>
     </Object>
 
     <Prefab Filename="Prefabs\\Box.xml" Name="Rigidbody1">

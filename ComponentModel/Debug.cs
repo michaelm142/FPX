@@ -47,9 +47,11 @@ namespace FPX
 
         public static void LogWarning(string warning, params object[] args)
         {
-            ForegroundColor = ConsoleColor.Yellow;
+            ForegroundColor = ConsoleColor.Black;
+            BackgroundColor = ConsoleColor.DarkYellow;
             Log(warning, ConsoleColor.Yellow, args);
             ForegroundColor = ConsoleColor.Gray;
+            BackgroundColor = ConsoleColor.Black;
         }
 
         public static void LogError(string error, params object[] args)

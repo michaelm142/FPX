@@ -12,6 +12,8 @@ Public Class StartingForce
         Dim rigidBody = GetComponent(Of Rigidbody)()
         rigidBody.AddForce(startingForce)
         rigidBody.AddTorque(startingTorque)
+
+        Debug.Log("Object {0} position is {1}", gameObject.Name, position)
     End Sub
 
     Public Sub LoadXml(node As XmlNode)

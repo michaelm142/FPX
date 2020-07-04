@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework;
 
 namespace FPX
 {
-    public class Time : IGameComponent, IUpdateable
+    public class Time : IGameComponent, IUpdateable, IDisposable
     {
         public bool Enabled { get; private set; } = true;
 
@@ -42,6 +42,11 @@ namespace FPX
         public void Update(GameTime gameTime)
         {
             this._gameTime = gameTime;
+        }
+
+        public void Dispose()
+        {
+            Instance = null;
         }
     }
 }

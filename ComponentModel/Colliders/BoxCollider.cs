@@ -92,7 +92,7 @@ namespace FPX
 
         private Vector3 GetNormal(Vector3 point)
         {
-            Vector3 localNormal = Vector3.TransformNormal(point, transform.worldToLocalMatrix);
+            Vector3 localNormal = Vector3.Transform(point, transform.worldToLocalMatrix);
 
             float largest = MathHelper.Max(MathHelper.Max(Math.Abs(localNormal.X), Math.Abs(localNormal.Y)), Math.Abs(localNormal.Z));
             if (largest == Math.Abs(localNormal.X))

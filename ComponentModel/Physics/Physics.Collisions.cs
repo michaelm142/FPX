@@ -201,7 +201,7 @@ namespace FPX
             a.ClosestPoint(b.position, out normalA);
             b.ClosestPoint(a.position, out normalB);
 
-            c.ContactNormal = (normalA + normalB) * 0.5f;
+            c.ContactNormal = ((normalA + normalB) * 0.5f).Normalized();
 
             return c;
         }
@@ -312,19 +312,19 @@ namespace FPX
             BoxCollider b = collision[1] as BoxCollider;
 
             Vector3 closestPointA = a.ClosestPoint(b.position);
-            Vector3 closestPointB = b.ClosestPoint(a.position);
+            Vector3 closestPointB = b.ClosestPoint(closestPointA);
 
-            Vector3 L_a = a.position - closestPointA;
-            Vector3 L_b = b.position - closestPointB;
-
-            a.position += L_a;
-            b.position += L_b;
+            Vector3 L_a = closestPointB - a.position;
+            Vector3 L_b = closestPointA - b.position;
 
             var bodyA = a.GetComponent<Rigidbody>();
             var bodyB = b.GetComponent<Rigidbody>();
 
             if (bodyA == null || bodyB == null)
                 return;
+
+            bodyA.position -= closestPointA - closestPointB;
+            bodyB.position += closestPointB - closestPointA;
 
             var velocityA = Vector3.Reflect(bodyB.velocity, collision.ContactNormal);
             var velocityB = Vector3.Reflect(bodyA.velocity, collision.ContactNormal);
@@ -337,6 +337,51 @@ namespace FPX
 
             bodyA.acceleration = accelerationA;
             bodyB.acceleration = accelerationB;
+
+            Matrix contactTensorA = Matrix.Identity;
+            Matrix velocityTensorA = Matrix.Identity;
+
+            contactTensorA.Forward = L_a.Normalized();
+            contactTensorA.Up = collision.ContactNormal;
+            contactTensorA.Right = Vector3.Cross(contactTensorA.Up, contactTensorA.Forward).Normalized();
+
+            velocityTensorA.Forward = bodyA.velocity;
+            velocityTensorA.Right = Vector3.Cross(Vector3.Up, bodyA.velocity).Normalized();
+            velocityTensorA.Up = Vector3.Cross(velocityTensorA.Forward, velocityTensorA.Right).Normalized();
+
+            float yawA = Vector3.Dot(contactTensorA.Right, velocityTensorA.Forward);
+            float pitchA = Vector3.Dot(contactTensorA.Up, velocityTensorA.Forward);
+            float rollA = Vector3.Dot(contactTensorA.Up, velocityTensorA.Right);
+
+            if (float.IsNaN(yawA)) yawA = 0.0f;
+            if (float.IsNaN(pitchA)) pitchA = 0.0f;
+            if (float.IsNaN(rollA)) rollA = 0.0f;
+
+            bodyA.angularVelocity += new Vector3(pitchA, yawA, rollA);
+            Debug.Log("{0} Yaw: {1} Pitch: {2} Roll: {3}", bodyA.gameObject.Name, yawA, pitchA, rollA);
+
+
+            Matrix contactTensorB = Matrix.Identity;
+            Matrix velocityTensorB = Matrix.Identity;
+
+            contactTensorB.Forward = L_b.Normalized();
+            contactTensorB.Up = collision.ContactNormal;
+            contactTensorB.Right = Vector3.Cross(contactTensorB.Up, contactTensorB.Forward).Normalized();
+
+            velocityTensorB.Forward = bodyB.velocity;
+            velocityTensorB.Right = Vector3.Cross(Vector3.Up, bodyB.velocity).Normalized();
+            velocityTensorB.Up = Vector3.Cross(velocityTensorB.Forward, velocityTensorB.Right).Normalized();
+
+            float yawB = Vector3.Dot(contactTensorB.Right, velocityTensorB.Forward);
+            float pitchB = Vector3.Dot(contactTensorB.Up, velocityTensorB.Forward);
+            float rollB = Vector3.Dot(contactTensorB.Up, velocityTensorB.Right);
+
+            if (float.IsNaN(yawB)) yawB = 0.0f;
+            if (float.IsNaN(pitchB)) pitchB = 0.0f;
+            if (float.IsNaN(rollB)) rollB = 0.0f;
+
+            bodyB.angularVelocity += new Vector3(pitchB, yawB, rollB);
+            Debug.Log("{0} Yaw: {1} Pitch: {2} Roll: {3}", bodyB.gameObject.Name, yawB, pitchB, rollB);
         }
 
         #endregion

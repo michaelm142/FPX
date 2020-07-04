@@ -63,6 +63,11 @@ namespace FPX
 
         public uint Id { get; protected set; }
 
+        public string Name
+        {
+            get { return gameObject.Name; }
+        }
+
         public Component()
         {
             g_collection.Add(this);

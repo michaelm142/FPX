@@ -57,6 +57,89 @@ namespace FPX
             return null;
         }
 
+        private void ResolveCollision(Collision collision)
+        {
+            foreach (var c in collision.colliders)
+                if (c.GetComponent<Rigidbody>() == null)
+                    return;
+
+            Collider a = collision[0];
+            Collider b = collision[1];
+
+            Vector3 closestPointA = a.ClosestPoint(b.position);
+            Vector3 closestPointB = b.ClosestPoint(closestPointA);
+
+            Vector3 L_a = closestPointB - a.position;
+            Vector3 L_b = closestPointA - b.position;
+
+            var bodyA = a.GetComponent<Rigidbody>();
+            var bodyB = b.GetComponent<Rigidbody>();
+
+            if (bodyA == null || bodyB == null)
+                return;
+
+            bodyA.position -= closestPointA - closestPointB;
+            bodyB.position += closestPointB - closestPointA;
+
+            var velocityA = Vector3.Reflect(bodyB.velocity, collision.ContactNormal);
+            var velocityB = Vector3.Reflect(bodyA.velocity, collision.ContactNormal);
+            Debug.Log("Contact Normal: {0}", collision.ContactNormal);
+
+            bodyA.velocity = velocityA;
+            bodyB.velocity = velocityB;
+
+            var accelerationA = Vector3.Reflect(bodyB.acceleration, collision.ContactNormal);
+            var accelerationB = Vector3.Reflect(bodyA.acceleration, collision.ContactNormal);
+
+            bodyA.acceleration = accelerationA;
+            bodyB.acceleration = accelerationB;
+
+            Matrix contactTensorA = Matrix.Identity;
+            Matrix velocityTensorA = Matrix.Identity;
+
+            contactTensorA.Forward = L_a.Normalized();
+            contactTensorA.Up = collision.ContactNormal;
+            contactTensorA.Right = Vector3.Cross(contactTensorA.Up, contactTensorA.Forward).Normalized();
+
+            velocityTensorA.Forward = bodyA.velocity;
+            velocityTensorA.Right = Vector3.Cross(Vector3.Up, bodyA.velocity).Normalized();
+            velocityTensorA.Up = Vector3.Cross(velocityTensorA.Forward, velocityTensorA.Right).Normalized();
+
+            float yawA = Vector3.Dot(contactTensorA.Right, velocityTensorA.Forward);
+            float pitchA = Vector3.Dot(contactTensorA.Up, velocityTensorA.Forward);
+            float rollA = Vector3.Dot(contactTensorA.Up, velocityTensorA.Right);
+
+            if (float.IsNaN(yawA)) yawA = 0.0f;
+            if (float.IsNaN(pitchA)) pitchA = 0.0f;
+            if (float.IsNaN(rollA)) rollA = 0.0f;
+
+            bodyA.angularVelocity += new Vector3(pitchA, yawA, rollA);
+            Debug.Log("{0} Yaw: {1} Pitch: {2} Roll: {3}", bodyA.gameObject.Name, yawA, pitchA, rollA);
+
+
+            Matrix contactTensorB = Matrix.Identity;
+            Matrix velocityTensorB = Matrix.Identity;
+
+            contactTensorB.Forward = L_b.Normalized();
+            contactTensorB.Up = collision.ContactNormal;
+            contactTensorB.Right = Vector3.Cross(contactTensorB.Up, contactTensorB.Forward).Normalized();
+
+            velocityTensorB.Forward = bodyB.velocity;
+            velocityTensorB.Right = Vector3.Cross(Vector3.Up, bodyB.velocity).Normalized();
+            velocityTensorB.Up = Vector3.Cross(velocityTensorB.Forward, velocityTensorB.Right).Normalized();
+
+            float yawB = Vector3.Dot(contactTensorB.Right, velocityTensorB.Forward);
+            float pitchB = Vector3.Dot(contactTensorB.Up, velocityTensorB.Forward);
+            float rollB = Vector3.Dot(contactTensorB.Up, velocityTensorB.Right);
+
+            if (float.IsNaN(yawB)) yawB = 0.0f;
+            if (float.IsNaN(pitchB)) pitchB = 0.0f;
+            if (float.IsNaN(rollB)) rollB = 0.0f;
+
+            bodyB.angularVelocity += new Vector3(pitchB, yawB, rollB);
+            Debug.Log("{0} Yaw: {1} Pitch: {2} Roll: {3}", bodyB.gameObject.Name, yawB, pitchB, rollB);
+        }
+
         #region Collision Detection
 
         private Collision SphereToSphere(SphereCollider a, SphereCollider b)
@@ -201,188 +284,11 @@ namespace FPX
             a.ClosestPoint(b.position, out normalA);
             b.ClosestPoint(a.position, out normalB);
 
-            c.ContactNormal = ((normalA + normalB) * 0.5f).Normalized();
+            c.ContactNormal = normalA;// ((normalA + normalB) * 0.5f).Normalized();
 
             return c;
         }
 
-
-        #endregion
-
-        #region Collision Resolution
-
-        private void ResolveCollision(Collision collision)
-        {
-            var a = collision.colliders.ToList()[0];
-            var b = collision.colliders.ToList()[1];
-
-            if (a.GetComponent<Rigidbody>() == null || b.GetComponent<Rigidbody>() == null)
-                return;
-
-            if (a is SphereCollider && b is SphereCollider)
-                ResoveSphereToSphere(collision);
-            if (a is BoxCollider && b is BoxCollider)
-                ResolveBoxToBox(collision);
-        }
-
-        private float AngleBetweenVectors(Vector3 u, Vector3 v)
-        {
-            double d = (double)u.Length();
-            float value = MathHelper.ToDegrees((float)Math.Acos((double)(Vector3.Dot(u, v)) / (double)(u.Length() * v.Length())));
-            if (LinearAlgebraUtil.isEpsilon(value))
-                return 0.0f;
-
-            return value;
-        }
-
-        private void ResoveSphereToSphere(Collision collision)
-        {
-            SphereCollider a = collision[0] as SphereCollider;
-            SphereCollider b = collision[1] as SphereCollider;
-
-            a.position += collision.L *collision.PenetrationDistance;
-            b.position -= collision.L * collision.PenetrationDistance;
-
-            var bodyA = a.GetComponent<Rigidbody>();
-            var bodyB = b.GetComponent<Rigidbody>();
-
-            if (bodyA == null || bodyB == null)
-                return;
-
-            var velocityA = Vector3.Reflect(bodyB.velocity, collision.ContactNormal);
-            var velocityB = Vector3.Reflect(bodyA.velocity, collision.ContactNormal);
-
-            bodyA.velocity = velocityA;
-            bodyB.velocity = velocityB;
-
-            var accelerationA = Vector3.Reflect(bodyB.acceleration, collision.ContactNormal);
-            var accelerationB = Vector3.Reflect(bodyA.acceleration, collision.ContactNormal);
-
-            bodyA.acceleration = accelerationA;
-            bodyB.acceleration = accelerationB;
-
-            Matrix contactTensorA = Matrix.Identity;
-            Matrix velocityTensorA = Matrix.Identity;
-
-            contactTensorA.Forward = collision.L * a.radius;
-            contactTensorA.Up = collision.ContactNormal;
-            contactTensorA.Right = Vector3.Cross(contactTensorA.Up, contactTensorA.Forward).Normalized();
-
-            velocityTensorA.Forward = bodyA.velocity;
-            velocityTensorA.Right = Vector3.Cross(Vector3.Up, bodyA.velocity).Normalized();
-            velocityTensorA.Up = Vector3.Cross(velocityTensorA.Forward, velocityTensorA.Right).Normalized();
-
-            float yawA = Vector3.Dot(contactTensorA.Right, velocityTensorA.Forward);
-            float pitchA = Vector3.Dot(contactTensorA.Forward, velocityTensorA.Up);
-            float rollA = Vector3.Dot(contactTensorA.Up, velocityTensorA.Right);
-
-            if (float.IsNaN(yawA)) yawA = 0.0f;
-            if (float.IsNaN(pitchA)) pitchA = 0.0f;
-            if (float.IsNaN(rollA)) rollA = 0.0f;
-
-            bodyA.angularVelocity += new Vector3(pitchA, yawA, rollA);
-            Debug.Log("Yaw: {0} Pitch: {1} Roll: {2}", yawA, pitchA, rollA);
-
-            Matrix contactTensorB = Matrix.Identity;
-            Matrix velocityTensorB = Matrix.Identity;
-
-            contactTensorB.Forward = collision.L * b.radius;
-            contactTensorB.Up = collision.ContactNormal;
-            contactTensorB.Right = Vector3.Cross(contactTensorB.Up, contactTensorB.Forward).Normalized();
-
-            velocityTensorB.Forward = bodyB.velocity;
-            velocityTensorB.Right = Vector3.Cross(Vector3.Up, bodyB.velocity).Normalized();
-            velocityTensorB.Up = Vector3.Cross(velocityTensorB.Forward, velocityTensorB.Right).Normalized();
-
-            float yawB = Vector3.Dot(   velocityTensorB.Right,      contactTensorB.Forward);
-            float pitchB = Vector3.Dot( velocityTensorB.Forward,    contactTensorB.Up);
-            float rollB = Vector3.Dot(  velocityTensorB.Up,         contactTensorB.Right);
-
-            if (float.IsNaN(yawB)) yawB = 0.0f;
-            if (float.IsNaN(pitchB)) pitchB = 0.0f;
-            if (float.IsNaN(rollB)) rollB = 0.0f;
-
-            bodyB.angularVelocity += new Vector3(pitchB, yawB, rollB);
-            Debug.Log("Yaw: {0} Pitch: {1} Roll: {2}", yawB, pitchB, rollB);
-        }
-
-        private void ResolveBoxToBox(Collision collision)
-        {
-            BoxCollider a = collision[0] as BoxCollider;
-            BoxCollider b = collision[1] as BoxCollider;
-
-            Vector3 closestPointA = a.ClosestPoint(b.position);
-            Vector3 closestPointB = b.ClosestPoint(closestPointA);
-
-            Vector3 L_a = closestPointB - a.position;
-            Vector3 L_b = closestPointA - b.position;
-
-            var bodyA = a.GetComponent<Rigidbody>();
-            var bodyB = b.GetComponent<Rigidbody>();
-
-            if (bodyA == null || bodyB == null)
-                return;
-
-            bodyA.position -= closestPointA - closestPointB;
-            bodyB.position += closestPointB - closestPointA;
-
-            var velocityA = Vector3.Reflect(bodyB.velocity, collision.ContactNormal);
-            var velocityB = Vector3.Reflect(bodyA.velocity, collision.ContactNormal);
-
-            bodyA.velocity = velocityA;
-            bodyB.velocity = velocityB;
-
-            var accelerationA = Vector3.Reflect(bodyB.acceleration, collision.ContactNormal);
-            var accelerationB = Vector3.Reflect(bodyA.acceleration, collision.ContactNormal);
-
-            bodyA.acceleration = accelerationA;
-            bodyB.acceleration = accelerationB;
-
-            Matrix contactTensorA = Matrix.Identity;
-            Matrix velocityTensorA = Matrix.Identity;
-
-            contactTensorA.Forward = L_a.Normalized();
-            contactTensorA.Up = collision.ContactNormal;
-            contactTensorA.Right = Vector3.Cross(contactTensorA.Up, contactTensorA.Forward).Normalized();
-
-            velocityTensorA.Forward = bodyA.velocity;
-            velocityTensorA.Right = Vector3.Cross(Vector3.Up, bodyA.velocity).Normalized();
-            velocityTensorA.Up = Vector3.Cross(velocityTensorA.Forward, velocityTensorA.Right).Normalized();
-
-            float yawA = Vector3.Dot(contactTensorA.Right, velocityTensorA.Forward);
-            float pitchA = Vector3.Dot(contactTensorA.Up, velocityTensorA.Forward);
-            float rollA = Vector3.Dot(contactTensorA.Up, velocityTensorA.Right);
-
-            if (float.IsNaN(yawA)) yawA = 0.0f;
-            if (float.IsNaN(pitchA)) pitchA = 0.0f;
-            if (float.IsNaN(rollA)) rollA = 0.0f;
-
-            bodyA.angularVelocity += new Vector3(pitchA, yawA, rollA);
-            Debug.Log("{0} Yaw: {1} Pitch: {2} Roll: {3}", bodyA.gameObject.Name, yawA, pitchA, rollA);
-
-
-            Matrix contactTensorB = Matrix.Identity;
-            Matrix velocityTensorB = Matrix.Identity;
-
-            contactTensorB.Forward = L_b.Normalized();
-            contactTensorB.Up = collision.ContactNormal;
-            contactTensorB.Right = Vector3.Cross(contactTensorB.Up, contactTensorB.Forward).Normalized();
-
-            velocityTensorB.Forward = bodyB.velocity;
-            velocityTensorB.Right = Vector3.Cross(Vector3.Up, bodyB.velocity).Normalized();
-            velocityTensorB.Up = Vector3.Cross(velocityTensorB.Forward, velocityTensorB.Right).Normalized();
-
-            float yawB = Vector3.Dot(contactTensorB.Right, velocityTensorB.Forward);
-            float pitchB = Vector3.Dot(contactTensorB.Up, velocityTensorB.Forward);
-            float rollB = Vector3.Dot(contactTensorB.Up, velocityTensorB.Right);
-
-            if (float.IsNaN(yawB)) yawB = 0.0f;
-            if (float.IsNaN(pitchB)) pitchB = 0.0f;
-            if (float.IsNaN(rollB)) rollB = 0.0f;
-
-            bodyB.angularVelocity += new Vector3(pitchB, yawB, rollB);
-            Debug.Log("{0} Yaw: {1} Pitch: {2} Roll: {3}", bodyB.gameObject.Name, yawB, pitchB, rollB);
-        }
 
         #endregion
     }

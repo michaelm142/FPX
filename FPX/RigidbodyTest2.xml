@@ -15,6 +15,10 @@
         <MoveSpeed>10</MoveSpeed>
         <RotationSpeed>5</RotationSpeed>
       </CameraController>
+      <PusdodistanceTester>
+        <IDA>Rigidbody1</IDA>
+        <IDB>Rigidbody2</IDB>
+      </PusdodistanceTester>
     </Object>
 
     <Prefab Filename="Prefabs\\Box.xml" Name="Rigidbody1">

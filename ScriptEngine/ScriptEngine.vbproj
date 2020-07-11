@@ -141,6 +141,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Compile Include="PsudodistanceTester.vb" />
     <Compile Include="RayTester.vb" />
     <Compile Include="RigidbodyController.vb" />
     <Compile Include="StartringForce.vb" />

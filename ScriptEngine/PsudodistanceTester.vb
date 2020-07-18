@@ -38,6 +38,9 @@ Public Class PusdodistanceTester
         Dim boxA = TargetA.GetComponent(Of BoxCollider)
         Dim boxB = TargetB.GetComponent(Of BoxCollider)
 
+        Dim bodyA = boxA.GetComponent(Of Rigidbody)
+        Dim bodyB = boxB.GetComponent(Of Rigidbody)
+
         Dim boxA_dotRight = Vector3.Dot(boxA.transform.right * boxA.size.X, Vector3.Right)
         Dim boxA_dotUp = Vector3.Dot(boxA.transform.up * boxA.size.Y, Vector3.Up)
         Dim boxA_dotFront = Vector3.Dot(boxA.transform.forward * boxA.size.Z, Vector3.Forward)
@@ -64,15 +67,16 @@ Public Class PusdodistanceTester
         Dim boxB_maxFront = boxB.Location + Vector3.Forward * boxA_dotFront
         Dim boxB_minFront = boxB.Location - Vector3.Forward * boxA_dotFront
 
-
-        If Psudodistance(boxA_minRight.X, boxA_maxRight.X, boxB_minRight.X, boxB_maxRight.X) < boxA.size.X + boxB.size.X Then
+        Debug.Log("Psudodistance: {0}", Psudodistance(boxA_minRight.X, boxA_maxRight.X, boxB_minRight.X, boxB_maxRight.X, bodyA.velocity.X, bodyB.velocity.X, Time.deltaTime))
+        If Psudodistance(boxA_minRight.X, boxA_maxRight.X, boxB_minRight.X, boxB_maxRight.X, bodyA.velocity.X, bodyB.velocity.X, Time.deltaTime) < boxA.size.X + boxB.size.X Then
             Debug.Log("Contact Dected")
         End If
 
     End Sub
 
-    Private Function Psudodistance(p0 As Single, p1 As Single, q0 As Single, q1 As Single) As Single
-        Return ((p1 - p0) * 0.5 + (q1 - q0) * 0.5) - ((p0 + p1) * 0.5 - (q0 + q1) * 0.5)
+    Private Function Psudodistance(p0 As Single, p1 As Single, q0 As Single, q1 As Single, u As Single, v As Single, t As Single) As Single
+        'Return ((p1 - p0) * 0.5 + (q1 - q0) * 0.5) - ((p0 + p1) * 0.5 - (q0 + q1) * 0.5)
+        Return (u - v) * (u - v) * (t * t) + 2 * (u - v) * ((p0 - p1) / 2.0F - (q1 + q0) / 2.0F) * t + (p0 - q1) * (p1 - q0)
     End Function
 
 

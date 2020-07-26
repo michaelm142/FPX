@@ -12,6 +12,11 @@ namespace FPX
 
         public float radius { get; set; }
 
+        public override Vector3 Psudosize
+        {
+            get { return Vector3.One * radius; }
+        }
+
         public void LoadXml(XmlElement node)
         {
 

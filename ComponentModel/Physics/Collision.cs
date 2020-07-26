@@ -27,6 +27,7 @@ namespace FPX
 
         public Vector3 L;
         public Vector3 ContactNormal;
+        public Vector3 Psudodistance;
 
         public float PenetrationDistance;
 

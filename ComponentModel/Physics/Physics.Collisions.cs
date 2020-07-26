@@ -38,6 +38,8 @@ namespace FPX
             if (a is BoxCollider && b is BoxCollider)
             {
                 Collision c = BoxToBox(a as BoxCollider, b as BoxCollider);
+                if (c != null)
+                    Debug.Log("PsudoDistance: {0}", c.Psudodistance);
                 SendColisionMessages(a, b, c != null);
                 return c;
             }
@@ -78,8 +80,17 @@ namespace FPX
             if (bodyA == null || bodyB == null)
                 return;
 
-            bodyA.position -= closestPointA - closestPointB;
-            bodyB.position += closestPointB - closestPointA;
+            for (int i = 0; i < MaxPhysIterations; i++)
+            {
+                Vector3 psudoDistance = Psudodistance(a, b);
+                Debug.Log("Iteration {0}, Psudodistance: {1}", i, psudoDistance);
+                Vector3 offset = (a.Psudosize + b.Psudosize) - psudoDistance;
+                bodyA.position += offset * Time.deltaTime;
+                bodyB.position -= offset * Time.deltaTime;
+            }
+
+            //bodyA.position -= closestPointA - closestPointB;
+            //bodyB.position += closestPointB - closestPointA;
 
             var velocityA = Vector3.Reflect(bodyB.velocity, collision.ContactNormal);
             var velocityB = Vector3.Reflect(bodyA.velocity, collision.ContactNormal);
@@ -142,6 +153,49 @@ namespace FPX
 
         #region Collision Detection
 
+        private Vector3 Psudodistance(Collider colliderA, Collider colliderB)
+        {
+            var bodyA = colliderA.GetComponent<Rigidbody>();
+            var bodyB = colliderB.GetComponent<Rigidbody>();
+
+            var boxA_dotRight = Vector3.Dot(colliderA.transform.right * colliderA.Psudosize.X, Vector3.Right);
+            var boxA_dotUp = Vector3.Dot(colliderA.transform.up * colliderA.Psudosize.Y, Vector3.Up);
+            var boxA_dotFront = Vector3.Dot(colliderA.transform.forward * colliderA.Psudosize.Z, Vector3.Forward);
+
+            var boxB_dotRight = Vector3.Dot(colliderB.transform.right * colliderA.Psudosize.X, Vector3.Right);
+            var boxB_dotUp = Vector3.Dot(colliderB.transform.up * colliderB.Psudosize.Y, Vector3.Up);
+            var boxB_dotFront = Vector3.Dot(colliderB.transform.forward * colliderB.Psudosize.Z, Vector3.Forward);
+
+            var boxA_maxRight = colliderA.Location + Vector3.Right * boxA_dotRight;
+            var boxA_minRight = colliderA.Location - Vector3.Right * boxA_dotRight;
+
+            var boxA_maxUp = colliderA.Location + Vector3.Up * boxA_dotUp;
+            var boxA_minUp = colliderA.Location - Vector3.Up * boxA_dotUp;
+
+            var boxA_maxFront = colliderA.Location + Vector3.Forward * boxA_dotFront;
+            var boxA_minFront = colliderA.Location - Vector3.Forward * boxA_dotFront;
+
+            var boxB_maxRight = colliderB.Location + Vector3.Right * boxB_dotRight;
+            var boxB_minRight = colliderB.Location - Vector3.Right * boxB_dotRight;
+
+            var boxB_maxUp = colliderB.Location + Vector3.Up * boxB_dotUp;
+            var boxB_minUp = colliderB.Location - Vector3.Up * boxB_dotUp;
+
+            var boxB_maxFront = colliderB.Location + Vector3.Forward * boxB_dotFront;
+            var boxB_minFront = colliderB.Location - Vector3.Forward * boxB_dotFront;
+
+            var psudodistanceX = Psudodistance(boxA_minRight.X, boxA_maxRight.X, boxB_minRight.X, boxB_maxRight.X, bodyA.velocity.X, bodyB.velocity.X, Time.deltaTime);
+            var psudodistanceY = Psudodistance(boxA_minUp.Y, boxA_maxUp.Y, boxB_minUp.Y, boxB_maxUp.Y, bodyA.velocity.Y, bodyB.velocity.Y, Time.deltaTime);
+            var psudodistanceZ = Psudodistance(boxA_minFront.Z, boxA_maxFront.Z, boxB_minFront.Z, boxB_maxFront.Z, bodyA.velocity.Z, bodyB.velocity.Z, Time.deltaTime);
+
+            return Vector3.Right * psudodistanceX + Vector3.Up * psudodistanceY + Vector3.Forward * psudodistanceZ;
+        }
+
+        private float Psudodistance(float p0, float p1, float q0, float q1, float u, float v, float t)
+        {
+            return (u - v) * (u - v) * (t * t) + 2 * (u - v) * ((p0 - p1) / 2.0F - (q1 + q0) / 2.0F) * t + (p0 - q1) * (p1 - q0);
+        }
+
         private Collision SphereToSphere(SphereCollider a, SphereCollider b)
         {
             float distance = Vector3.Distance(a.Location, b.Location);
@@ -161,17 +215,25 @@ namespace FPX
             Vector3 nPrime = Vector3.Cross(Vector3.Up, L);
             collision.ContactNormal = Vector3.Cross(L, nPrime);
 
+            collision.Psudodistance = Psudodistance(a, b);
+
             return collision;
         }
 
         private Collision SphereToBox(SphereCollider a, BoxCollider b)
         {
+            if (MathHelper.Distance(a.Psudosize.Length(), b.Psudosize.Length()) > a.Psudosize.Length() + b.Psudosize.Length())
+                return null;
+
             var closestPoint = b.ClosestPoint(a.Location);
 
             Vector3 L = closestPoint - a.Location;
             if (Vector3.Dot(L, L) <= a.radius * a.radius)
             {
                 Collision c = new Collision(a, b);
+                c.L = L;
+                c.ContactNormal = L.Normalized();
+                c.Psudodistance = Psudodistance(a, b);
                 return c;
             }
 
@@ -185,6 +247,9 @@ namespace FPX
 
         private Collision BoxToBox(BoxCollider a, BoxCollider b)
         {
+            if (MathHelper.Distance(a.Psudosize.Length(), b.Psudosize.Length()) > a.Psudosize.Length() + b.Psudosize.Length())
+                return null;
+
             float ra, rb;
             Matrix R = Matrix.Identity,
                 AbsR = Matrix.Identity;
@@ -285,6 +350,8 @@ namespace FPX
             b.ClosestPoint(a.position, out normalB);
 
             c.ContactNormal = normalA;// ((normalA + normalB) * 0.5f).Normalized();
+            if (a.GetComponent<Rigidbody>() != null && b.GetComponent<Rigidbody>() != null)
+                c.Psudodistance = Psudodistance(a, b);
 
             return c;
         }

@@ -20,6 +20,11 @@ namespace FPX
             get { return Location + Vector3.Transform(size, rotation); }
         }
 
+        public override Vector3 Psudosize
+        {
+            get { return size; }
+        }
+
         public override bool Contains(Vector3 point)
         {
             var localPoint = Vector3.Transform(point, Matrix.Invert(transform.worldPose));

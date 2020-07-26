@@ -5,4 +5,5 @@
   <ControllerInput>One</ControllerInput>
   <TimeScale>1.0</TimeScale>
   <FillMode>TriangleList</FillMode>
+  <MaxPhysIterations>4</MaxPhysIterations>
 </Settings>

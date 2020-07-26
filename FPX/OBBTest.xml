@@ -18,14 +18,21 @@
         <MoveSpeed>5.0</MoveSpeed>
         <RotationSpeed>10.0</RotationSpeed>
       </CameraController>
+      <PusdodistanceTester>
+        <IDA>Box 1</IDA>
+        <IDB>WorldBox</IDB>
+      </PusdodistanceTester>
     </Object>
 
     <Object Name="Box 1" Id="0">
+      <Transform>
+        <Position x="0" y="1.5" z="0"/>
+      </Transform>
       <LocalAxisRenderer/>
-      <GameControlTest>
+      <RigidbodyController>
         <MoveSpeed>5.0</MoveSpeed>
         <RotationSpeed>10.0</RotationSpeed>
-      </GameControlTest>
+      </RigidbodyController>
       <AxisAlignedTester>
         <Target>1</Target>
       </AxisAlignedTester>
@@ -35,6 +42,10 @@
       <BoxCollider>
         <Size X="1" Y="1" Z="1"/>
       </BoxCollider>
+      <Rigidbody>
+        <Drag>0.1</Drag>
+        <AngularDrag>0.05</AngularDrag>
+      </Rigidbody>
     </Object>
 
     <Object Name="WorldBox" Id="1">
@@ -42,6 +53,11 @@
         <Size X="1" Y="1" Z="1"/>
       </BoxCollider>
       <BoxRenderer/>
+      <Rigidbody>
+        <Drag>0.01</Drag>
+        <AngularDrag>0.1</AngularDrag>
+        <IsKinematic>true</IsKinematic>
+      </Rigidbody>
     </Object>
     
   </Objects>

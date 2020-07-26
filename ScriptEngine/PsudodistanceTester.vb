@@ -67,8 +67,9 @@ Public Class PusdodistanceTester
         Dim boxB_maxFront = boxB.Location + Vector3.Forward * boxA_dotFront
         Dim boxB_minFront = boxB.Location - Vector3.Forward * boxA_dotFront
 
-        Debug.Log("Psudodistance: {0}", Psudodistance(boxA_minRight.X, boxA_maxRight.X, boxB_minRight.X, boxB_maxRight.X, bodyA.velocity.X, bodyB.velocity.X, Time.deltaTime))
-        If Psudodistance(boxA_minRight.X, boxA_maxRight.X, boxB_minRight.X, boxB_maxRight.X, bodyA.velocity.X, bodyB.velocity.X, Time.deltaTime) < boxA.size.X + boxB.size.X Then
+        Debug.Log("Psudodistance X:{0} Y:{1}", Psudodistance(boxA_minRight.X, boxA_maxRight.X, boxB_minRight.X, boxB_maxRight.X, bodyA.velocity.X, bodyB.velocity.X, Time.deltaTime),
+                                                Psudodistance(boxA_minUp.Y, boxA_maxUp.Y, boxB_minUp.Y, boxB_maxUp.Y, bodyA.velocity.Y, bodyB.velocity.Y, Time.deltaTime))
+        If Psudodistance(boxA_minRight.X, boxA_maxRight.X, boxB_minRight.X, boxB_maxRight.X, bodyA.velocity.X, bodyB.velocity.X, Time.deltaTime) < 0 Then 'boxA.size.X + boxB.size.X Then
             Debug.Log("Contact Dected")
         End If
 

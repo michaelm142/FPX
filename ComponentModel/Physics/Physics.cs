@@ -53,8 +53,12 @@ namespace FPX
 
         List<Collision> activeCollisions = new List<Collision>();
 
+        public int MaxPhysIterations { get; private set; }
+
         public void Initialize()
         {
+            MaxPhysIterations = Settings.GetSetting<int>("MaxPhysIterations");
+            Debug.Log("Maximum number of collision iterations is {0}", MaxPhysIterations);
         }
 
         public void Update(GameTime gameTime)

@@ -9,6 +9,7 @@ namespace FPX
         public Vector3 acceleration = Vector3.Zero;
         public Vector3 torque = Vector3.Zero;
         public Vector3 angularVelocity = Vector3.Zero;
+        private Vector3 startPosition;
 
         public float mass = 1.0F;
         public float drag = 0.0F;
@@ -21,8 +22,15 @@ namespace FPX
             get { return GetComponent<Collider>(); }
         }
 
+        public void Start()
+        {
+            startPosition = transform.position;
+        }
+
         public void Update(GameTime gameTime)
         {
+            if (isKinematic)
+                transform.position = startPosition;
         //    if (isKinematic || (acceleration.Length() == 0.0f && velocity.Length() == 0.0f))
         //        return;
 

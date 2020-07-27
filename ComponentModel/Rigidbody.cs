@@ -10,6 +10,7 @@ namespace FPX
         public Vector3 torque = Vector3.Zero;
         public Vector3 angularVelocity = Vector3.Zero;
         private Vector3 startPosition;
+        private Vector3 startRotation;
 
         public float mass = 1.0F;
         public float drag = 0.0F;
@@ -25,12 +26,16 @@ namespace FPX
         public void Start()
         {
             startPosition = transform.position;
+            startRotation = transform.rotation.GetEulerAngles();
         }
 
         public void Update(GameTime gameTime)
         {
             if (isKinematic)
+            {
                 transform.position = startPosition;
+                transform.rotation.SetEulerAngles(startRotation);
+            }
         //    if (isKinematic || (acceleration.Length() == 0.0f && velocity.Length() == 0.0f))
         //        return;
 

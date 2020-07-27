@@ -22,11 +22,19 @@ namespace FPX
 
         private static Time Instance;
 
+        public float TimeScale
+        {
+            get { return Settings.GetSetting<float>("Physics/TimeScale"); }
+
+            set { Settings.SetSetting("Physics/TimeScale", value); }
+        }
+
         public static float deltaTime
         {
-            get {
-                return ((float)Instance._gameTime.ElapsedGameTime.TotalSeconds *
-                  Settings.GetSetting<float>("TimeScale"));
+            get
+            {
+                return (((float)Instance._gameTime.ElapsedGameTime.Milliseconds / 1000.0f) *
+                  Instance.TimeScale);
             }
         }
 
@@ -42,6 +50,7 @@ namespace FPX
         public void Update(GameTime gameTime)
         {
             this._gameTime = gameTime;
+            Debug.Log("Delta Time: {0}", deltaTime);
         }
 
         public void Dispose()

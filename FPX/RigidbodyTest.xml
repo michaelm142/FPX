@@ -25,7 +25,7 @@
         <AngularDrag>0.05</AngularDrag>
       </Rigidbody>
       <StartingForce>
-        <StartingForce X="1" Y="0.0" Z="0.0"/>
+        <StartingForce X="5" Y="0.0" Z="0.0"/>
       </StartingForce>
       <Material>
         <DiffuseMap FileName ="Textures\\TestTexture"/>
@@ -34,14 +34,30 @@
 
     <Prefab Filename="Prefabs\\Sphere.xml" Name="Rigidbody2">
       <Transform>
-        <Position X="3.0" Y="0.5" Z="0.5"/>
+        <Position X="3.0" Y="0.5" Z="0"/>
       </Transform>
       <Rigidbody>
         <Drag>0.1</Drag>
         <AngularDrag>0.05</AngularDrag>
       </Rigidbody>
       <StartingForce>
-        <StartingForce X="-1" Y="0.0" Z="0.0"/>
+        <StartingForce X="-10" Y="0.0" Z="0.0"/>
+      </StartingForce>
+      <Material>
+        <DiffuseMap FileName ="Textures\\TestTexture"/>
+      </Material>
+    </Prefab>
+
+    <Prefab Filename="Prefabs\\Sphere.xml" Name="Rigidbody3">
+      <Transform>
+        <Position X="-1.0" Y="2" Z="0.5"/>
+      </Transform>
+      <Rigidbody>
+        <Drag>0.1</Drag>
+        <AngularDrag>0.05</AngularDrag>
+      </Rigidbody>
+      <StartingForce>
+        <StartingForce X="3" Y="-0.5" Z="0.0"/>
       </StartingForce>
       <Material>
         <DiffuseMap FileName ="Textures\\TestTexture"/>

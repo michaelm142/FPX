@@ -106,9 +106,6 @@ namespace FPX
             //if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
             //Exit();
 
-            foreach (var comp in Components.ToList().FindAll(c => c is IUpdateable).Cast<IUpdateable>())
-                comp.Update(gameTime);
-
             base.Update(gameTime);
         }
 
@@ -118,8 +115,6 @@ namespace FPX
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            foreach (IDrawable component in Components.ToList().FindAll(c => c is IDrawable).Cast<IDrawable>())
-                component.Draw(gameTime);
 
             base.Draw(gameTime);
         }

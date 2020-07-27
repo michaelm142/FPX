@@ -70,9 +70,10 @@ namespace FPX
 
             Vector3 closestPointA = a.ClosestPoint(b.position);
             Vector3 closestPointB = b.ClosestPoint(closestPointA);
+            closestPointA = a.ClosestPoint(closestPointB);
 
-            Vector3 L_a = closestPointB - a.position;
-            Vector3 L_b = closestPointA - b.position;
+            Vector3 L_a = closestPointB - closestPointA;
+            Vector3 L_b = closestPointA - closestPointB;
 
             var bodyA = a.GetComponent<Rigidbody>();
             var bodyB = b.GetComponent<Rigidbody>();
@@ -82,11 +83,17 @@ namespace FPX
 
             for (int i = 0; i < MaxPhysIterations; i++)
             {
-                Vector3 psudoDistance = Psudodistance(a, b);
-                Debug.Log("Iteration {0}, Psudodistance: {1}", i, psudoDistance);
-                Vector3 offset = (a.Psudosize + b.Psudosize) - psudoDistance;
-                bodyA.position += offset * Time.deltaTime;
-                bodyB.position -= offset * Time.deltaTime;
+                float psudoDistance = Psudodistance(a, b);
+                float itr = 1.0f / (i + 1.0f);
+                Debug.Log("Iteration {0}, Psudodistance: {1}, itr: {2}", i, psudoDistance, itr);
+                bodyA.position -= L_a * psudoDistance * itr;
+                bodyB.position -= L_b * psudoDistance * itr;
+
+                //bodyA.rotation *= Quaternion.CreateFromYawPitchRoll(psudoDistance * itr, psudoDistance * itr, psudoDistance * itr);
+                //bodyB.rotation *= Quaternion.CreateFromYawPitchRoll(-psudoDistance * itr, -psudoDistance * itr, -psudoDistance * itr);
+
+                //bodyA.velocity += bodyA.velocity * (psudoDistance * itr);
+                //bodyB.velocity -= bodyB.velocity * (-psudoDistance * itr);
             }
 
             //bodyA.position -= closestPointA - closestPointB;
@@ -110,9 +117,9 @@ namespace FPX
 
             contactTensorA.Forward = L_a.Normalized();
             contactTensorA.Up = collision.ContactNormal;
-            contactTensorA.Right = Vector3.Cross(contactTensorA.Up, contactTensorA.Forward).Normalized();
+            contactTensorA.Right = Vector3.Cross(contactTensorA.Forward, contactTensorA.Up).Normalized();
 
-            velocityTensorA.Forward = bodyA.velocity;
+            velocityTensorA.Forward = bodyA.velocity.Normalized();
             velocityTensorA.Right = Vector3.Cross(Vector3.Up, bodyA.velocity).Normalized();
             velocityTensorA.Up = Vector3.Cross(velocityTensorA.Forward, velocityTensorA.Right).Normalized();
 
@@ -133,9 +140,9 @@ namespace FPX
 
             contactTensorB.Forward = L_b.Normalized();
             contactTensorB.Up = collision.ContactNormal;
-            contactTensorB.Right = Vector3.Cross(contactTensorB.Up, contactTensorB.Forward).Normalized();
+            contactTensorB.Right = Vector3.Cross(contactTensorB.Forward, contactTensorB.Up).Normalized();
 
-            velocityTensorB.Forward = bodyB.velocity;
+            velocityTensorB.Forward = bodyB.velocity.Normalized();
             velocityTensorB.Right = Vector3.Cross(Vector3.Up, bodyB.velocity).Normalized();
             velocityTensorB.Up = Vector3.Cross(velocityTensorB.Forward, velocityTensorB.Right).Normalized();
 
@@ -153,47 +160,51 @@ namespace FPX
 
         #region Collision Detection
 
-        private Vector3 Psudodistance(Collider colliderA, Collider colliderB)
+        private float Psudodistance(Collider colliderA, Collider colliderB)
         {
-            var bodyA = colliderA.GetComponent<Rigidbody>();
-            var bodyB = colliderB.GetComponent<Rigidbody>();
-
-            var boxA_dotRight = Vector3.Dot(colliderA.transform.right * colliderA.Psudosize.X, Vector3.Right);
-            var boxA_dotUp = Vector3.Dot(colliderA.transform.up * colliderA.Psudosize.Y, Vector3.Up);
-            var boxA_dotFront = Vector3.Dot(colliderA.transform.forward * colliderA.Psudosize.Z, Vector3.Forward);
-
-            var boxB_dotRight = Vector3.Dot(colliderB.transform.right * colliderA.Psudosize.X, Vector3.Right);
-            var boxB_dotUp = Vector3.Dot(colliderB.transform.up * colliderB.Psudosize.Y, Vector3.Up);
-            var boxB_dotFront = Vector3.Dot(colliderB.transform.forward * colliderB.Psudosize.Z, Vector3.Forward);
-
-            var boxA_maxRight = colliderA.Location + Vector3.Right * boxA_dotRight;
-            var boxA_minRight = colliderA.Location - Vector3.Right * boxA_dotRight;
-
-            var boxA_maxUp = colliderA.Location + Vector3.Up * boxA_dotUp;
-            var boxA_minUp = colliderA.Location - Vector3.Up * boxA_dotUp;
-
-            var boxA_maxFront = colliderA.Location + Vector3.Forward * boxA_dotFront;
-            var boxA_minFront = colliderA.Location - Vector3.Forward * boxA_dotFront;
-
-            var boxB_maxRight = colliderB.Location + Vector3.Right * boxB_dotRight;
-            var boxB_minRight = colliderB.Location - Vector3.Right * boxB_dotRight;
-
-            var boxB_maxUp = colliderB.Location + Vector3.Up * boxB_dotUp;
-            var boxB_minUp = colliderB.Location - Vector3.Up * boxB_dotUp;
-
-            var boxB_maxFront = colliderB.Location + Vector3.Forward * boxB_dotFront;
-            var boxB_minFront = colliderB.Location - Vector3.Forward * boxB_dotFront;
-
-            var psudodistanceX = Psudodistance(boxA_minRight.X, boxA_maxRight.X, boxB_minRight.X, boxB_maxRight.X, bodyA.velocity.X, bodyB.velocity.X, Time.deltaTime);
-            var psudodistanceY = Psudodistance(boxA_minUp.Y, boxA_maxUp.Y, boxB_minUp.Y, boxB_maxUp.Y, bodyA.velocity.Y, bodyB.velocity.Y, Time.deltaTime);
-            var psudodistanceZ = Psudodistance(boxA_minFront.Z, boxA_maxFront.Z, boxB_minFront.Z, boxB_maxFront.Z, bodyA.velocity.Z, bodyB.velocity.Z, Time.deltaTime);
-
-            return Vector3.Right * psudodistanceX + Vector3.Up * psudodistanceY + Vector3.Forward * psudodistanceZ;
+            if (colliderA is BoxCollider && colliderB is BoxCollider)
+                return Psudodistance(colliderA as BoxCollider, colliderB as BoxCollider);
+            else
+                return Psudodistance(colliderA as SphereCollider, colliderB as SphereCollider);
         }
 
-        private float Psudodistance(float p0, float p1, float q0, float q1, float u, float v, float t)
+        private float Psudodistance(SphereCollider a, SphereCollider b)
         {
-            return (u - v) * (u - v) * (t * t) + 2 * (u - v) * ((p0 - p1) / 2.0F - (q1 + q0) / 2.0F) * t + (p0 - q1) * (p1 - q0);
+            Vector3 L = b.position - a.position;
+            float lengthSquared = L.LengthSquared();
+            float sumRadi = a.radius + b.radius;
+            return lengthSquared / (sumRadi * sumRadi) - 1.0f;
+        }
+
+        private float Psudodistance(BoxCollider a, BoxCollider b)
+        {
+            Vector3 L = b.Location - a.Location;
+            float lengthSquared = L.LengthSquared();
+            float rSum = a.size.Length() + b.size.Length();
+
+            return lengthSquared / (rSum * rSum) - 1.0f;
+
+        }
+
+        private float Psudodistance(float p0, float p1, float q0, float q1, float u, float v, float t, out float asub2, out float asub1, out float asub0)
+        {
+            asub2 = (u - v) * (u - v);
+            asub1 = p0 * u - p0 * v + p1 * p1 * u - p1 * v;
+            asub0 = (p0 - q1) * (p1 - q0);
+            float F = asub2 * (t * t) + asub1 * t + asub0;
+            return F;
+            //return (u - v) * (u - v) * (t * t) + 2 * (u - v) * ((p0 - p1) / 2.0F - (q1 + q0) / 2.0F) * t + (p0 - q1) * (p1 - q0);
+        }
+
+        private ContactType FindContactType(Collider a, Collider b, out float psudoDistance)
+        {
+            psudoDistance = Psudodistance(a, b);
+            if (psudoDistance < 0.0f)
+                return ContactType.Overlapping;
+            else if (LinearAlgebraUtil.isEpsilon(psudoDistance))
+                return ContactType.Touching;
+
+            return ContactType.Seperated;
         }
 
         private Collision SphereToSphere(SphereCollider a, SphereCollider b)
@@ -358,5 +369,12 @@ namespace FPX
 
 
         #endregion
+    }
+
+    internal enum ContactType
+    {
+        Overlapping,
+        Touching,
+        Seperated,
     }
 }

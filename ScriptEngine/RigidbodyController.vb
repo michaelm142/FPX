@@ -31,6 +31,7 @@ Public Class RigidbodyController
         GetComponent(Of Rigidbody).torque = Vector3.Right * rightThumbstick.Y + Vector3.Up * rightThumbstick.X
         If slow Then
             GetComponent(Of Rigidbody).angularVelocity -= GetComponent(Of Rigidbody).angularVelocity * Time.deltaTime
+            GetComponent(Of Rigidbody).velocity -= GetComponent(Of Rigidbody).velocity * Time.deltaTime
         End If
     End Sub
 

@@ -35,16 +35,17 @@
 
     <Prefab Filename="Prefabs\\Box.xml" Name="Rigidbody2">
       <Transform>
-        <Position X="3.0" Y="0" Z="0"/>
+        <Position X="3.0" Y="0.75" Z="0"/>
       </Transform>
       <Rigidbody>
         <Drag>0.1</Drag>
         <AngularDrag>0.05</AngularDrag>
       </Rigidbody>
       <StartingForce>
-        <StartingForce X="-1" Y="0.0" Z="0.0"/>
+        <StartingForce X="-20" Y="0.0" Z="0.0"/>
       </StartingForce>
       <Material>
+        <DiffuseColor R="255" G="255" B="255" A="255"/>
         <DiffuseMap FileName ="Textures\\TestTexture"/>
       </Material>
     </Prefab>

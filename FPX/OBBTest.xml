@@ -26,7 +26,7 @@
 
     <Object Name="Box 1" Id="0">
       <Transform>
-        <Position x="0" y="1.5" z="0"/>
+        <Position X="0" Y="2.5" Z="0"/>
       </Transform>
       <LocalAxisRenderer/>
       <RigidbodyController>

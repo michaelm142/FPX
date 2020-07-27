@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Settings>
+  <Physics>
+    <TimeScale>1.0</TimeScale>
+    <MaxPhysIterations>4</MaxPhysIterations>
+  </Physics>
   <ScreenWidth>1600</ScreenWidth>
   <ScreenHeight>1200</ScreenHeight>
   <ControllerInput>One</ControllerInput>
-  <TimeScale>1.0</TimeScale>
   <FillMode>TriangleList</FillMode>
-  <MaxPhysIterations>4</MaxPhysIterations>
 </Settings>

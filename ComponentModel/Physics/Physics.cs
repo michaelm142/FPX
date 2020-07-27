@@ -57,12 +57,13 @@ namespace FPX
 
         public void Initialize()
         {
-            MaxPhysIterations = Settings.GetSetting<int>("MaxPhysIterations");
+            MaxPhysIterations = Settings.GetSetting<int>("Physics/MaxPhysIterations");
             Debug.Log("Maximum number of collision iterations is {0}", MaxPhysIterations);
         }
 
         public void Update(GameTime gameTime)
         {
+            Debug.Log("==================<Begin Physics Frame>==================");
             // detect and cull collisions
             List<Collision> collisions = new List<Collision>();
             DetectCollisions(ref collisions);
@@ -83,7 +84,7 @@ namespace FPX
             // move objects
             foreach (var rBody in Rigidbodies)
                 UpdateRigidbody(rBody);
-
+            Debug.Log("==================<End Physics Frame>==================");
         }
 
         private void UpdateRigidbody(Rigidbody rBody)

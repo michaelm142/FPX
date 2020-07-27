@@ -19,7 +19,8 @@ Public Class ClosestPointShower
         If target Is Nothing Then
             target = GameObject.Find(targetName)
         End If
-        sphere.position = GetComponent(Of Collider).ClosestPoint(target.GetComponent(Of Collider).Location)
+        Dim point = target.GetComponent(Of Collider).ClosestPoint(position)
+        sphere.position = GetComponent(Of Collider).ClosestPoint(point)
     End Sub
 
     Public Sub LoadXml(ByVal node As Xml.XmlElement)

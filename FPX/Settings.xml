@@ -4,8 +4,9 @@
     <TimeScale>1.0</TimeScale>
     <MaxPhysIterations>4</MaxPhysIterations>
   </Physics>
-  <ScreenWidth>1600</ScreenWidth>
-  <ScreenHeight>1200</ScreenHeight>
+  <FullScreen>true</FullScreen>
+  <ScreenWidth>5760</ScreenWidth>
+  <ScreenHeight>1080</ScreenHeight>
   <ControllerInput>One</ControllerInput>
   <FillMode>TriangleList</FillMode>
 </Settings>

@@ -104,8 +104,6 @@ namespace FPX
             Debug.Log("ENGINE LAUNCH");
             Debug.ResetColors();
 
-            Settings.Initialize();
-
             IsRunning = true;
             using (Game gameInstance = CreateGameInstance(sceneName, windowHandle))
             {

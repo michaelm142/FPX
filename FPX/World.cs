@@ -24,7 +24,10 @@ namespace FPX
         {
             graphics = new GraphicsDeviceManager(this);
             graphics.GraphicsProfile = GraphicsProfile.HiDef;
+            graphics.PreparingDeviceSettings += Graphics_PreparingDeviceSettings;
             Content.RootDirectory = "Content";
+            var gdm = Services.GetService(typeof(IGraphicsDeviceManager)) as IGraphicsDeviceManager;
+            gdm.CreateDevice();
         }
 
         public World(IntPtr windowHandle)
@@ -48,6 +51,7 @@ namespace FPX
                 prams.BackBufferWidth = Settings.GetSetting<int>("ScreenWidth");
                 prams.BackBufferHeight = Settings.GetSetting<int>("ScreenHeight");
                 prams.DeviceWindowHandle = Window.Handle;
+                prams.IsFullScreen = Settings.GetSetting<bool>("FullScreen");
             }
             else
             {

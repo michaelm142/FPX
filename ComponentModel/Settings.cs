@@ -70,6 +70,7 @@ namespace FPX
         {
             float floatVal = 0.0f;
             int intVal = 0;
+            bool boolVal = false;
             string strVal = setting.InnerText;
 
             var childNodes = setting.ChildNodes.Cast<XmlNode>().ToList().FindAll(node => node is XmlElement).Cast<XmlElement>();
@@ -77,6 +78,8 @@ namespace FPX
             {
                 if (int.TryParse(strVal, out intVal))
                     settings.Add(existingText + setting.Name, intVal);
+                else if (bool.TryParse(strVal, out boolVal))
+                    settings.Add(existingText + setting.Name, boolVal);
                 else if (float.TryParse(strVal, out floatVal))
                     settings.Add(existingText + setting.Name, floatVal);
                 else

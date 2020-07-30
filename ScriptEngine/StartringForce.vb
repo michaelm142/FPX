@@ -14,7 +14,7 @@ Public Class StartingForce
         rigidBody.AddTorque(startingTorque)
     End Sub
 
-    Public Sub LoadXml(node As XmlNode)
+    Public Overrides Sub LoadXml(node As XmlElement)
         Dim startingForceNode As XmlElement = node.SelectSingleNode("StartingForce")
         Dim startingTorqueNode As XmlElement = node.SelectSingleNode("StartingTorque")
 

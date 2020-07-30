@@ -14,7 +14,7 @@ Public Class PusdodistanceTester
     Private TargetAPosPrev As Vector3
     Private TargetBPosPrev As Vector3
 
-    Public Sub LoadXml(node As XmlElement)
+    Public Overrides Sub LoadXml(node As XmlElement)
         Dim nodeA = node.SelectSingleNode("IDA")
         Dim nodeB = node.SelectSingleNode("IDB")
 

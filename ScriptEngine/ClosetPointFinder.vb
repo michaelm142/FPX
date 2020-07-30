@@ -16,7 +16,7 @@ Public Class ClosestPointFinder
         sphere.transform.localScale = Vector3.One * 0.05
     End Sub
 
-    Public Sub LoadXml(node As XmlElement)
+    Public Overrides Sub LoadXml(node As XmlElement)
         Dim targetNode = node.SelectSingleNode("Target")
         targetId = UInteger.Parse(targetNode.InnerText)
     End Sub

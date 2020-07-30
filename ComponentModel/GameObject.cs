@@ -189,11 +189,7 @@ namespace FPX
                 Component c = Activator.CreateInstance(createType) as Component;
                 if (c == null)
                 {
-<<<<<<< HEAD
                     Debug.LogError("Could not find type {0} in assembly", createType);
-=======
-                    Debug.LogError("No type named {0} does not exist", createType);
->>>>>>> Branch_e4d91dcb
                     continue;
                 }
                 c.gameObject = obj;

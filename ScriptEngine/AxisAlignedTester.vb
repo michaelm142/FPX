@@ -36,7 +36,7 @@ Public Class AxisAlignedTester
         pointSphereB.position = closestPointB
     End Sub
 
-    Public Sub LoadXml(node As XmlElement)
+    Public Overrides Sub LoadXml(node As XmlElement)
         Dim targetNode = node.SelectSingleNode("Target")
         Dim sizeNode = node.SelectSingleNode("Size")
 

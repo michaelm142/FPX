@@ -21,11 +21,11 @@
         <Position X="-3.0" Y="0" Z="0.0"/>
       </Transform>
       <Rigidbody>
-        <Drag>0.1</Drag>
+        <Drag>0.01</Drag>
         <AngularDrag>0.05</AngularDrag>
       </Rigidbody>
       <StartingForce>
-        <StartingForce X="5" Y="0.0" Z="0.0"/>
+        <StartingForce X="10" Y="0.0" Z="0.0"/>
       </StartingForce>
       <Material>
         <DiffuseMap FileName ="Textures\\TestTexture"/>
@@ -37,7 +37,7 @@
         <Position X="3.0" Y="0.5" Z="0"/>
       </Transform>
       <Rigidbody>
-        <Drag>0.1</Drag>
+        <Drag>0.01</Drag>
         <AngularDrag>0.05</AngularDrag>
       </Rigidbody>
       <StartingForce>
@@ -56,7 +56,7 @@
         <Position X="-1.0" Y="2" Z="0.5"/>
       </Transform>
       <Rigidbody>
-        <Drag>0.1</Drag>
+        <Drag>0.01</Drag>
         <AngularDrag>0.05</AngularDrag>
       </Rigidbody>
       <StartingForce>

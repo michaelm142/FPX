@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Settings>
   <Physics>
-    <TimeScale>0.1</TimeScale>
+    <TimeScale>1.0</TimeScale>
     <MaxPhysIterations>8</MaxPhysIterations>
   </Physics>
   <FullScreen>true</FullScreen>

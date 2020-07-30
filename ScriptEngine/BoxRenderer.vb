@@ -59,7 +59,7 @@ Public Class BoxRenderer
         legFrontRight.material.DiffuseColor = Color
     End Sub
 
-    Public Sub LoadXml(node As XmlElement)
+    Public Overrides Sub LoadXml(node As XmlElement)
         Dim colorNode = node.SelectSingleNode("Color")
         If Not colorNode Is Nothing Then
             Color = LinearAlgebraUtil.ColorFromXml(colorNode)

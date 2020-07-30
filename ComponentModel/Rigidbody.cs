@@ -76,7 +76,7 @@ namespace FPX
             angularVelocity = Vector3.Zero;
         }
 
-        public void LoadXml(XmlElement element)
+        public override void LoadXml(XmlElement element)
         {
             var velocityNode = element.SelectSingleNode("Velocity") as XmlElement;
             var torqueNode = element.SelectSingleNode("Torque") as XmlElement;

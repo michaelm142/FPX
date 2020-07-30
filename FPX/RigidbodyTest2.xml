@@ -19,14 +19,14 @@
 
     <Prefab Filename="Prefabs\\Box.xml" Name="Rigidbody1">
       <Transform>
-        <Position X="-3.0" Y="0" Z="0.0"/>
+        <Position X="-3.0" Y="0" Z="0.5"/>
       </Transform>
       <Rigidbody>
         <Drag>0.1</Drag>
         <AngularDrag>0.05</AngularDrag>
       </Rigidbody>
       <StartingForce>
-        <StartingForce X="1" Y="0.0" Z="0.0"/>
+        <StartingForce X="20" Y="0.0" Z="0.0"/>
       </StartingForce>
       <Material>
         <DiffuseMap FileName ="Textures\\TestTexture"/>
@@ -42,7 +42,8 @@
         <AngularDrag>0.05</AngularDrag>
       </Rigidbody>
       <StartingForce>
-        <StartingForce X="-20" Y="0.0" Z="0.0"/>
+        <StartingForce X="-1" Y="0.0" Z="0.0"/>
+        <StartingTorque Y="20"/>
       </StartingForce>
       <Material>
         <DiffuseColor R="255" G="255" B="255" A="255"/>

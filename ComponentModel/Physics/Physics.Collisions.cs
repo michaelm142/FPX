@@ -68,8 +68,11 @@ namespace FPX
             Collider a = collision[0];
             Collider b = collision[1];
 
-            Vector3 closestPointA = a.ClosestPoint(b.position);
-            Vector3 closestPointB = b.ClosestPoint(closestPointA);
+            Vector3 contactNormalA = Vector3.Zero;
+            Vector3 contactNormalB = Vector3.Zero;
+
+            Vector3 closestPointA = a.ClosestPoint(b.position, out contactNormalA);
+            Vector3 closestPointB = b.ClosestPoint(closestPointA, out contactNormalB);
             closestPointA = a.ClosestPoint(closestPointB);
 
             Vector3 L_a = closestPointB - closestPointA;
@@ -86,28 +89,37 @@ namespace FPX
                 float psudoDistance = Psudodistance(a, b);
                 float itr = 1.0f / (i + 1.0f);
                 Debug.Log("Iteration {0}, Psudodistance: {1}, itr: {2}", i, psudoDistance, itr);
-                bodyA.position -= L_a * psudoDistance * itr;
-                bodyB.position -= L_b * psudoDistance * itr;
+                bodyA.position += bodyA.velocity.Normalized() * (psudoDistance * itr);
+                bodyB.position += bodyB.velocity.Normalized() * (psudoDistance * itr);
 
-                //bodyA.rotation *= Quaternion.CreateFromYawPitchRoll(psudoDistance * itr, psudoDistance * itr, psudoDistance * itr);
-                //bodyB.rotation *= Quaternion.CreateFromYawPitchRoll(-psudoDistance * itr, -psudoDistance * itr, -psudoDistance * itr);
+                // Vector3 bodyA_w = bodyA.angularVelocity.Normalized();
+                // Vector3 bodyB_w = bodyB.angularVelocity.Normalized();
+
+                // bodyA.rotation *= LinearAlgebraUtil.QuaternionFromEuler(-bodyA_w * -psudoDistance * itr);// Quaternion.CreateFromYawPitchRoll(-bodyA_w.Y * -psudoDistance * itr, -bodyA_w.X * -psudoDistance * itr, -bodyA_w.Z * -psudoDistance * itr);
+                // bodyB.rotation *= LinearAlgebraUtil.QuaternionFromEuler(-bodyB_w * -psudoDistance * itr);// Quaternion.CreateFromYawPitchRoll(-bodyB_w.Y * -psudoDistance * itr, -bodyB_w.X * -psudoDistance * itr, -bodyB_w.Z * -psudoDistance * itr);
 
                 //bodyA.velocity += bodyA.velocity * (psudoDistance * itr);
                 //bodyB.velocity -= bodyB.velocity * (-psudoDistance * itr);
             }
 
-            //bodyA.position -= closestPointA - closestPointB;
-            //bodyB.position += closestPointB - closestPointA;
+            closestPointA = a.ClosestPoint(b.position);
+            closestPointB = b.ClosestPoint(a.position);
+            closestPointA = a.ClosestPoint(closestPointB);
+
+            L_a = closestPointA - a.position;
+            L_b = closestPointB - b.position;
 
             var velocityA = Vector3.Reflect(bodyB.velocity, collision.ContactNormal);
-            var velocityB = Vector3.Reflect(bodyA.velocity, collision.ContactNormal);
+            var velocityB = Vector3.Reflect(bodyA.velocity, -collision.ContactNormal);
             Debug.Log("Contact Normal: {0}", collision.ContactNormal);
 
             bodyA.velocity = velocityA;
             bodyB.velocity = velocityB;
 
+            Debug.Log("Velocity A: {0} Velocity B: {1}", velocityA, velocityB);
+
             var accelerationA = Vector3.Reflect(bodyB.acceleration, collision.ContactNormal);
-            var accelerationB = Vector3.Reflect(bodyA.acceleration, collision.ContactNormal);
+            var accelerationB = Vector3.Reflect(bodyA.acceleration, -collision.ContactNormal);
 
             bodyA.acceleration = accelerationA;
             bodyB.acceleration = accelerationB;
@@ -115,12 +127,12 @@ namespace FPX
             Matrix contactTensorA = Matrix.Identity;
             Matrix velocityTensorA = Matrix.Identity;
 
-            contactTensorA.Forward = L_a.Normalized();
+            contactTensorA.Forward = L_a;
             contactTensorA.Up = collision.ContactNormal;
-            contactTensorA.Right = Vector3.Cross(contactTensorA.Forward, contactTensorA.Up).Normalized();
+            contactTensorA.Right = Vector3.Cross(contactTensorA.Forward, contactTensorA.Up);
 
-            velocityTensorA.Forward = bodyA.velocity.Normalized();
-            velocityTensorA.Right = Vector3.Cross(Vector3.Up, bodyA.velocity).Normalized();
+            velocityTensorA.Forward = velocityA;
+            velocityTensorA.Right = Vector3.Cross(Vector3.Up, velocityA.Normalized());
             velocityTensorA.Up = Vector3.Cross(velocityTensorA.Forward, velocityTensorA.Right).Normalized();
 
             float yawA = Vector3.Dot(contactTensorA.Right, velocityTensorA.Forward);
@@ -138,13 +150,13 @@ namespace FPX
             Matrix contactTensorB = Matrix.Identity;
             Matrix velocityTensorB = Matrix.Identity;
 
-            contactTensorB.Forward = L_b.Normalized();
-            contactTensorB.Up = collision.ContactNormal;
+            contactTensorB.Forward = L_b;
+            contactTensorB.Up = -collision.ContactNormal;
             contactTensorB.Right = Vector3.Cross(contactTensorB.Forward, contactTensorB.Up).Normalized();
 
-            velocityTensorB.Forward = bodyB.velocity.Normalized();
-            velocityTensorB.Right = Vector3.Cross(Vector3.Up, bodyB.velocity).Normalized();
-            velocityTensorB.Up = Vector3.Cross(velocityTensorB.Forward, velocityTensorB.Right).Normalized();
+            velocityTensorB.Forward = velocityB;
+            velocityTensorB.Right = Vector3.Cross(Vector3.Up, velocityB.Normalized());
+            velocityTensorB.Up = Vector3.Cross(velocityTensorB.Right, velocityTensorB.Forward);
 
             float yawB = Vector3.Dot(contactTensorB.Right, velocityTensorB.Forward);
             float pitchB = Vector3.Dot(contactTensorB.Up, velocityTensorB.Forward);
@@ -360,7 +372,7 @@ namespace FPX
             a.ClosestPoint(b.position, out normalA);
             b.ClosestPoint(a.position, out normalB);
 
-            c.ContactNormal = normalA;// ((normalA + normalB) * 0.5f).Normalized();
+            c.ContactNormal = Vector3.Cross(normalA, normalB);
             if (a.GetComponent<Rigidbody>() != null && b.GetComponent<Rigidbody>() != null)
                 c.Psudodistance = Psudodistance(a, b);
 

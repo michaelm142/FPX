@@ -88,6 +88,12 @@ namespace FPX
 
                 if (postProcessor != null)
                     postProcessor.End();
+
+                var uiElements = Component.g_collection.ToList().FindAll(c => c.KnowsMessage("DrawUI") && c.gameObject.Visible).ToList();
+                GameCore.spriteBatch.Begin();
+                foreach (var element in uiElements)
+                    element.SendMessage("DrawUI", GameCore.spriteBatch);
+                GameCore.spriteBatch.End();
             }
             else if (Mode == "Deferred")
             {

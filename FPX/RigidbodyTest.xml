@@ -46,6 +46,9 @@
       <Material>
         <DiffuseMap FileName ="Textures\\TestTexture"/>
       </Material>
+      <SphereCollider>
+        <Radius>2</Radius>
+      </SphereCollider>
     </Prefab>
 
     <Prefab Filename="Prefabs\\Sphere.xml" Name="Rigidbody3">

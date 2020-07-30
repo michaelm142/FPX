@@ -28,6 +28,8 @@ namespace FPX
 
         private Texture2D transparentTexture;
 
+        public PrimitiveType fillMode = PrimitiveType.TriangleList;
+
 
         public void Initialize()
         {
@@ -36,6 +38,11 @@ namespace FPX
             clearDepthShader = GameCore.content.Load<Effect>("Shaders\\ClearDepth");
             transparentTexture = new Texture2D(GameCore.graphicsDevice, 1, 1);
             transparentTexture.SetData(new Color[] { Color.Transparent });
+
+            string fillModeName = Settings.GetSetting<string>("FillMode");
+            if (!string.IsNullOrEmpty(fillModeName))
+                fillMode = (PrimitiveType)Enum.Parse(typeof(PrimitiveType), fillModeName);
+
             GameCore.gameInstance.Components.Add(new QuadRenderer());
             GameCore.graphicsDevice.SamplerStates[0] = SamplerState.AnisotropicWrap;
         }
@@ -81,6 +88,12 @@ namespace FPX
 
                 if (postProcessor != null)
                     postProcessor.End();
+
+                var uiElements = Component.g_collection.ToList().FindAll(c => c.KnowsMessage("DrawUI") && c.gameObject.Visible).ToList();
+                GameCore.spriteBatch.Begin();
+                foreach (var element in uiElements)
+                    element.SendMessage("DrawUI", GameCore.spriteBatch);
+                GameCore.spriteBatch.End();
             }
             else if (Mode == "Deferred")
             {

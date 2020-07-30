@@ -69,17 +69,21 @@ namespace FPX
             set { transform.rotation = value; }
         }
 
+        internal uint Id { get; private set; }
+
         private static List<GameObject> _instances = new List<GameObject>();
 
         private GameObject(bool isEmpty)
         {
             _instances.Add(this);
+            Id = (uint)GetHashCode();
         }
 
         public GameObject()
         {
             _instances.Add(this);
             AddComponent<Transform>();
+            Id = (uint)GetHashCode();
         }
 
         ~GameObject()
@@ -100,13 +104,8 @@ namespace FPX
 
         public void Run(GameTime gameTime)
         {
-            if (firstFrame)
-            {
-                BroadcastMessage("Start");
-                firstFrame = false;
-            }
-            else
-                BroadcastMessage("Update", new object[] { gameTime });
+            for (int i = 0; i < components.Count; i++)
+                components[i].Run();
         }
 
         public void Draw(GameTime gameTime)
@@ -165,6 +164,11 @@ namespace FPX
             return _instances.Find(g => g.Name == name);
         }
 
+        public static GameObject Find(uint Id)
+        {
+            return _instances.Find(g => g.Id == Id);
+        }
+
         public static GameObject Load(XmlElement node)
         {
             GameObject obj = Empty;
@@ -175,6 +179,9 @@ namespace FPX
             var enabledAttribute = node.Attributes["Enabled"];
             if (enabledAttribute != null)
                 obj.Enabled = bool.Parse(enabledAttribute.InnerText);
+            var idAttr = node.Attributes["Id"];
+            if (idAttr != null)
+                obj.Id = uint.Parse(idAttr.Value);
 
             foreach (XmlElement componentNode in node.ChildNodes)
             {
@@ -182,13 +189,21 @@ namespace FPX
                 Component c = Activator.CreateInstance(createType) as Component;
                 if (c == null)
                 {
+<<<<<<< HEAD
                     Debug.LogError("Could not find type {0} in assembly", createType);
+=======
+                    Debug.LogError("No type named {0} does not exist", createType);
+>>>>>>> Branch_e4d91dcb
                     continue;
                 }
                 c.gameObject = obj;
                 c.LoadXml(componentNode);
                 obj.AddComponent(c);
             }
+
+            var transform = obj.GetComponent<Transform>();
+            if (transform == null)
+                obj.AddComponent<Transform>();
 
             return obj;
         }

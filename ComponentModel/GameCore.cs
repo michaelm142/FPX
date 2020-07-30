@@ -74,6 +74,7 @@ namespace FPX
             level.sceneName = sceneName;
 
             gameInstance.Components.Add(level);
+            gameInstance.Components.Add(new Time());
             gameInstance.Components.Add(new Physics());
             gameInstance.Components.Add(new Graphics());
 
@@ -102,8 +103,6 @@ namespace FPX
             Debug.BackgroundColor = ConsoleColor.Red;
             Debug.Log("ENGINE LAUNCH");
             Debug.ResetColors();
-
-            Settings.Initialize();
 
             IsRunning = true;
             using (Game gameInstance = CreateGameInstance(sceneName, windowHandle))

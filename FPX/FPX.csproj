@@ -156,6 +156,9 @@
     <Content Include="betaLevel.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="ContactTest.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Icon.ico" />
     <Content Include="OBBTest.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -186,6 +189,11 @@
     </Content>
     <Content Include="RigidbodyTest.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="RigidbodyTest2.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </Content>
     <Content Include="Settings.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -213,10 +221,6 @@
     <ProjectReference Include="..\ComponentModel\ComponentModel.csproj">
       <Project>{73a2c53f-f1ca-44ce-874f-daf8f666af89}</Project>
       <Name>ComponentModel</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\ContentPiplineExtentions\ContentPiplineExtentions.csproj">
-      <Project>{7cd3a14d-90bf-4431-9a1d-7db5ca6c5bd2}</Project>
-      <Name>ContentPiplineExtentions</Name>
     </ProjectReference>
     <ProjectReference Include="..\Crom.Controls.Docking\Crom.Controls.Docking.csproj">
       <Project>{a9df5e3c-aad6-4640-aaa1-65b3e7da290b}</Project>

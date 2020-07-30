@@ -41,7 +41,7 @@ Public Class GameControlTest
             t.localRotation = startRotation
         End If
 
-        t.position += (t.worldPose.Right * Right + t.worldPose.Forward * Forward + Vector3.Up * Up) * gametime.ElapsedGameTime.TotalSeconds * MoveSpeed * speed
+        position += (t.worldPose.Right * Right + t.worldPose.Forward * Forward + Vector3.Up * Up) * gametime.ElapsedGameTime.TotalSeconds * MoveSpeed * speed
 
         angle.Y += turnX * gametime.ElapsedGameTime.TotalSeconds * RotationSpeed
         angle.X += turnY * gametime.ElapsedGameTime.TotalSeconds * RotationSpeed

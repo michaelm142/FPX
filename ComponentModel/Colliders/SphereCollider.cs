@@ -12,7 +12,16 @@ namespace FPX
 
         public float radius { get; set; }
 
+<<<<<<< HEAD
         public override void LoadXml(XmlElement node)
+=======
+        public override Vector3 Psudosize
+        {
+            get { return Vector3.One * radius; }
+        }
+
+        public void LoadXml(XmlElement node)
+>>>>>>> Branch_e4d91dcb
         {
 
             radius = Single.Parse(node.SelectSingleNode("Radius").InnerText);
@@ -41,7 +50,7 @@ namespace FPX
             var length = MathHelper.Clamp(L.Length(), 0.0F, radius);
             L.Normalize();
 
-            return L * length;
+            return position + L * length;
         }
 
         public override Vector3 ClosestPoint(Vector3 point, out Vector3 normal)

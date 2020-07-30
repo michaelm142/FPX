@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Linq;
 using System.Xml;
 using Microsoft.Xna.Framework;
@@ -17,6 +18,11 @@ namespace FPX
         public Vector3 Max
         {
             get { return Location + Vector3.Transform(size, rotation); }
+        }
+
+        public override Vector3 Psudosize
+        {
+            get { return size; }
         }
 
         public override bool Contains(Vector3 point)
@@ -84,9 +90,39 @@ namespace FPX
             outval += dist_y * transform.worldPose.Up;
             outval += dist_z * transform.worldPose.Forward;
 
-            normal = Vector3.Zero;
+            normal = GetNormal(point);
 
             return outval;
+        }
+
+        private Vector3 GetNormal(Vector3 point)
+        {
+            Vector3 localNormal = Vector3.Transform(point, transform.worldToLocalMatrix);
+
+            float largest = MathHelper.Max(MathHelper.Max(Math.Abs(localNormal.X), Math.Abs(localNormal.Y)), Math.Abs(localNormal.Z));
+            if (largest == Math.Abs(localNormal.X))
+            {
+                if (localNormal.X < 0.0f)
+                    return -transform.right;
+                else
+                    return transform.right;
+            }
+            if (largest == Math.Abs(localNormal.Y))
+            {
+                if (localNormal.Y < 0.0f)
+                    return -transform.up;
+                else
+                    return transform.up;
+            }
+            if (largest == Math.Abs(localNormal.Z))
+            {
+                if (localNormal.Z < 0.0f)
+                    return -transform.forward;
+                else
+                    return transform.forward;
+            }
+
+            return Vector3.Zero;
         }
     }
 }

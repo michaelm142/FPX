@@ -140,6 +140,7 @@
     <Compile Include="Colliders\BoxCollider.cs" />
     <Compile Include="Colliders\SphereCollider.cs" />
     <Compile Include="Graphics\ILightSource.cs" />
+    <Compile Include="Graphics\LineRenderer.cs" />
     <Compile Include="Graphics\ModelReader.cs" />
     <Compile Include="Graphics\PostProcessor.cs" />
     <Compile Include="Graphics\DeferredRenderer.cs" />
@@ -153,6 +154,7 @@
     <Compile Include="Debug.cs" />
     <Compile Include="GameObject.cs" />
     <Compile Include="GameCore.cs" />
+    <Compile Include="Physics\Time.cs" />
     <Compile Include="Prefab.cs" />
     <Compile Include="Graphics\QuadRenderer.cs" />
     <Compile Include="Graphics\Graphics.cs" />

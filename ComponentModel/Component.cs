@@ -62,9 +62,17 @@ namespace FPX
 
         internal static List<Component> g_collection = new List<Component>();
 
+        public uint Id { get; protected set; }
+
+        public string Name
+        {
+            get { return gameObject.Name; }
+        }
+
         public Component()
         {
             g_collection.Add(this);
+            Id = (uint)GetHashCode();
         }
 
         public T GetComponent<T>()
@@ -249,9 +257,33 @@ namespace FPX
             return g_collection.Find(o => o is T) as T;
         }
 
+        public static GameObject Instanciate(GameObject @object)
+        {
+            return GameCore.currentLevel.Spawn(@object);
+        }
+
         public static GameObject Instantiate(Prefab prefab)
         {
             return GameCore.currentLevel.Spawn(prefab);
+        }
+
+        public override string ToString()
+        {
+            return string.Format("{0} of {1}", GetType().ToString(), gameObject.Name);
+        }
+
+        private bool _firstFrame = true;
+
+        internal  void Run()
+        {
+            if (_firstFrame && KnowsMessage("Start"))
+            {
+                SendMessage("Start");
+                _firstFrame = false;
+            }
+
+            if (KnowsMessage("Update"))
+                SendMessage("Update", Time.GameTime);
         }
     }
 }

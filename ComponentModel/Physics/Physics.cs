@@ -53,17 +53,24 @@ namespace FPX
 
         List<Collision> activeCollisions = new List<Collision>();
 
+        public int MaxPhysIterations { get; private set; }
+
         public void Initialize()
         {
+            MaxPhysIterations = Settings.GetSetting<int>("Physics/MaxPhysIterations");
+            Debug.Log("Maximum number of collision iterations is {0}", MaxPhysIterations);
         }
 
         public void Update(GameTime gameTime)
         {
+            Debug.Log("==================<Begin Physics Frame>==================");
             // detect and cull collisions
             List<Collision> collisions = new List<Collision>();
             DetectCollisions(ref collisions);
+            activeCollisions = collisions;
 
             // resolve collisions and update physics state
+            collisions.ForEach(c => ResolveCollision(c));
 
             // Update previous positions
             foreach (var collider in colliders)
@@ -71,27 +78,32 @@ namespace FPX
                 if (previousPositions.ContainsKey(collider))
                     previousPositions[collider] = collider.Location;
                 else
-                    previousPositions.Add(collider, collider.position);
+                    previousPositions.Add(collider, collider.Location);
             }
 
             // move objects
             foreach (var rBody in Rigidbodies)
-                UpdateRigidbody(rBody, gameTime);
-
+                UpdateRigidbody(rBody);
+            Debug.Log("==================<End Physics Frame>==================");
         }
 
-        private void UpdateRigidbody(Rigidbody rBody, GameTime gameTime)
+        private void UpdateRigidbody(Rigidbody rBody)
         {
             if (rBody.isKinematic || (rBody.acceleration.Length() == 0.0f && rBody.velocity.Length() == 0.0f))
                 return;
 
-            rBody.acceleration -= rBody.velocity * rBody.drag * (float)gameTime.ElapsedGameTime.TotalSeconds;
-            rBody.torque -= rBody.angularVelocity * rBody.angularDrag * (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-            rBody.velocity += rBody.acceleration * (float)gameTime.ElapsedGameTime.TotalSeconds;
-            rBody.transform.position += rBody.velocity * (float)gameTime.ElapsedGameTime.TotalSeconds;
-            rBody.angularVelocity += rBody.torque * (float)gameTime.ElapsedGameTime.TotalSeconds;
-            rBody.transform.rotation *= Quaternion.CreateFromYawPitchRoll(rBody.angularVelocity.Y, rBody.angularVelocity.X, rBody.angularVelocity.Z);
+            rBody.acceleration -= rBody.acceleration * rBody.drag * Time.deltaTime;
+            rBody.torque -= rBody.torque * rBody.angularDrag * Time.deltaTime;
+
+            rBody.velocity += rBody.acceleration * Time.deltaTime;
+            rBody.velocity -= rBody.velocity * rBody.drag * Time.deltaTime;
+            rBody.transform.position += rBody.velocity * Time.deltaTime;
+            rBody.angularVelocity += rBody.torque * Time.deltaTime;
+            rBody.transform.rotation *= Quaternion.CreateFromYawPitchRoll(
+                rBody.angularVelocity.Y * Time.deltaTime,
+                rBody.angularVelocity.Z * Time.deltaTime,
+                rBody.angularVelocity.X * Time.deltaTime);
 
             if (LinearAlgebraUtil.isEpsilon(rBody.acceleration))
                 rBody.acceleration = Vector3.Zero;
@@ -115,7 +127,7 @@ namespace FPX
                     b.gameObject.BroadcastMessage("OnCollision", a);
                 }
             }
-            else if (activeCollisions.Find(activeCollision => activeCollision.colliders.Contains(a) || activeCollision.colliders.Contains(b)) != null)
+            else if (activeCollisions.Find(activeCollision => activeCollision.colliders.Contains(a) && activeCollision.colliders.Contains(b)) != null)
             {
                 a.gameObject.BroadcastMessage("OnCollisionExit", b);
                 b.gameObject.BroadcastMessage("OnCollisionExit", a);

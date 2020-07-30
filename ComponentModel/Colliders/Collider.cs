@@ -15,6 +15,8 @@ namespace FPX
             get { return transform.position + center; }
         }
 
+        public abstract Vector3 Psudosize { get; }
+
         public abstract bool Contains(Vector3 point);
 
         public abstract Vector3 ClosestPoint(Vector3 point);

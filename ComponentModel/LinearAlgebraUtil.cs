@@ -21,7 +21,7 @@ namespace FPX
 
         public static bool isEpsilon(float f)
         {
-            if (Math.Abs(f) < 0.01f)
+            if (Math.Abs(f) < 0.01f || float.IsNaN(f) || float.IsInfinity(f))
                 return true;
 
             return false;
@@ -40,6 +40,20 @@ namespace FPX
             unsafe
             {
                 return *((Vector4*)(&m) + index);
+            }
+        }
+        public static void SetRow(this Matrix m, int index, Vector4 row)
+        {
+            unsafe
+            {
+                *((Vector4*)(&m) + index) = row;
+            }
+        }
+        public static void SetRow(this Matrix m, int index, Vector3 row)
+        {
+            unsafe
+            {
+                *((Vector4*)(&m) + index) = row.ToVector4();
             }
         }
         public static Matrix SetMatrixRow(Matrix m, int index, Vector4 value)
@@ -138,14 +152,39 @@ namespace FPX
             }
         }
 
+        public static Vector3 Normalized(this Vector3 v)
+        {
+            Vector3 _v = v;
+            _v.Normalize();
+
+            if (float.IsNaN(_v.X))
+                _v.X = 0.0f;
+            if (float.IsNaN(_v.Y))
+                _v.Y = 0.0f;
+            if (float.IsNaN(_v.Z))
+                _v.Z = 0.0f;
+
+            return _v;
+        }
+
         public static Vector3 Vector3FromXml(XmlElement element)
         {
             if (element == null)
                 return Vector3.Zero;
+            Vector3 outval = Vector3.Zero;
 
-            return new Vector3(float.Parse(element.Attributes["X"].Value),
-                float.Parse(element.Attributes["Y"].Value),
-                float.Parse(element.Attributes["Z"].Value));
+            var xAttr = element.Attributes["X"];
+            var yAttr = element.Attributes["Y"];
+            var zAttr = element.Attributes["Z"];
+
+            if (xAttr != null)
+                outval.X = float.Parse(xAttr.Value);
+            if (yAttr != null)
+                outval.Y = float.Parse(yAttr.Value);
+            if (zAttr != null)
+                outval.Z = float.Parse(zAttr.Value);
+
+            return outval;
         }
 
         public static Vector4 Vector4FromXml(XmlElement element)
@@ -229,6 +268,7 @@ namespace FPX
             return element;
         }
 
+<<<<<<< HEAD
         public static Color ColorFromXml(XmlElement element)
         {
             XmlAttribute rAttr = element.Attributes["R"];
@@ -252,6 +292,49 @@ namespace FPX
             outval.G = (byte)(g * 255.0f);
             outval.B = (byte)(b * 255.0f);
             outval.A = (byte)(a * 255.0f);
+=======
+        public static Color ColorFromXml(System.Xml.XmlElement node)
+        {
+            XmlAttribute rAttr = node.Attributes["R"];
+            XmlAttribute gAttr = node.Attributes["G"];
+            XmlAttribute bAttr = node.Attributes["B"];
+            XmlAttribute aAttr = node.Attributes["A"];
+
+            Color outval = Color.Transparent;
+
+            if (rAttr != null)
+            {
+                byte v = 0x0;
+                if (!byte.TryParse(rAttr.Value, out v))
+                    throw new Exception("Failed to parse color from xml");
+
+                outval.R = v;
+            }
+            if (gAttr != null)
+            {
+                byte v = 0x0;
+                if (!byte.TryParse(gAttr.Value, out v))
+                    throw new Exception("Failed to parse color from xml");
+
+                outval.G = v;
+            }
+            if (bAttr != null)
+            {
+                byte v = 0x0;
+                if (!byte.TryParse(bAttr.Value, out v))
+                    throw new Exception("Failed to parse color from xml");
+
+                outval.B = v;
+            }
+            if (aAttr != null)
+            {
+                byte v = 0x0;
+                if (!byte.TryParse(aAttr.Value, out v))
+                    throw new Exception("Failed to parse color from xml");
+
+                outval.A = v;
+            }
+>>>>>>> Branch_e4d91dcb
 
             return outval;
         }

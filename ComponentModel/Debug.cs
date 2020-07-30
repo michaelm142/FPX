@@ -47,9 +47,11 @@ namespace FPX
 
         public static void LogWarning(string warning, params object[] args)
         {
-            ForegroundColor = ConsoleColor.Yellow;
+            ForegroundColor = ConsoleColor.Black;
+            BackgroundColor = ConsoleColor.DarkYellow;
             Log(warning, ConsoleColor.Yellow, args);
             ForegroundColor = ConsoleColor.Gray;
+            BackgroundColor = ConsoleColor.Black;
         }
 
         public static void LogError(string error, params object[] args)
@@ -69,13 +71,12 @@ namespace FPX
             FileInfo logFile = new FileInfo(Environment.CurrentDirectory + "\\" + filename);
             if (!logFile.Exists)
                 logFile.Create();
-            else
-                logFile.Delete();
 
             var sb = writer.GetStringBuilder();
             writer.Close();
             writer = null;
-            using (StreamWriter writer = new StreamWriter(logFile.Open(FileMode.OpenOrCreate, FileAccess.Write)))
+
+            using (StreamWriter writer = new StreamWriter(logFile.Open(FileMode.Append, FileAccess.Write)))
             {
                 var date = DateTime.Now.Date;
                 var time = DateTime.Now.TimeOfDay;

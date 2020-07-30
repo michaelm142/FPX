@@ -24,7 +24,10 @@ namespace FPX
         {
             graphics = new GraphicsDeviceManager(this);
             graphics.GraphicsProfile = GraphicsProfile.HiDef;
+            graphics.PreparingDeviceSettings += Graphics_PreparingDeviceSettings;
             Content.RootDirectory = "Content";
+            var gdm = Services.GetService(typeof(IGraphicsDeviceManager)) as IGraphicsDeviceManager;
+            gdm.CreateDevice();
         }
 
         public World(IntPtr windowHandle)
@@ -48,6 +51,7 @@ namespace FPX
                 prams.BackBufferWidth = Settings.GetSetting<int>("ScreenWidth");
                 prams.BackBufferHeight = Settings.GetSetting<int>("ScreenHeight");
                 prams.DeviceWindowHandle = Window.Handle;
+                prams.IsFullScreen = Settings.GetSetting<bool>("FullScreen");
             }
             else
             {
@@ -69,8 +73,6 @@ namespace FPX
         protected override void Initialize()
         {
             AssetManager.Inilitize();
-            foreach (var comp in Components.ToList().FindAll(c => c is IGameComponent).Cast<IGameComponent>())
-                comp.Initialize();
 
             base.Initialize();
         }
@@ -94,6 +96,7 @@ namespace FPX
         /// </summary>
         protected override void UnloadContent()
         {
+            base.UnloadContent();
             GameCore.fonts.Clear();
         }
 
@@ -107,9 +110,6 @@ namespace FPX
             //if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
             //Exit();
 
-            foreach (var comp in Components.ToList().FindAll(c => c is IUpdateable).Cast<IUpdateable>())
-                comp.Update(gameTime);
-
             base.Update(gameTime);
         }
 
@@ -119,8 +119,6 @@ namespace FPX
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            foreach (IDrawable component in Components.ToList().FindAll(c => c is IDrawable).Cast<IDrawable>())
-                component.Draw(gameTime);
 
             base.Draw(gameTime);
         }

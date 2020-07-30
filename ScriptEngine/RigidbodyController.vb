@@ -19,6 +19,7 @@ Public Class RigidbodyController
         Dim leftThumbstick = gamepadstate.ThumbSticks.Left
         Dim rightThumbstick = gamepadstate.ThumbSticks.Right
         Dim vertical = gamepadstate.Triggers.Left - gamepadstate.Triggers.Right
+        Dim slow = gamepadstate.Buttons.B
 
         If gamepadstate.IsButtonDown(Buttons.A) Then
             transform.position = startPosition
@@ -28,6 +29,10 @@ Public Class RigidbodyController
 
         GetComponent(Of Rigidbody).acceleration = Vector3.Right * leftThumbstick.X + Vector3.Up * vertical + Vector3.Forward * leftThumbstick.Y
         GetComponent(Of Rigidbody).torque = Vector3.Right * rightThumbstick.Y + Vector3.Up * rightThumbstick.X
+        If slow Then
+            GetComponent(Of Rigidbody).angularVelocity -= GetComponent(Of Rigidbody).angularVelocity * Time.deltaTime
+            GetComponent(Of Rigidbody).velocity -= GetComponent(Of Rigidbody).velocity * Time.deltaTime
+        End If
     End Sub
 
     Public Sub DrawUI(spriteBatch As SpriteBatch)

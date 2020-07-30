@@ -59,24 +59,43 @@ namespace FPX
 
                 foreach (XmlElement setting in root.ChildNodes)
                 {
-                    float floatVal = 0.0f;
-                    int intVal = 0;
-                    string strVal = setting.InnerText;
-
-                    if (int.TryParse(setting.InnerText, out intVal))
-                        settings.Add(setting.Name, intVal);
-                    else if (float.TryParse(setting.InnerText, out floatVal))
-                        settings.Add(setting.Name, floatVal);
-                    else
-                        settings.Add(setting.Name, strVal);
+                    ReadSetting(setting);
                 }
             }
 
             isInilitized = true;
         }
 
+        private static void ReadSetting(XmlElement setting, string existingText = "")
+        {
+            float floatVal = 0.0f;
+            int intVal = 0;
+            bool boolVal = false;
+            string strVal = setting.InnerText;
+
+            var childNodes = setting.ChildNodes.Cast<XmlNode>().ToList().FindAll(node => node is XmlElement).Cast<XmlElement>();
+            if (childNodes.ToList().Count == 0)
+            {
+                if (int.TryParse(strVal, out intVal))
+                    settings.Add(existingText + setting.Name, intVal);
+                else if (bool.TryParse(strVal, out boolVal))
+                    settings.Add(existingText + setting.Name, boolVal);
+                else if (float.TryParse(strVal, out floatVal))
+                    settings.Add(existingText + setting.Name, floatVal);
+                else
+                    settings.Add(existingText + setting.Name, strVal);
+            }
+            else
+            {
+                existingText += setting.Name + "/";
+                foreach (XmlElement childSetting in childNodes)
+                    ReadSetting(childSetting, existingText);
+            }
+        }
+
         public static void ShutDown()
         {
+            return;
             XmlDocument doc = new XmlDocument();
             var root = doc.CreateNode(XmlNodeType.Element, "Settings", null);
             doc.AppendChild(root);

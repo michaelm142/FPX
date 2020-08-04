@@ -5,14 +5,14 @@
 
     <Object Name="Camera">
       <Transform >
-        <Position X="0.0" Y="1.0" Z ="-25"/>
-        <Rotation X ="0.0" Y="180.0" Z="0.0"/>
+        <Position X="0.0" Y="1.0" Z ="25"/>
       </Transform>
       <DebugDeviceTextures/>
       <Camera>
         <FieldOfView>60</FieldOfView>
         <NearPlaneDistance>0.001</NearPlaneDistance>
         <FarPlaneDistance>1000.0</FarPlaneDistance>
+        <ClearColor Name="CornflowerBlue"/>
       </Camera>
       <GameControlTest>
         <MoveSpeed>100</MoveSpeed>

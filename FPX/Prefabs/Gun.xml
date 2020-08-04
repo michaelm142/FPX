@@ -5,5 +5,7 @@
   <MeshRenderer>
     <Model Name="Models//Gun"/>
   </MeshRenderer>
-  <Material/>
+  <Material>
+    <DiffuseColor Name="Blue"/>
+  </Material>
 </Object>

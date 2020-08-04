@@ -31,6 +31,8 @@ namespace FPX
             get { return GameCore.graphicsDevice; }
         }
 
+        private PrimitiveType PrimitiveType { get { return Settings.GetSetting<PrimitiveType>("FillMode"); } }
+
         public SamplerState anisoSampler;
 
         RenderTarget2D diffuseMap;
@@ -54,6 +56,8 @@ namespace FPX
         Texture2D testBlue;
         Texture2D testYellow;
 
+        VertexPositionTexture[] testQuadVertecies;
+
         public DeferredRenderer()
         {
             Content = GameCore.content;
@@ -76,12 +80,12 @@ namespace FPX
             basicEffect = new BasicEffect(Device);
             basicEffect.TextureEnabled = true;
 
-            VertexPositionTexture[] testQuadVertecies = new VertexPositionTexture[]
+            testQuadVertecies = new VertexPositionTexture[]
             {
-                new VertexPositionTexture(new Vector3(-0.5f, -0.5f, 0.0f), new Vector2(0.0f, 0.0f)),
-                new VertexPositionTexture(new Vector3(-0.5f, 0.5f, 0.0f),new Vector2(0.0f, 1.0f)),
-                new VertexPositionTexture(new Vector3(0.5f, -0.5f, 0.0f),new Vector2(1.0f, 0.0f)),
-                new VertexPositionTexture(new Vector3(0.5f, 0.5f, 0.0f),new Vector2(1.0f,1.0f)),
+                new VertexPositionTexture(new Vector3(-0.5f, -0.5f, 0.0f), new Vector2(0.0f, 1.0f)),
+                new VertexPositionTexture(new Vector3(-0.5f, 0.5f, 0.0f),new Vector2(0.0f, 0.0f)),
+                new VertexPositionTexture(new Vector3(0.5f, -0.5f, 0.0f),new Vector2(1.0f, 1.0f)),
+                new VertexPositionTexture(new Vector3(0.5f, 0.5f, 0.0f),new Vector2(1.0f,0.0f)),
             };
 
             VertexPositionTexture[] screenQuadVertecies = new VertexPositionTexture[]
@@ -122,9 +126,9 @@ namespace FPX
             normalMap = new RenderTarget2D(Device, ScreenWidth, ScreenHeight, false, SurfaceFormat.Rgba64, DepthFormat.Depth24Stencil8, 0, RenderTargetUsage.PreserveContents);
             normalMap.Name = "Normal Map";
             specularMap = new RenderTarget2D(Device, ScreenWidth, ScreenHeight, false, SurfaceFormat.Rgba64, DepthFormat.Depth24Stencil8, 0, RenderTargetUsage.PreserveContents);
-            normalMap.Name = "Specular Map";
+            specularMap.Name = "Specular Map";
             depthMap = new RenderTarget2D(Device, ScreenWidth, ScreenHeight, false, SurfaceFormat.Rgba64, DepthFormat.Depth24Stencil8, 0, RenderTargetUsage.PreserveContents);
-            normalMap.Name = "Depth Map";
+            depthMap.Name = "Depth Map";
         }
 
 
@@ -138,23 +142,6 @@ namespace FPX
             EndRenderGBuffers();
 
             RenderLights();
-        }
-
-        public void RenderObject(MeshRenderer renderer)
-        {
-            GBufferShader.Parameters["World"].SetValue(renderer.transform.localToWorldMatrix);
-            GBufferShader.Parameters["DiffuseColor"].SetValue(renderer.GetComponent<Material>().DiffuseColor.ToVector4());
-            GBufferShader.Parameters["SpecularColor"].SetValue(renderer.GetComponent<Material>().SpecularColor.ToVector4());
-            //GBufferShader.Parameters["Roughness"].SetValue(_object.GetComponet<Material>().Roughness);
-            //GBufferShader.Parameters["SpecularPower"].SetValue(_object.GetComponet<Material>().SpecularPower / 10.0f);
-            //GBufferShader.Parameters["SpecularIntensity"].SetValue(_object.GetComponet<Material>().SpecularIntensity / 10.0f);
-            GBufferShader.CurrentTechnique.Passes[0].Apply();
-            Device.Textures[0] = renderer.GetComponent<Material>().DiffuseMap;
-            Device.Textures[1] = renderer.GetComponent<Material>().NormalMap;
-            Device.Textures[2] = renderer.GetComponent<Material>().SpecularMap;
-
-            // Device.DrawPrimitives(PrimitiveType.TriangleList, renderer.startIndex, renderer.primitiveCount);
-            Device.DrawUserPrimitives(PrimitiveType.TriangleStrip, renderer.Vertecies, 0, renderer.primitiveCount);
         }
 
         public void BeginRenderGBuffers(Camera camera = null)
@@ -171,13 +158,39 @@ namespace FPX
 
             GBufferShader.CurrentTechnique.Passes[0].Apply();
 
+
             Device.Clear(Color.Transparent);
             // Device.SetVertexBuffer(vBuffer);
             Device.BlendState = BlendState.Opaque;
         }
 
+        public void RenderObject(MeshRenderer renderer)
+        {
+            Material material = renderer.GetComponent<Material>();
+            GBufferShader.Parameters["DiffuseMap"].SetValue(material.DiffuseMap);
+            //GBufferShader.Parameters["NormalMap"].SetValue(material.NormalMap);
+            GBufferShader.Parameters["SpecularMap"].SetValue(material.SpecularMap);
+
+            GBufferShader.Parameters["World"].SetValue(renderer.transform.worldPose);
+            GBufferShader.Parameters["DiffuseColor"].SetValue(renderer.GetComponent<Material>().DiffuseColor.ToVector4());
+            GBufferShader.Parameters["SpecularColor"].SetValue(renderer.GetComponent<Material>().SpecularColor.ToVector4());
+            GBufferShader.Parameters["Roughness"].SetValue(             material.Roughness);
+            GBufferShader.Parameters["SpecularPower"].SetValue(         material.SpecularPower / 10.0f);
+            GBufferShader.Parameters["SpecularIntensity"].SetValue(     material.SpecularIntensity / 10.0f);
+            //Device.Textures[0] = renderer.GetComponent<Material>().DiffuseMap;
+            //Device.Textures[1] = renderer.GetComponent<Material>().NormalMap;
+            //Device.Textures[2] = renderer.GetComponent<Material>().SpecularMap;
+            GBufferShader.CurrentTechnique.Passes[0].Apply();
+
+            // Device.DrawPrimitives(PrimitiveType.TriangleList, renderer.startIndex, renderer.primitiveCount);
+            Device.DrawUserIndexedPrimitives(PrimitiveType, renderer.Vertecies, 0, renderer.Vertecies.Length, renderer.Indicies, 0, renderer.primitiveCount);
+        }
+
         public void EndRenderGBuffers()
         {
+            for (int i = 0; i < 8; i++)
+                Device.Textures[i] = null;
+
             Device.SetRenderTargets(null);
         }
 
@@ -311,8 +324,12 @@ namespace FPX
 
         public void _debug_renderGBufferResults()
         {
-            Device.BlendState = BlendState.AlphaBlend;
+            Device.Clear(Camera.Active.ClearColor);
+
+            Device.BlendState = BlendState.Opaque;
             Device.SetVertexBuffer(TestQuad);
+            basicEffect.DiffuseColor = Color.White.ToVector3();
+            basicEffect.TextureEnabled = true;
 
             basicEffect.Projection = Matrix.Identity;
             basicEffect.View = Matrix.Identity;
@@ -321,7 +338,7 @@ namespace FPX
             basicEffect.Texture = diffuseMap;
             basicEffect.CurrentTechnique.Passes[0].Apply();
 
-            Device.DrawPrimitives(PrimitiveType.TriangleStrip, 0, 2);
+            Device.DrawUserPrimitives(PrimitiveType.TriangleStrip, testQuadVertecies, 0, 2);
 
             basicEffect.World = Matrix.CreateTranslation((Vector3.Up + Vector3.Right) * 0.5f);
             basicEffect.Texture = normalMap;
@@ -340,14 +357,22 @@ namespace FPX
             basicEffect.CurrentTechnique.Passes[0].Apply();
 
             Device.DrawPrimitives(PrimitiveType.TriangleStrip, 0, 2);
+
+            Device.SetVertexBuffer(null);
         }
 
         public void _debug_OutuptGBuffers()
         {
-            diffuseMap.SaveAsJpeg(new FileStream(Environment.CurrentDirectory + "\\diffuseMapOutput.jpg", FileMode.Create), ScreenWidth, ScreenHeight);
-            normalMap.SaveAsJpeg(new FileStream(Environment.CurrentDirectory + "\\normalMapOutput.jpg", FileMode.Create), ScreenWidth, ScreenHeight);
-            specularMap.SaveAsJpeg(new FileStream(Environment.CurrentDirectory + "\\specularMapOutput.jpg", FileMode.Create), ScreenWidth, ScreenHeight);
-            depthMap.SaveAsJpeg(new FileStream(Environment.CurrentDirectory + "\\depthMapOutput.jpg", FileMode.Create), ScreenWidth, ScreenHeight);
+            GameCore.content.Load<Texture2D>("Textures/TestTexture").SaveAsPng(new FileStream(Environment.CurrentDirectory + "\\testOutput.png", FileMode.Create), ScreenWidth, ScreenHeight);
+            Debug.Log("Output test");
+            diffuseMap.SaveAsPng(new FileStream(Environment.CurrentDirectory + "\\diffuseMapOutput.png", FileMode.Create), ScreenWidth, ScreenHeight);
+            Debug.Log("Output diffuse");
+            normalMap.SaveAsPng(new FileStream(Environment.CurrentDirectory + "\\normalMapOutput.png", FileMode.Create), ScreenWidth, ScreenHeight);
+            Debug.Log("Output Normals");
+            specularMap.SaveAsPng(new FileStream(Environment.CurrentDirectory + "\\specularMapOutput.png", FileMode.Create), ScreenWidth, ScreenHeight);
+            Debug.Log("Output Specular");
+            depthMap.SaveAsPng(new FileStream(Environment.CurrentDirectory + "\\depthMapOutput.png", FileMode.Create), ScreenWidth, ScreenHeight);
+            Debug.Log("Output Depth");
         }
     }
 

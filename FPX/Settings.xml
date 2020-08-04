@@ -4,9 +4,10 @@
     <TimeScale>1.0</TimeScale>
     <MaxPhysIterations>8</MaxPhysIterations>
   </Physics>
-  <FullScreen>true</FullScreen>
+  <FullScreen>false</FullScreen>
   <ScreenWidth>1600</ScreenWidth>
   <ScreenHeight>1200</ScreenHeight>
   <ControllerInput>One</ControllerInput>
-  <FillMode>TriangleList</FillMode>
+  <FillMode Type="Microsoft.Xna.Framework.Graphics.PrimitiveType, Monogame.Framework">TriangleList</FillMode>
+  <RenderMode>DeferredDebug</RenderMode>
 </Settings>

@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.IO;
 using System.Xml;
+
 
 namespace FPX
 {
@@ -68,6 +70,8 @@ namespace FPX
 
         private static void ReadSetting(XmlElement setting, string existingText = "")
         {
+            string keyValue = existingText + setting.Name;
+
             float floatVal = 0.0f;
             int intVal = 0;
             bool boolVal = false;
@@ -77,13 +81,29 @@ namespace FPX
             if (childNodes.ToList().Count == 0)
             {
                 if (int.TryParse(strVal, out intVal))
-                    settings.Add(existingText + setting.Name, intVal);
+                    settings.Add(keyValue, intVal);
                 else if (bool.TryParse(strVal, out boolVal))
-                    settings.Add(existingText + setting.Name, boolVal);
+                    settings.Add(keyValue, boolVal);
                 else if (float.TryParse(strVal, out floatVal))
-                    settings.Add(existingText + setting.Name, floatVal);
+                    settings.Add(keyValue, floatVal);
+                else if (setting.Attributes["Type"] != null)
+                {
+                    var typeAttr = setting.Attributes["Type"];
+                    string typename = typeAttr.Value;
+
+                    Type enumType = Type.GetType(typename);
+                    if (enumType == null)
+                    {
+                        Debug.LogError("Settings | Unknown enum type: {0}", typename);
+                        return;
+                    }
+
+                    Enum enumVal = Enum.Parse(enumType, strVal) as Enum;
+                    settings.Add(keyValue, enumVal);
+
+                }
                 else
-                    settings.Add(existingText + setting.Name, strVal);
+                    settings.Add(keyValue, strVal);
             }
             else
             {

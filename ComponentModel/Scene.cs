@@ -257,6 +257,11 @@ namespace FPX
             }
 
             var scene = doc.SelectSingleNode("Scene");
+            if (scene == null)
+            {
+                Debug.LogError("Could not load scene {0} because it does not contain scene content", sceneName);
+                return;
+            }
             var objectCollection = scene.FirstChild as XmlElement;
 
             // parse xml into game scene

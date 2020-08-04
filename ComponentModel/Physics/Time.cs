@@ -50,7 +50,6 @@ namespace FPX
         public void Update(GameTime gameTime)
         {
             this._gameTime = gameTime;
-            Debug.Log("Delta Time: {0}", deltaTime);
         }
 
         public void Dispose()

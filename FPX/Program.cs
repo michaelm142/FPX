@@ -26,6 +26,7 @@ namespace FPX
         {
             Title();
             Settings.Initialize();
+            uint frame = 0;
             while (Running)
             {
                 Debug.Log(DateTime.Now);
@@ -36,46 +37,71 @@ namespace FPX
                 Console.BackgroundColor = ConsoleColor.Black;
                 Console.ForegroundColor = ConsoleColor.White;
                 Console.Write(">");
-                string line = Console.ReadLine();
-                if (string.IsNullOrEmpty(line))
-                    continue;
+                if (args.Length >= 2 && frame == 0)
+                {
+                    args.ToList().ForEach(a => Console.Write(a + " "));
+                    Console.WriteLine();
+                    var pragma = new string[args.Length - 1];
+                    for (int i = 1; i < args.Length; i++)
+                        pragma[i - 1] = args[i];
 
-                string[] pragma = line.Split(new char[] { ' ', ',' }, StringSplitOptions.RemoveEmptyEntries);
-                string command = pragma[0];
-                var methods = typeof(Program).GetMethods().ToList().FindAll(m => m.Name == command);
-                var method = methods.Find(m => m.GetParameters().Length == pragma.Length - 1);
-                if (method == null)
-                {
-                    Console.WriteLine("Unknown function: {0}", command);
-                    continue;
-                }
-                int intPram = 0;
-                float floatPram = 0.0f;
-                object[] prams = new object[pragma.Length - 1];
-                for (int i = 1; i < pragma.Length; i++)
-                {
-                    if (int.TryParse(pragma[i], out intPram))
-                        prams[i - 1] = intPram;
-                    else if (float.TryParse(pragma[i], out floatPram))
-                        prams[i - 1] = floatPram;
-                    else
-                        prams[i - 1] = pragma[i];
-                }
+                    string command = args[0];
 
-                try
-                {
-                    method.Invoke(null, prams);
+                    ParseCommand(command, pragma);
                 }
-                catch (TargetInvocationException e)
+                else
                 {
-                    Exception ex = getInnerException(e);
-                    Debug.LogError("Exception of type {0} was thrown. {1}", ex.GetType(), ex.Message);
-                    Debug.LogError(ex.StackTrace);
+                    string line = Console.ReadLine();
+                    if (string.IsNullOrEmpty(line))
+                        continue;
+
+                    string[] pragma = line.Split(new char[] { ' ', ',' }, StringSplitOptions.RemoveEmptyEntries);
+                    string command = pragma[0];
+                    var arguments = new string[pragma.Length - 1];
+                    for (int i = 0; i < arguments.Length; i++)
+                        arguments[i] = pragma[i + 1];
+
+                    ParseCommand(command, arguments);
                 }
+                frame++;
             }
             Settings.ShutDown();
             Debug.DumpLog();
 
+        }
+
+        static void ParseCommand(string command, string[] pragma)
+        {
+            var methods = typeof(Program).GetMethods().ToList().FindAll(m => m.Name == command);
+            var method = methods.Find(m => m.GetParameters().Length == pragma.Length);
+            if (method == null)
+            {
+                Console.WriteLine("Unknown function: {0}", command);
+                return;
+            }
+            int intPram = 0;
+            float floatPram = 0.0f;
+            object[] prams = new object[pragma.Length];
+            for (int i = 0; i < pragma.Length; i++)
+            {
+                if (int.TryParse(pragma[i], out intPram))
+                    prams[i] = intPram;
+                else if (float.TryParse(pragma[i], out floatPram))
+                    prams[i] = floatPram;
+                else
+                    prams[i] = pragma[i];
+            }
+
+            try
+            {
+                method.Invoke(null, prams);
+            }
+            catch (TargetInvocationException e)
+            {
+                Exception ex = getInnerException(e);
+                Debug.LogError("Exception of type {0} was thrown. {1}", ex.GetType(), ex.Message);
+                Debug.LogError(ex.StackTrace);
+            }
         }
 
         static void Title()

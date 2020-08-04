@@ -14,9 +14,9 @@ namespace FPX
         public const float Deg2Rad = (float)Math.PI / 180.0f;
 
 
-        public static Vector4 ToVector4(this Vector3 v)
+        public static Vector4 ToVector4(this Vector3 v, float a)
         {
-            return new Vector4(v, 0.0f);
+            return new Vector4(v, a);
         }
 
         public static bool isEpsilon(float f)
@@ -53,7 +53,7 @@ namespace FPX
         {
             unsafe
             {
-                *((Vector4*)(&m) + index) = row.ToVector4();
+                *((Vector4*)(&m) + index) = row.ToVector4(0.0f);
             }
         }
         public static Matrix SetMatrixRow(Matrix m, int index, Vector4 value)
@@ -273,40 +273,73 @@ namespace FPX
             XmlAttribute gAttr = node.Attributes["G"];
             XmlAttribute bAttr = node.Attributes["B"];
             XmlAttribute aAttr = node.Attributes["A"];
+            XmlAttribute nameAttr = node.Attributes["Name"];
 
             Color outval = Color.Transparent;
 
+            float f = 0.0f;
+            byte v = 0x0;
             if (rAttr != null)
             {
-                byte v = 0x0;
                 if (!byte.TryParse(rAttr.Value, out v))
-                    throw new Exception("Failed to parse color from xml");
+                {
+                    if (!float.TryParse(rAttr.Value, out f))
+                        throw new Exception("Failed to parse color from xml");
+
+                    v = (byte)(255.0f * f);
+                }
 
                 outval.R = v;
             }
             if (gAttr != null)
             {
-                byte v = 0x0;
                 if (!byte.TryParse(gAttr.Value, out v))
-                    throw new Exception("Failed to parse color from xml");
+                {
+                    if (!float.TryParse(gAttr.Value, out f))
+                        throw new Exception("Failed to parse color from xml");
+
+                    v = (byte)(255.0f * f);
+                }
 
                 outval.G = v;
             }
             if (bAttr != null)
             {
-                byte v = 0x0;
                 if (!byte.TryParse(bAttr.Value, out v))
-                    throw new Exception("Failed to parse color from xml");
+                {
+                    if (!float.TryParse(bAttr.Value, out f))
+                        throw new Exception("Failed to parse color from xml");
+
+                    v = (byte)(255.0f * f);
+                }
 
                 outval.B = v;
             }
             if (aAttr != null)
             {
-                byte v = 0x0;
                 if (!byte.TryParse(aAttr.Value, out v))
-                    throw new Exception("Failed to parse color from xml");
+                {
+                    if (!float.TryParse(aAttr.Value, out f))
+                        throw new Exception("Failed to parse color from xml");
+
+                    v = (byte)(255.0f * f);
+                }
 
                 outval.A = v;
+            }
+            if (nameAttr != null)
+            {
+                var colorType = typeof(Color);
+                var properties = colorType.GetProperties(BindingFlags.GetProperty | BindingFlags.Static | BindingFlags.Public).ToList();
+
+                var property = properties.Find(prop => prop.Name == nameAttr.Value);
+                if (property == null)
+                    Debug.LogError("Unknown color name");
+                else
+                    Debug.Log("Found property {0}", property);
+
+                var value = property.GetAccessors()[0].Invoke(null, null);
+                outval = (Color)value;
             }
 
             return outval;

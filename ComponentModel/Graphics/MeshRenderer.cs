@@ -20,8 +20,11 @@ namespace FPX
 
         public int startIndex { get; private set; }
         public int primitiveCount { get; private set; }
+        public int indexCount { get; private set; }
 
         public VertexPositionNormalTextureBinormal[] Vertecies { get; private set; }
+
+        public int[] Indicies { get; private set; }
 
         public bool Visible { get; set; } = true;
 
@@ -93,21 +96,27 @@ namespace FPX
                     foreach (var part in mesh.MeshParts)
                     {
                         VertexPositionNormalTexture[] vertecies = new VertexPositionNormalTexture[part.VertexBuffer.VertexCount];
+                        UInt16[] indicies = new UInt16[part.IndexBuffer.IndexCount];
                         part.VertexBuffer.GetData(vertecies);
+                        part.IndexBuffer.GetData<UInt16>(indicies);
 
                         VertexPositionNormalTextureBinormal[] verts = new VertexPositionNormalTextureBinormal[vertecies.Length];
                         for (int i = 0; i < vertecies.Length; i++)
                         {
-                            verts[i].Position = vertecies[i].Position.ToVector4();
+                            verts[i].Position = vertecies[i].Position.ToVector4(1.0f);
                             verts[i].Normal = vertecies[i].Normal;
                             verts[i].TextureCoordinate = vertecies[i].TextureCoordinate;
                         }
                         Vertecies = verts;
+                        Indicies = new int[indicies.Length];
+                        for (int i = 0; i < Indicies.Length; i++)
+                            Indicies[i] = (int)indicies[i];
 
                         int index = 0;
                         // Graphics.instance.renderer.AppendVertecies(verts, out index);
                         startIndex = index;
-                        primitiveCount = verts.Length / 2;
+                        primitiveCount = indicies.Length / 3;
+                        indexCount = indicies.Length;
                     }
                 }
                 model.Tag = modelName;

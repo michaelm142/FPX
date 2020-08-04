@@ -25,7 +25,7 @@ Public Class MatrixTester
         Console.WriteLine("Value at <3, 1> is:{0}", m.GetRowColumn(3, 1))
 
         Console.WriteLine("Set row 0 to <0, 0, 1>")
-        m = LinearAlgebraUtil.SetMatrixRow(m, 0, Vector3.Forward.ToVector4())
+        m = LinearAlgebraUtil.SetMatrixRow(m, 0, Vector3.Forward.ToVector4(0))
         Console.WriteLine(m.GetRow(0).ToString())
     End Sub
 

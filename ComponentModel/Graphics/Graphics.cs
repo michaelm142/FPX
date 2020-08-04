@@ -39,12 +39,13 @@ namespace FPX
             transparentTexture = new Texture2D(GameCore.graphicsDevice, 1, 1);
             transparentTexture.SetData(new Color[] { Color.Transparent });
 
-            string fillModeName = Settings.GetSetting<string>("FillMode");
-            if (!string.IsNullOrEmpty(fillModeName))
-                fillMode = (PrimitiveType)Enum.Parse(typeof(PrimitiveType), fillModeName);
+            fillMode = Settings.GetSetting<PrimitiveType>("FillMode");
 
             GameCore.gameInstance.Components.Add(new QuadRenderer());
             GameCore.graphicsDevice.SamplerStates[0] = SamplerState.AnisotropicWrap;
+
+            Mode = Settings.GetSetting<string>("RenderMode");
+            Debug.Log("Current Render Mode: {0}", Mode);
         }
 
         public static void ClearDepth()
@@ -64,9 +65,7 @@ namespace FPX
 
         public void Draw(GameTime gameTime)
         {
-            if (Camera.Active == null)
-                return;
-            if (!GameCore.currentLevel.IsLoaded)
+            if (!GameCore.currentLevel.IsLoaded || Camera.Active == null)
             {
                 GameCore.graphicsDevice.Clear(Color.Magenta);
                 return;
@@ -89,11 +88,6 @@ namespace FPX
                 if (postProcessor != null)
                     postProcessor.End();
 
-                var uiElements = Component.g_collection.ToList().FindAll(c => c.KnowsMessage("DrawUI") && c.gameObject.Visible).ToList();
-                GameCore.spriteBatch.Begin();
-                foreach (var element in uiElements)
-                    element.SendMessage("DrawUI", GameCore.spriteBatch);
-                GameCore.spriteBatch.End();
             }
             else if (Mode == "Deferred")
             {
@@ -110,14 +104,18 @@ namespace FPX
                 }
                 renderer.EndRenderGBuffers();
 
+
+
                 renderer._debug_renderGBufferResults();
             }
+            else
+                Debug.LogError("Unknown render mode {0} is active", Mode);
 
-            //GameCore.spriteBatch.Begin();
-            //{
-            //    Scene.Active.BroadcastMessage("DrawUI", GameCore.spriteBatch);
-            //}
-            //GameCore.spriteBatch.End();
+            GameCore.spriteBatch.Begin();
+            {
+                Scene.Active.BroadcastMessage("DrawUI", GameCore.spriteBatch);
+            }
+            GameCore.spriteBatch.End();
 
             GameCore.graphicsDevice.DepthStencilState = DepthStencilState.Default;
         }

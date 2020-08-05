@@ -90,10 +90,10 @@ namespace FPX
 
             VertexPositionTexture[] screenQuadVertecies = new VertexPositionTexture[]
             {
-                new VertexPositionTexture(new Vector3(-1, -1, 0.0f), new Vector2(0.0f, 0.0f)),
-                new VertexPositionTexture(new Vector3(-1, 1, 0.0f),new Vector2(0.0f, 1.0f)),
-                new VertexPositionTexture(new Vector3(1, -1, 0.0f),new Vector2(1.0f, 0.0f)),
-                new VertexPositionTexture(new Vector3(1, 1, 0.0f),new Vector2(1.0f,1.0f)),
+                new VertexPositionTexture(new Vector3(-1, -1, 0.0f), new Vector2(0.0f, 1.0f)),
+                new VertexPositionTexture(new Vector3(-1, 1, 0.0f),new Vector2(0.0f, 0.0f)),
+                new VertexPositionTexture(new Vector3(1, -1, 0.0f),new Vector2(1.0f, 1.0f)),
+                new VertexPositionTexture(new Vector3(1, 1, 0.0f),new Vector2(1.0f,0.0f)),
             };
 
             TestQuad = new VertexBuffer(Device, VertexPositionTexture.VertexDeclaration, 4, BufferUsage.None);
@@ -197,7 +197,7 @@ namespace FPX
         public void RenderLights()
         {
 
-            Device.Clear(Camera.Active.ClearColor);
+            Device.Clear(Color.Black);
             Device.SetVertexBuffer(ScreenQuad);
             Device.BlendState = BlendState.Additive;
             Device.SamplerStates[0] = SamplerState.AnisotropicWrap;

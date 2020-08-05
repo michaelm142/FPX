@@ -7,4 +7,6 @@ float3 gCameraPos;
 float4 DiffuseColor;
 float4 SpecularColor;
 
+float Intensity;
+
 #endif

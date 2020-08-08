@@ -39,8 +39,8 @@ namespace FPX
             {
                 foreach (BasicEffect effect in mesh.Effects)
                 {
-                    AmbientLight ambient = (g_collection.Find(c => c is AmbientLight) as AmbientLight);
-                    effect.AmbientLightColor = (ambient != null ? ambient.DiffuseColor : AmbientLight.DefaultColor).ToVector3();
+                    Light ambient = (g_collection.Find(c => c is Light && (c as Light).LightType == LightType.Ambient) as Light);
+                    effect.AmbientLightColor = (ambient != null ? ambient.DiffuseColor : Light.DefaultColor).ToVector3();
                     effect.DiffuseColor = material.DiffuseColor.ToVector3();
                     effect.SpecularColor = material.SpecularColor.ToVector3();
                     effect.PreferPerPixelLighting = true;

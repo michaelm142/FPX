@@ -279,6 +279,18 @@ namespace FPX
 
             float f = 0.0f;
             byte v = 0x0;
+            if (nameAttr != null)
+            {
+                var colorType = typeof(Color);
+                var properties = colorType.GetProperties(BindingFlags.GetProperty | BindingFlags.Static | BindingFlags.Public).ToList();
+
+                var property = properties.Find(prop => prop.Name == nameAttr.Value);
+                if (property == null)
+                    Debug.LogError("Unknown color name");
+
+                var value = property.GetAccessors()[0].Invoke(null, null);
+                outval = (Color)value;
+            }
             if (rAttr != null)
             {
                 if (!byte.TryParse(rAttr.Value, out v))
@@ -326,20 +338,6 @@ namespace FPX
                 }
 
                 outval.A = v;
-            }
-            if (nameAttr != null)
-            {
-                var colorType = typeof(Color);
-                var properties = colorType.GetProperties(BindingFlags.GetProperty | BindingFlags.Static | BindingFlags.Public).ToList();
-
-                var property = properties.Find(prop => prop.Name == nameAttr.Value);
-                if (property == null)
-                    Debug.LogError("Unknown color name");
-                else
-                    Debug.Log("Found property {0}", property);
-
-                var value = property.GetAccessors()[0].Invoke(null, null);
-                outval = (Color)value;
             }
 
             return outval;

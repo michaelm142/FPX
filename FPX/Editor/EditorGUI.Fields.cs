@@ -73,7 +73,7 @@ namespace FPX.Editor
                 return f;
             }
 
-            val = new GUIValue(ValueType.Integer, value, label);
+            val = new GUIValue(ValueType.Float, value, label);
             Values.Add(val);
 
             return value;

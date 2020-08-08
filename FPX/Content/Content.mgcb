@@ -315,3 +315,9 @@
 /processorParam:TextureFormat=Color
 /build:Textures/TestTexture.jpg
 
+#begin Shaders/PointLight.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Debug
+/build:Shaders/PointLight.fx
+

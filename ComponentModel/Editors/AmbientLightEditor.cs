@@ -9,9 +9,9 @@ using System.Windows.Forms;
 
 namespace FPX
 {
-    public partial class AmbientLightEditor : ComponentEditor
+    public partial class LightEditor : ComponentEditor
     {
-        public AmbientLightEditor(AmbientLight Target)
+        public LightEditor(Light Target)
         {
             InitializeComponent();
             this.Target = Target;
@@ -21,7 +21,7 @@ namespace FPX
 
         private void ColorPicker1_ColorChanged(object sender, EventArgs e)
         {
-            (Target as AmbientLight).DiffuseColor = colorPicker1.XnaColor;
+            (Target as Light).DiffuseColor = colorPicker1.XnaColor;
         }
     }
 }

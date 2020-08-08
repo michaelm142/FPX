@@ -57,7 +57,7 @@ PixelShaderOutput PixelShaderFunction(VertexShaderOutput input)
 	tangentSpace[1] = input.binormal;
 	tangentSpace[0] = cross(tangentSpace[1], tangentSpace[2]);
 
-	float3 normal = float3(0, 0, 1.f);
+	float3 normal = NormalMap.Sample(NormalMapSampler, input.uv) * Roughness;
 	normal = mul(normal, tangentSpace);
 
 	output.normal = float4((normal + 1.f) / 2.f * Roughness, 1.f);

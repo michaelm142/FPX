@@ -1,42 +1,6 @@
 #include "Headers/LightParameters.h"
 #include "Headers/Textureing.h"
 
-float4x4 gInvViewProj;
-
-struct VertexShaderInput
-{
-    float4 Position : POSITION0;
-	float3 Normal : NORMAL0;
-	float2 uv : TEXCOORD0;
-	float3 binormal : BINORMAL0;
-};
-
-struct VertexShaderOutput
-{
-	float4 position : POSITION0;
-	float2 scrPos : TEXCOORD1;
-	float2 uv : TEXCOORD0;
-};
-
-VertexShaderOutput VertexShaderFunction(float4 position : POSITION0, float2 uv : TEXCOORD0)
-{
-	VertexShaderOutput output;
-
-	output.position = position;
-	output.scrPos = position.xy;
-	output.uv = uv;
-
-	return output;
-}
-
-float4 CalculateWorldSpacePosition(float2 pixelPosition, float pixelDepth, 
-								   float4x4 inverseViewProjection)
-{
-	float4 viewPos = mul(float4(pixelPosition, pixelDepth, 1.f), inverseViewProjection);
-
-	return viewPos / viewPos.w;
-}
-
 float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 {
 	float4 diffuse = DiffuseMap.Sample(DiffuseMapSampler, input.uv);
@@ -60,7 +24,7 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 	float4 finalDiffuse = saturate(nDotL) * diffuse * DiffuseColor;
 	float4 finalSpecular = specular * saturate(SpecularMod) * specular_nDotL *  (specular_nDotL > 0.0f ? float4(SpecularColor.xyz, 1.f) : (float4)0);
 
-    return finalDiffuse + finalSpecular;
+    return (finalDiffuse + finalSpecular) * Intensity;
 }
 
 technique Technique1

@@ -45,6 +45,7 @@ namespace FPX
         Effect GBufferShader;
         Effect DirectionalLightShader;
         Effect AmbientLightShader;
+        Effect PointLightShader;
         BasicEffect basicEffect;
 
         VertexBuffer TestQuad;
@@ -62,10 +63,12 @@ namespace FPX
         {
             Content = GameCore.content;
             DeviceUpdate(GameCore.graphicsDevice.Viewport.Width, GameCore.graphicsDevice.Viewport.Height);
+            GameCore.graphicsDevice.DeviceReset += GraphicsDevice_DeviceReset;
 
             GBufferShader = Content.Load<Effect>("Shaders\\DeferredGBuffers");
             AmbientLightShader = Content.Load<Effect>("Shaders\\AmbientLight");
             DirectionalLightShader = Content.Load<Effect>("Shaders\\DirectionalLight");
+            PointLightShader = Content.Load<Effect>("Shaders\\PointLight");
 
             rt_bindings = new RenderTargetBinding[4]
             {
@@ -110,25 +113,36 @@ namespace FPX
             anisoSampler.AddressV = TextureAddressMode.Wrap;
             anisoSampler.AddressW = TextureAddressMode.Wrap;
 
-            anisoSampler.Filter = TextureFilter.Anisotropic;
+            anisoSampler.Filter = TextureFilter.PointMipLinear;
             anisoSampler.MaxAnisotropy = 16;
             anisoSampler.MaxMipLevel = 4;
+            anisoSampler.FilterMode = TextureFilterMode.Comparison;
 
             Device.SamplerStates[0] = Device.SamplerStates[1] = Device.SamplerStates[2] = Device.SamplerStates[3] = anisoSampler;
 
             Debug.Log("Sampler State: " + Device.SamplerStates[3].Filter.ToString());
         }
 
+        private void GraphicsDevice_DeviceReset(object sender, EventArgs e)
+        {
+            //DeviceUpdate(GameCore.viewport.Width, GameCore.viewport.Height);
+        }
+
         private void DeviceUpdate(int ScreenWidth, int ScreenHeight)
         {
+            if (ScreenHeight == 0 || ScreenWidth == 0)
+                return;
+
             diffuseMap = new RenderTarget2D(Device, ScreenWidth, ScreenHeight, false, SurfaceFormat.Rgba64, DepthFormat.Depth24Stencil8, 0, RenderTargetUsage.PreserveContents);
             diffuseMap.Name = "Diffuse Map";
             normalMap = new RenderTarget2D(Device, ScreenWidth, ScreenHeight, false, SurfaceFormat.Rgba64, DepthFormat.Depth24Stencil8, 0, RenderTargetUsage.PreserveContents);
             normalMap.Name = "Normal Map";
             specularMap = new RenderTarget2D(Device, ScreenWidth, ScreenHeight, false, SurfaceFormat.Rgba64, DepthFormat.Depth24Stencil8, 0, RenderTargetUsage.PreserveContents);
             specularMap.Name = "Specular Map";
-            depthMap = new RenderTarget2D(Device, ScreenWidth, ScreenHeight, false, SurfaceFormat.Rgba64, DepthFormat.Depth24Stencil8, 0, RenderTargetUsage.PreserveContents);
+            depthMap = new RenderTarget2D(Device, ScreenWidth, ScreenHeight, false, SurfaceFormat.Vector4, DepthFormat.Depth24Stencil8, 0, RenderTargetUsage.PreserveContents);
             depthMap.Name = "Depth Map";
+
+            Device.SetRenderTargets(rt_bindings);
         }
 
 
@@ -166,17 +180,20 @@ namespace FPX
 
         public void RenderObject(MeshRenderer renderer)
         {
+            if (!renderer.Visible || !renderer.gameObject.Visible)
+                return;
+
             Material material = renderer.GetComponent<Material>();
             GBufferShader.Parameters["DiffuseMap"].SetValue(material.DiffuseMap);
-            //GBufferShader.Parameters["NormalMap"].SetValue(material.NormalMap);
+            GBufferShader.Parameters["NormalMap"].SetValue(material.NormalMap);
             GBufferShader.Parameters["SpecularMap"].SetValue(material.SpecularMap);
 
             GBufferShader.Parameters["World"].SetValue(renderer.transform.worldPose);
             GBufferShader.Parameters["DiffuseColor"].SetValue(renderer.GetComponent<Material>().DiffuseColor.ToVector4());
             GBufferShader.Parameters["SpecularColor"].SetValue(renderer.GetComponent<Material>().SpecularColor.ToVector4());
-            GBufferShader.Parameters["Roughness"].SetValue(             material.Roughness);
-            GBufferShader.Parameters["SpecularPower"].SetValue(         material.SpecularPower / 10.0f);
-            GBufferShader.Parameters["SpecularIntensity"].SetValue(     material.SpecularIntensity / 10.0f);
+            GBufferShader.Parameters["Roughness"].SetValue(material.Roughness);
+            GBufferShader.Parameters["SpecularPower"].SetValue(material.SpecularPower / 10.0f);
+            GBufferShader.Parameters["SpecularIntensity"].SetValue(material.SpecularIntensity / 10.0f);
             //Device.Textures[0] = renderer.GetComponent<Material>().DiffuseMap;
             //Device.Textures[1] = renderer.GetComponent<Material>().NormalMap;
             //Device.Textures[2] = renderer.GetComponent<Material>().SpecularMap;
@@ -196,6 +213,7 @@ namespace FPX
 
         public void RenderLights()
         {
+            var camera = Camera.Active;
 
             Device.Clear(Color.Black);
             Device.SetVertexBuffer(ScreenQuad);
@@ -205,29 +223,51 @@ namespace FPX
             Device.SamplerStates[2] = SamplerState.AnisotropicWrap;
             Device.SamplerStates[3] = SamplerState.AnisotropicWrap;
 
+            var Lights = Component.g_collection.FindAll(c => c is Light && c.gameObject.Visible).Cast<Light>().ToList();
 
-            //foreach (ILightSource light in root.GetNodesInChildren<DirectionalLight>())
-            //{
-            //    DirectionalLight dirLight = light as DirectionalLight;
-            //    DirectionalLightShader.Parameters["DiffuseColor"].SetValue(light.DiffuseColor.ToVector4());
-            //    DirectionalLightShader.Parameters["SpecularColor"].SetValue(light.SpecularColor.ToVector4());
-            //    DirectionalLightShader.Parameters["gCameraPos"].SetValue(camera.GetNodeInChildren<Transform>().position);
-            //    DirectionalLightShader.Parameters["gInvViewProj"].SetValue(Matrix.Transpose(camera.View * camera.Perspective));
-            //    DirectionalLightShader.Parameters["LightDirection"].SetValue(dirLight.direction);
-            //    DirectionalLightShader.CurrentTechnique.Passes[0].Apply();
-            //    Device.Textures[0] = diffuseMap;
-            //    Device.Textures[1] = normalMap;
-            //    Device.Textures[2] = specularMap;
-            //    Device.Textures[3] = depthMap;
+            foreach (Light light in Lights.FindAll(l => l.LightType == LightType.Directional))
+            {
+                DirectionalLightShader.Parameters["DiffuseColor"].SetValue(light.DiffuseColor.ToVector4());
+                DirectionalLightShader.Parameters["SpecularColor"].SetValue(light.SpecularColor.ToVector4());
+                DirectionalLightShader.Parameters["gCameraPos"].SetValue(camera.position);
+                DirectionalLightShader.Parameters["Intensity"].SetValue(light.Intensity);
+                DirectionalLightShader.Parameters["gInvViewProj"].SetValue(Matrix.Invert(camera.ViewMatrix * camera.ProjectionMatrix));
+                DirectionalLightShader.Parameters["LightDirection"].SetValue(light.transform.forward);
+                DirectionalLightShader.CurrentTechnique.Passes[0].Apply();
+                Device.Textures[0] = diffuseMap;
+                Device.Textures[1] = normalMap;
+                Device.Textures[2] = specularMap;
+                Device.Textures[3] = depthMap;
 
-            //    Device.DrawPrimitives(PrimitiveType.TriangleStrip, 0, 2);
-            //}
+                Device.DrawPrimitives(PrimitiveType.TriangleStrip, 0, 2);
+            }
 
-            foreach (AmbientLight light in Component.g_collection.FindAll(c => c is AmbientLight))
+            foreach (Light pointLight in Lights.FindAll(l => l.LightType == LightType.Point))
+            {
+                PointLightShader.Parameters["DiffuseColor"].SetValue(pointLight.DiffuseColor.ToVector4());
+                PointLightShader.Parameters["SpecularColor"].SetValue(pointLight.SpecularColor.ToVector4());
+                PointLightShader.Parameters["gCameraPos"].SetValue(camera.position);
+                PointLightShader.Parameters["Intensity"].SetValue(pointLight.Intensity);
+                PointLightShader.Parameters["gInvViewProj"].SetValue(Matrix.Invert(camera.ViewMatrix * camera.ProjectionMatrix));
+                PointLightShader.Parameters["LightPosition"].SetValue(pointLight.position);
+                PointLightShader.Parameters["Range"].SetValue(pointLight.Range);
+
+
+                PointLightShader.CurrentTechnique.Passes[0].Apply();
+                Device.Textures[0] = diffuseMap;
+                Device.Textures[1] = normalMap;
+                Device.Textures[2] = specularMap;
+                Device.Textures[3] = depthMap;
+
+                Device.DrawPrimitives(PrimitiveType.TriangleStrip, 0, 2);
+            }
+
+            foreach (Light light in Lights.FindAll(l => l.LightType == LightType.Ambient))
             {
                 AmbientLightShader.Parameters["DiffuseColor"].SetValue(light.DiffuseColor.ToVector4());
                 AmbientLightShader.Parameters["SpecularColor"].SetValue(light.SpecularColor.ToVector4());
                 AmbientLightShader.Parameters["gCameraPos"].SetValue(Camera.Active.transform.position);
+                AmbientLightShader.Parameters["Intensity"].SetValue(light.Intensity);
                 AmbientLightShader.CurrentTechnique.Passes[0].Apply();
                 Device.Textures[0] = diffuseMap;
 

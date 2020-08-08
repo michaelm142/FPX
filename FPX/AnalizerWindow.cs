@@ -112,5 +112,17 @@ namespace FPX
         {
             AnalyzerGUI(this, new SelectionEventArgs(Selection.SelectedObjects.ToArray()));
         }
+
+        private void visibleCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            foreach (var obj in Selection.SelectedObjects)
+                obj.Visible = visibleCheckBox.Checked;
+        }
+
+        private void enabledCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            foreach (var obj in Selection.SelectedObjects)
+                obj.Enabled = enabledCheckBox.Checked;
+        }
     }
 }

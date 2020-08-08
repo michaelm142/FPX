@@ -30,9 +30,9 @@
         {
             this.addComponentButton = new System.Windows.Forms.Button();
             this.titlePanel = new System.Windows.Forms.Panel();
-            this.visibleCheckBox = new System.Windows.Forms.CheckBox();
-            this.enabledCheckBox = new System.Windows.Forms.CheckBox();
             this.nameTextBox = new System.Windows.Forms.TextBox();
+            this.enabledCheckBox = new System.Windows.Forms.CheckBox();
+            this.visibleCheckBox = new System.Windows.Forms.CheckBox();
             this.titlePanel.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -60,15 +60,14 @@
             this.titlePanel.Size = new System.Drawing.Size(364, 78);
             this.titlePanel.TabIndex = 1;
             // 
-            // visibleCheckBox
+            // nameTextBox
             // 
-            this.visibleCheckBox.AutoSize = true;
-            this.visibleCheckBox.Location = new System.Drawing.Point(11, 11);
-            this.visibleCheckBox.Name = "visibleCheckBox";
-            this.visibleCheckBox.Size = new System.Drawing.Size(56, 17);
-            this.visibleCheckBox.TabIndex = 0;
-            this.visibleCheckBox.Text = "Visible";
-            this.visibleCheckBox.UseVisualStyleBackColor = true;
+            this.nameTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.nameTextBox.Location = new System.Drawing.Point(97, 9);
+            this.nameTextBox.Name = "nameTextBox";
+            this.nameTextBox.Size = new System.Drawing.Size(252, 20);
+            this.nameTextBox.TabIndex = 2;
             // 
             // enabledCheckBox
             // 
@@ -79,15 +78,18 @@
             this.enabledCheckBox.TabIndex = 1;
             this.enabledCheckBox.Text = "Enabled";
             this.enabledCheckBox.UseVisualStyleBackColor = true;
+            this.enabledCheckBox.CheckedChanged += new System.EventHandler(this.enabledCheckBox_CheckedChanged);
             // 
-            // nameTextBox
+            // visibleCheckBox
             // 
-            this.nameTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.nameTextBox.Location = new System.Drawing.Point(97, 9);
-            this.nameTextBox.Name = "nameTextBox";
-            this.nameTextBox.Size = new System.Drawing.Size(252, 20);
-            this.nameTextBox.TabIndex = 2;
+            this.visibleCheckBox.AutoSize = true;
+            this.visibleCheckBox.Location = new System.Drawing.Point(11, 11);
+            this.visibleCheckBox.Name = "visibleCheckBox";
+            this.visibleCheckBox.Size = new System.Drawing.Size(56, 17);
+            this.visibleCheckBox.TabIndex = 0;
+            this.visibleCheckBox.Text = "Visible";
+            this.visibleCheckBox.UseVisualStyleBackColor = true;
+            this.visibleCheckBox.CheckedChanged += new System.EventHandler(this.visibleCheckBox_CheckedChanged);
             // 
             // AnalizerWindow
             // 

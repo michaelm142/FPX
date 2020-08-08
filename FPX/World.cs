@@ -20,6 +20,8 @@ namespace FPX
 
         IntPtr targetWindowHandle = IntPtr.Zero;
 
+        private bool isInilitized;
+
         public World()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -72,9 +74,14 @@ namespace FPX
         /// </summary>
         protected override void Initialize()
         {
+            if (isInilitized)
+                return;
+
             AssetManager.Inilitize();
 
             base.Initialize();
+
+            isInilitized = true;
         }
 
         /// <summary>

@@ -135,7 +135,7 @@
     <Compile Include="Editors\TransformEditor.Designer.cs">
       <DependentUpon>TransformEditor.cs</DependentUpon>
     </Compile>
-    <Compile Include="Graphics\AmbientLight.cs" />
+    <Compile Include="Graphics\Light.cs" />
     <Compile Include="Graphics\Camera.cs" />
     <Compile Include="Colliders\Collider.cs" />
     <Compile Include="Colliders\BoxCollider.cs" />

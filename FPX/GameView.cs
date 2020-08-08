@@ -93,7 +93,8 @@ namespace FPX
                 + sceneCamera.transform.right * right
                 + sceneCamera.transform.up * up;
 
-            simulation.GetType().GetMethods(BindingFlags.Instance | BindingFlags.NonPublic).ToList().Find(method => method.Name == "Draw").Invoke(simulation, new object[] { new GameTime(TimeSpan.Zero, TimeSpan.Zero, false) });
+            simulation.RunOneFrame();
+            // simulation.GetType().GetMethods(BindingFlags.Instance | BindingFlags.NonPublic).ToList().Find(method => method.Name == "Draw").Invoke(simulation, new object[] { new GameTime(TimeSpan.Zero, TimeSpan.Zero, false) });
             simulation.GraphicsDevice.Present();
         }
 

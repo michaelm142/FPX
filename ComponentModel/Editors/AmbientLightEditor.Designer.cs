@@ -1,6 +1,6 @@
 ﻿namespace FPX
 {
-    partial class AmbientLightEditor
+    partial class LightEditor
     {
         /// <summary> 
         /// Required designer variable.

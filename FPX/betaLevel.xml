@@ -6,6 +6,7 @@
     <Object Name="Camera">
       <Transform >
         <Position X="0.0" Y="1.0" Z ="25"/>
+        <Rotation Y="43"/>
       </Transform>
       <DebugDeviceTextures/>
       <Camera>
@@ -20,12 +21,17 @@
       </GameControlTest>
     </Object>
 
-    <Object Name="AmbientLight">
-      <Transform/>
-      <AmbientLight>
-        <DiffuseColor R="1.0" G="1.0" B="1.0" A="1.0"/>
-        <SpecularColor R="1.0" G="1.0" B="1.0" A="1.0"/>
-      </AmbientLight>
+    <Object Name="Point Light 1">
+      <Transform>
+        <Rotation X="45"/>
+        <Position Y="1.0"/>
+      </Transform>
+      <Light>
+        <LightType>Point</LightType>
+        <DiffuseColor Name="Yellow" B="0.75"/>
+        <SpecularColor Name="White"/>
+        <Intensity>1.0</Intensity>
+      </Light>
     </Object>
 
     <Prefab Filename="Prefabs\\Gun.xml">
@@ -33,9 +39,13 @@
         <Position X="1.5" Y="-0.5" Z="-2.5"/>
         <Rotation X="0.0" Y="180.0" Z="0.0"/>
       </Transform>
+      <Material>
+        <SpecularColor Name="Gray"/>
+      </Material>
     </Prefab>
 
     <Prefab Filename="Prefabs\\Sphere.xml"/>
+    
     <!--Prefabs\Room.cluster POSX=-20 POSY=0 POSZ=10-->
     <!--Prefabs\Room.cluster POSX=20 POSY=0 POSZ=-10-->
     <!--Prefabs\Ground.cluster-->

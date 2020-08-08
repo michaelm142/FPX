@@ -2,11 +2,50 @@
 #define _LIGHT_PARAMS
 
 float3 LightDirection;
+float3 LightPosition;
 float3 gCameraPos;
 
 float4 DiffuseColor;
 float4 SpecularColor;
 
+float Range;
 float Intensity;
+
+float4x4 gInvViewProj; 
+
+float CalculateAttenuation(float3 attenuationFactors, float distanceToLight, float lightRange,
+	float numerator = 1.0)
+{
+	float const_att = numerator / attenuationFactors.x;
+	float quad_att = numerator / (attenuationFactors.z * distanceToLight*distanceToLight);
+	float lin_att = numerator / (attenuationFactors.y * distanceToLight);
+	return numerator / (const_att + lin_att * distanceToLight + quad_att * distanceToLight * distanceToLight);
+}
+
+float4 CalculateWorldSpacePosition(float2 pixelPosition, float pixelDepth,
+	float4x4 inverseViewProjection)
+{
+	float4 viewPos = mul(float4(pixelPosition, pixelDepth, 1.f), inverseViewProjection);
+
+	return viewPos / viewPos.w;
+}
+
+struct VertexShaderOutput
+{
+	float4 position : POSITION0;
+	float2 scrPos : TEXCOORD1;
+	float2 uv : TEXCOORD0;
+};
+
+VertexShaderOutput VertexShaderFunction(float4 position : POSITION0, float2 uv : TEXCOORD0)
+{
+	VertexShaderOutput output;
+
+	output.position = position;
+	output.scrPos = position.xy;
+	output.uv = uv;
+
+	return output;
+}
 
 #endif

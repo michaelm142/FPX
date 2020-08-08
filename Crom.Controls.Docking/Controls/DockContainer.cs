@@ -898,7 +898,7 @@ namespace Crom.Controls
          MouseButtons button = MouseButtons;
 
          // Save processor
-         Application.DoEvents();
+         //Application.DoEvents();
          System.Threading.Thread.Sleep(1);
 
          if (button != MouseButtons.Left)

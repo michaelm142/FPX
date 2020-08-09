@@ -1,6 +1,15 @@
 ﻿#include "Headers/LightParameters.h"
 #include "Headers/Textureing.h"
 
+float CalculateAttenuation(float3 attenuationFactors, float distanceToLight, float lightRange,
+	float numerator = 1.0)
+{
+	//float const_att = numerator / attenuationFactors.x;
+	float quad_att = numerator / (attenuationFactors.z * distanceToLight*distanceToLight);
+	//float lin_att = numerator / (attenuationFactors.y * distanceToLight);
+	return numerator / (/*const_att + lin_att * distanceToLight +*/ quad_att * distanceToLight * distanceToLight);
+}
+
 float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 {
 	float2 pixelPosition = float2(input.scrPos.x, input.scrPos.y);
@@ -21,8 +30,10 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 	toLight = normalize(toLight);
 	float attenuation = CalculateAttenuation(Intensity, distanceToLight, Range);
 
+	float distanceFactor = 1.0f - saturate(distanceToLight / Range);
+
 	normal = (normal - 0.5f) * 2.f;
-	float nDotL = saturate(dot(normal, toLight)) * attenuation;
+	float nDotL = saturate(dot(normal, toLight)) * distanceFactor * attenuation;
 
 	float4 finalDiffuse = diffuse * nDotL * DiffuseColor;
 	float4 finalSpecular = specular * nDotL;

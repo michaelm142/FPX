@@ -13,21 +13,26 @@ namespace FPX
     {
         public static Dictionary<string, ContentReference> Assets { get; private set; } = new Dictionary<string, ContentReference>();
 
-        private const string ContentRootDirectory = "\\Content\\";
+        public static string ContentRootDirectory
+        {
+            get { return Environment.CurrentDirectory + "//" + GameCore.content.RootDirectory; }
+        }
 
         public static void Inilitize()
         {
             Debug.Log("Asset manager initializing...");
 
-            AnalyzeDirectory(new DirectoryInfo(Environment.CurrentDirectory + "//" + GameCore.content.RootDirectory));
+            AnalyzeDirectory(new DirectoryInfo(ContentRootDirectory));
         }
 
         private static void AnalyzeDirectory(DirectoryInfo directory)
         {
             var files = directory.GetFiles().ToList().FindAll(file =>  file.Extension == ".xnb");
+            if (files.Count == 0 && directory.FullName == ContentRootDirectory)
+                Debug.LogWarning("Content has not been compiled");
             foreach (var file in files)
             {
-                string contentRelitiveFilePath = file.FullName.Split(new string[] { ContentRootDirectory }, StringSplitOptions.RemoveEmptyEntries)[1];
+                string contentRelitiveFilePath = file.FullName.Split(new string[] { GameCore.content.RootDirectory + "\\" }, StringSplitOptions.RemoveEmptyEntries)[1];
                 contentRelitiveFilePath = contentRelitiveFilePath.Split(new char[] { '.' })[0];
                 using (var reader = file.OpenText())
                 {

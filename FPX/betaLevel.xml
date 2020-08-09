@@ -22,12 +22,39 @@
     </Object>
 
     <Object Name="Point Light 1">
-      <Transform>
+      <Transform Parent="Camera">
         <Rotation X="45"/>
         <Position Y="1.0"/>
       </Transform>
       <Light>
         <LightType>Point</LightType>
+        <DiffuseColor Name="Yellow" B="0.75"/>
+        <SpecularColor Name="White"/>
+        <Intensity>1.0</Intensity>
+        <Range>20</Range>
+      </Light>
+    </Object>
+
+    <Object Name="Ambient Light 1">
+      <Transform>
+        <Rotation X="45"/>
+        <Position Y="1.0"/>
+      </Transform>
+      <Light>
+        <LightType>Ambient</LightType>
+        <DiffuseColor Name="Yellow" B="0.75"/>
+        <SpecularColor Name="White"/>
+        <Intensity>0.1</Intensity>
+      </Light>
+    </Object>
+
+    <Object Name="The Sun">
+      <Transform>
+        <Rotation X="45"/>
+        <Position Y="1.0"/>
+      </Transform>
+      <Light>
+        <LightType>Directional</LightType>
         <DiffuseColor Name="Yellow" B="0.75"/>
         <SpecularColor Name="White"/>
         <Intensity>1.0</Intensity>

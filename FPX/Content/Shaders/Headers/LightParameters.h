@@ -4,6 +4,7 @@
 float3 LightDirection;
 float3 LightPosition;
 float3 gCameraPos;
+float3 AttenuationFactors;
 
 float4 DiffuseColor;
 float4 SpecularColor;
@@ -13,14 +14,6 @@ float Intensity;
 
 float4x4 gInvViewProj; 
 
-float CalculateAttenuation(float3 attenuationFactors, float distanceToLight, float lightRange,
-	float numerator = 1.0)
-{
-	float const_att = numerator / attenuationFactors.x;
-	float quad_att = numerator / (attenuationFactors.z * distanceToLight*distanceToLight);
-	float lin_att = numerator / (attenuationFactors.y * distanceToLight);
-	return numerator / (const_att + lin_att * distanceToLight + quad_att * distanceToLight * distanceToLight);
-}
 
 float4 CalculateWorldSpacePosition(float2 pixelPosition, float pixelDepth,
 	float4x4 inverseViewProjection)

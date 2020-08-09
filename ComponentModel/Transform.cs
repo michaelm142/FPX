@@ -112,9 +112,9 @@ namespace FPX
             var scaleNode = node.SelectSingleNode("Scale") as XmlElement;
 
             if (positionNode != null)
-                localPosition = LinearAlgebraUtil.Vector3FromXml(positionNode);
+                position = LinearAlgebraUtil.Vector3FromXml(positionNode);
             if (rotationNode != null)
-                localRotation = LinearAlgebraUtil.EulerFromXml(rotationNode);
+                rotation = LinearAlgebraUtil.EulerFromXml(rotationNode);
             if (scaleNode != null)
                 localScale = LinearAlgebraUtil.Vector3FromXml(scaleNode);
         }

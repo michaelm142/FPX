@@ -11,6 +11,7 @@ namespace FPX
     [Editor(typeof(LightEditor))]
     public class Light : Component, ILightSource
     {
+
         public Color DiffuseColor { get; set; }
 
         public Color SpecularColor { get; set; }

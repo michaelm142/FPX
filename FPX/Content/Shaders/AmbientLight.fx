@@ -5,7 +5,7 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 {
 	float4 diffuse = DiffuseMap.Sample(DiffuseMapSampler, input.uv);
 	float4 finalDiffuse = diffuse * DiffuseColor;
-    return finalDiffuse;
+    return finalDiffuse * Intensity;
 }
 
 technique Technique1

@@ -21,7 +21,14 @@ namespace FPX
         public float Intensity { get; set; } = 1.0f;
         public float Range { get; set; } = 5.0f;
 
+        public int ShadowMapSize { get; set; } = 1024;
+
         public LightType LightType { get; set; }
+
+        public bool UseShadows;
+
+        public RenderTarget2D shadowMap { get; private set; }
+        public RenderTargetCube shadowCube { get; private set; }
 
         public static Color DefaultColor { get { return Color.Gray; } }
 
@@ -34,6 +41,7 @@ namespace FPX
             XmlElement typeElement = element.SelectSingleNode("LightType") as XmlElement;
             XmlElement intensityElement = element.SelectSingleNode("Intensity") as XmlElement;
             XmlElement rangeElement = element.SelectSingleNode("Range") as XmlElement;
+            XmlElement useShadowsElement = element.SelectSingleNode("UseShadows") as XmlElement;
 
             if (diffuseColorElement != null)
                 DiffuseColor = LinearAlgebraUtil.ColorFromXml(diffuseColorElement);
@@ -49,6 +57,30 @@ namespace FPX
                 Intensity = float.Parse(intensityElement.InnerText);
             if (rangeElement != null)
                 Range = float.Parse(rangeElement.InnerText);
+            if (useShadowsElement != null)
+                UseShadows = bool.Parse(useShadowsElement.InnerText);
+
+            if (UseShadows)
+                CreateShadowMaps();
+        }
+
+        private void CreateShadowMaps()
+        {
+            switch (LightType)
+            {
+                case LightType.Directional:
+                    shadowMap = new RenderTarget2D(GameCore.graphicsDevice, ShadowMapSize, ShadowMapSize);
+                    break;
+                case LightType.Point:
+                    shadowCube = new RenderTargetCube(GameCore.graphicsDevice, ShadowMapSize, true, SurfaceFormat.Single, DepthFormat.Depth16);
+                    break;
+                        
+            }
+        }
+
+        public void RenderShadows()
+        {
+            Debug.Log("Rendered Shadow");
         }
     }
 

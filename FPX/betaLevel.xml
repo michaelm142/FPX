@@ -31,7 +31,7 @@
         <DiffuseColor Name="Yellow" B="0.75"/>
         <SpecularColor Name="White"/>
         <Intensity>1.0</Intensity>
-        <Range>20</Range>
+        <Range>80</Range>
       </Light>
     </Object>
 

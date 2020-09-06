@@ -276,6 +276,8 @@ namespace FPX
 
             for (int i = 0; i < 4; i++)
                 Device.Textures[i] = null;
+
+            Lights.ForEach(l => l.RenderShadows());
         }
 
         public void AppendVertecies(VertexPositionNormalTextureBinormal[] vertecies, out int startIndex)

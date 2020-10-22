@@ -225,6 +225,8 @@ namespace FPX
 
             var Lights = Component.g_collection.FindAll(c => c is Light && c.gameObject.Visible).Cast<Light>().ToList();
 
+            Lights.ForEach(l => l.RenderShadows());
+
             foreach (Light light in Lights.FindAll(l => l.LightType == LightType.Directional))
             {
                 DirectionalLightShader.Parameters["DiffuseColor"].SetValue(light.DiffuseColor.ToVector4());
@@ -277,7 +279,6 @@ namespace FPX
             for (int i = 0; i < 4; i++)
                 Device.Textures[i] = null;
 
-            Lights.ForEach(l => l.RenderShadows());
         }
 
         public void AppendVertecies(VertexPositionNormalTextureBinormal[] vertecies, out int startIndex)

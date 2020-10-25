@@ -9,9 +9,9 @@
 
 BOOL running = true;
 
-void Initialize()
+void Initialize(HWND h_wnd)
 {
-	hwnd = GetConsoleWindow();
+	hwnd = h_wnd;
 	hinstance = GetModuleHandle(0);
 
 	HRESULT hr = DirectInput8Create(hinstance, DIRECTINPUT_VERSION, IID_IDirectInput8A, (void**)&dInput, NULL);
@@ -21,15 +21,11 @@ void Initialize()
 
 
 	std::cout << "Initialized Sucessfully" << std::endl;
-
-
-
-	std::cout << "Total attached devices " << attachedDevices.size();
 }
 
 int main()
 {
-	Initialize();
+	Initialize(GetConsoleWindow());
 
 	std::cin.get();
 	while (running)
@@ -44,7 +40,10 @@ void Dispose()
 {
 	dInput->Release();
 	while (attachedDevices.size() > 0)
+	{
 		UnaquireDevice(*attachedDevices.begin());
+		attachedDevices.erase(attachedDevices.begin());
+	}
 }
 
 void UnaquireDevice(InputDevice* pDevice)
@@ -59,6 +58,7 @@ void UnaquireDevice(InputDevice* pDevice)
 void Loop()
 {
 	static long double totalElapsed = 0.0;
+	static HRESULT hr = S_OK;
 
 	clock_t now = clock();
 	static clock_t then = now;
@@ -71,7 +71,8 @@ void Loop()
 	for (auto i = attachedDevices.begin(); i != attachedDevices.end();)
 	{
 		InputDevice* pDevice = *i;
-		HRESULT hr = ProcessDevice(pDevice);
+		hr = ProcessDevice(pDevice);
+
 		if (hr == DIERR_INPUTLOST)
 		{
 			UnaquireDevice(pDevice);
@@ -94,18 +95,19 @@ void Loop()
 
 HRESULT ProcessDevice(InputDevice* pDevice)
 {
+	static HRESULT hr = S_OK;
 	pDevice->pDevice->Poll();
 	switch (pDevice->deviceType)
 	{
 	case DI8DEVTYPE_1STPERSON:
 	case DI8DEVTYPE_GAMEPAD:
-		HRESULT hr = pDevice->pDevice->GetDeviceState(sizeof(DIJOYSTATE), (void*)&pDevice->joypadState1);
+		hr = pDevice->pDevice->GetDeviceState(sizeof(DIJOYSTATE), (void*)&pDevice->deviceState);
 		if (hr == DIERR_INPUTLOST)
 			return hr;
 
 		std::cout << "Device Name:" << (char*)pDevice->dvInfo.tszInstanceName << std::endl;
 
-		auto gamepadState = pDevice->joypadState1;
+		auto gamepadState = pDevice->deviceState.joypadState1;
 
 		std::cout << "Device Left Stick:\t {" << gamepadState.lX << ":" << gamepadState.lY << "}" << std::endl;
 		std::cout << "Device Right Stick:\t {" << gamepadState.lRx << ":" << gamepadState.lRy << "}" << std::endl;
@@ -120,7 +122,30 @@ HRESULT ProcessDevice(InputDevice* pDevice)
 			std::cout << "6DOF Axis " << i << ":" << gamepadState.rgdwPOV[i] << std::endl;
 		}
 		break;
+	case DI8DEVTYPE_MOUSE:
+		hr = pDevice->pDevice->GetDeviceState(sizeof(DIMOUSESTATE), (void*)&pDevice->deviceState);
+		if (hr == DIERR_INPUTLOST)
+			return hr;
 
+		std::cout << "Device Name:" << (char*)pDevice->dvInfo.tszInstanceName << std::endl;
+
+		auto mouseState = pDevice->deviceState.mouseState;
+		std::cout << "Delta Position:\t{ " << mouseState.lX << ":" << mouseState.lY << " }" << std::endl;
+		std::cout << "Wheel Delta: " << (mouseState.lZ % 120) << std::endl;
+		for (uint i = 0; i < 4; i++)
+			std::cout << "Button[" << i << "]" << (mouseState.rgbButtons[i] == 0 ? "Up" : "Down") << std::endl;
+		break;
+	case DI8DEVTYPE_KEYBOARD:
+		hr = pDevice->pDevice->GetDeviceState(KEYBOARD_BUFFER_SIZE, (void*)&pDevice->deviceState);
+		if (hr == DIERR_INPUTLOST)
+			return hr;
+
+		std::cout << "Device Name:" << (char*)pDevice->dvInfo.tszInstanceName << std::endl;
+
+		for (uint i = 0; i < KEYBOARD_BUFFER_SIZE; i++)
+			if (pDevice->deviceState.keys[i] != 0)
+				std::cout << char(i) << " key is down";
+		break;
 	}
 	
 	return S_OK;

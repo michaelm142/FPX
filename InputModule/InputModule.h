@@ -6,12 +6,14 @@
 #include <consoleapi3.h>
 #include <list>
 
+#define KEYBOARD_BUFFER_SIZE 256
+
 typedef unsigned int uint;
 
 HWND hwnd;
 HINSTANCE hinstance;
 
-static IDirectInput8* dInput = (IDirectInput8*)(NULL); 
+static IDirectInput8* dInput = (IDirectInput8*)(NULL);
 
 struct InputDevice
 {
@@ -21,17 +23,22 @@ struct InputDevice
 	uint pad;
 	DIDEVICEINSTANCE dvInfo;
 
-	DIJOYSTATE joypadState1;
+	union
+	{
+		char keys[KEYBOARD_BUFFER_SIZE];
+		DIJOYSTATE joypadState1;
+		DIMOUSESTATE mouseState;
+	} deviceState;
 };
 
 void Loop();
-void Initialize();
+void Initialize(HWND);
 void Dispose();
 HRESULT ProcessDevice(InputDevice* pDevice);
 void UnaquireDevice(InputDevice* pDevice);
 
 static std::list<InputDevice*> attachedDevices;
 
-BOOL CALLBACK DIEnumDevicesCallback(LPCDIDEVICEINSTANCE lpddi, PVOID pvRef); 
+BOOL CALLBACK DIEnumDevicesCallback(LPCDIDEVICEINSTANCE lpddi, PVOID pvRef);
 BOOL CALLBACK DIEnumDeviceObjectsCallback(LPCDIDEVICEOBJECTINSTANCE lpddoi, LPVOID pvRef);
 #endif

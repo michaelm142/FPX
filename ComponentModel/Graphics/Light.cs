@@ -80,7 +80,6 @@ namespace FPX
 
         public void RenderShadows()
         {
-            Debug.Log("Rendered Shadow");
         }
     }
 

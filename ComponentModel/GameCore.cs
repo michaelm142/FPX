@@ -73,10 +73,14 @@ namespace FPX
             Scene level = new Scene();
             level.sceneName = sceneName;
 
+            InputManager input = new InputManager();
+            input.Filename = sceneName;
+
             gameInstance.Components.Add(level);
             gameInstance.Components.Add(new Time());
             gameInstance.Components.Add(new Physics());
             gameInstance.Components.Add(new Graphics());
+            gameInstance.Components.Add(input);
 
             gameInstance.Activated += Outval_Activated;
 

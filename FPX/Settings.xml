@@ -10,4 +10,8 @@
   <ControllerInput>One</ControllerInput>
   <FillMode Type="Microsoft.Xna.Framework.Graphics.PrimitiveType, Monogame.Framework">TriangleList</FillMode>
   <RenderMode>Deferred</RenderMode>
+  <Input>
+    <Axis Name="Horizontal" Platform="GamePad" Type="Thumbsticks Left Y"/>
+    <Axis Name="Vertical" Platform="GamePad" Type="Thumbsticks Right X"/>
+  </Input>
 </Settings>

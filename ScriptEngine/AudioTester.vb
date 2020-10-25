@@ -7,11 +7,11 @@ Public Class AudioTester
     Private keyDown As Boolean
 
     Public Sub Update(gameTime As GameTime)
-        If (Input.Keyboard.GetState().IsKeyDown(Input.Keys.A) And Not keyDown) Then
+        If (Microsoft.Xna.Framework.Input.Keyboard.GetState().IsKeyDown(Microsoft.Xna.Framework.Input.Keys.A) And Not keyDown) Then
             GetComponent(Of AudioSource).Play()
         End If
 
-        keyDown = Input.Keyboard.GetState().IsKeyDown(Input.Keys.A)
+        keyDown = Microsoft.Xna.Framework.Input.Keyboard.GetState().IsKeyDown(Microsoft.Xna.Framework.Input.Keys.A)
     End Sub
 
 End Class

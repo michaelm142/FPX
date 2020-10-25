@@ -9,9 +9,9 @@
 
 BOOL running = true;
 
-void Initialize(HWND h_wnd)
+EXPORT int _stdcall InitializeInputModule(int h_wnd)
 {
-	hwnd = h_wnd;
+	hwnd = (HWND)h_wnd;
 	hinstance = GetModuleHandle(0);
 
 	HRESULT hr = DirectInput8Create(hinstance, DIRECTINPUT_VERSION, IID_IDirectInput8A, (void**)&dInput, NULL);
@@ -20,17 +20,22 @@ void Initialize(HWND h_wnd)
 	assert(SUCCEEDED(hr) && "Failed to initialize direct input");
 
 
-	std::cout << "Initialized Sucessfully" << std::endl;
+	dInput->EnumDevices(DI8DEVCLASS_GAMECTRL, DIEnumDevicesCallback, &dInput, DIEDFL_ATTACHEDONLY);
+	dInput->EnumDevices(DI8DEVCLASS_KEYBOARD, DIEnumDevicesCallback, &dInput, DIEDFL_ATTACHEDONLY);
+	dInput->EnumDevices(DI8DEVCLASS_POINTER, DIEnumDevicesCallback, &dInput, DIEDFL_ATTACHEDONLY);
+
+	std::cout << "Input Module Initialized Sucessfully" << std::endl;
+	return hr;
 }
 
 int main()
 {
-	Initialize(GetConsoleWindow());
+	InitializeInputModule((int)GetConsoleWindow());
 
 	std::cin.get();
 	while (running)
 	{
-		Loop();
+		InputUpdate();
 	}
 
 	Dispose();
@@ -55,7 +60,7 @@ void UnaquireDevice(InputDevice* pDevice)
 	delete pDevice;
 }
 
-void Loop()
+EXPORT void __stdcall InputUpdate()
 {
 	static long double totalElapsed = 0.0;
 	static HRESULT hr = S_OK;
@@ -82,13 +87,11 @@ void Loop()
 			++i;
 	}
 
-	dInput->EnumDevices(DI8DEVCLASS_GAMECTRL, DIEnumDevicesCallback, &dInput, DIEDFL_ATTACHEDONLY);
-	dInput->EnumDevices(DI8DEVCLASS_KEYBOARD, DIEnumDevicesCallback, &dInput, DIEDFL_ATTACHEDONLY);
-	dInput->EnumDevices(DI8DEVCLASS_POINTER, DIEnumDevicesCallback, &dInput, DIEDFL_ATTACHEDONLY);
-
+#ifdef _IMOUTPUT_VERBOSE
 	std::cout << "Num devices: " << attachedDevices.size() << std::endl;
 
 	system("cls");
+#endif
 
 	then = now;
 }
@@ -105,9 +108,10 @@ HRESULT ProcessDevice(InputDevice* pDevice)
 		if (hr == DIERR_INPUTLOST)
 			return hr;
 
-		std::cout << "Device Name:" << (char*)pDevice->dvInfo.tszInstanceName << std::endl;
-
 		auto gamepadState = pDevice->deviceState.joypadState1;
+
+#ifdef _IMOUTPUT_VERBOSE
+		std::cout << "Device Name:" << (char*)pDevice->dvInfo.tszInstanceName << std::endl;
 
 		std::cout << "Device Left Stick:\t {" << gamepadState.lX << ":" << gamepadState.lY << "}" << std::endl;
 		std::cout << "Device Right Stick:\t {" << gamepadState.lRx << ":" << gamepadState.lRy << "}" << std::endl;
@@ -121,34 +125,51 @@ HRESULT ProcessDevice(InputDevice* pDevice)
 		{
 			std::cout << "6DOF Axis " << i << ":" << gamepadState.rgdwPOV[i] << std::endl;
 		}
+#endif
 		break;
 	case DI8DEVTYPE_MOUSE:
 		hr = pDevice->pDevice->GetDeviceState(sizeof(DIMOUSESTATE), (void*)&pDevice->deviceState);
 		if (hr == DIERR_INPUTLOST)
 			return hr;
 
+		auto mouseState = pDevice->deviceState.mouseState;
+#ifdef _IMOUTPUT_VERBOSE
 		std::cout << "Device Name:" << (char*)pDevice->dvInfo.tszInstanceName << std::endl;
 
-		auto mouseState = pDevice->deviceState.mouseState;
 		std::cout << "Delta Position:\t{ " << mouseState.lX << ":" << mouseState.lY << " }" << std::endl;
 		std::cout << "Wheel Delta: " << (mouseState.lZ % 120) << std::endl;
 		for (uint i = 0; i < 4; i++)
 			std::cout << "Button[" << i << "]" << (mouseState.rgbButtons[i] == 0 ? "Up" : "Down") << std::endl;
+#endif
 		break;
 	case DI8DEVTYPE_KEYBOARD:
 		hr = pDevice->pDevice->GetDeviceState(KEYBOARD_BUFFER_SIZE, (void*)&pDevice->deviceState);
 		if (hr == DIERR_INPUTLOST)
 			return hr;
 
+
+#if _IMOUTPUT_VERBOSE
 		std::cout << "Device Name:" << (char*)pDevice->dvInfo.tszInstanceName << std::endl;
 
+		std::cout << "{ ";
 		for (uint i = 0; i < KEYBOARD_BUFFER_SIZE; i++)
 			if (pDevice->deviceState.keys[i] != 0)
-				std::cout << char(i) << " key is down";
+				std::cout << char(i) << " ,";
+		std::cout << " } keys are down" << std::endl;
+#endif
 		break;
 	}
-	
+
 	return S_OK;
+}
+
+EXPORT BOOL _stdcall IsKeyDown(int keycode)
+{
+	for (auto i = attachedDevices.begin(); i != attachedDevices.end(); i++)
+		if ((*i)->deviceType == DI8DEVTYPE_KEYBOARD)
+			return (*i)->deviceState.keys[keycode] != 0;
+
+	return false;
 }
 
 BOOL CALLBACK DIEnumDevicesCallback(LPCDIDEVICEINSTANCE lpddi, PVOID pvRef)
@@ -210,7 +231,7 @@ BOOL CALLBACK DIEnumDevicesCallback(LPCDIDEVICEINSTANCE lpddi, PVOID pvRef)
 	{
 		DIACTION action = actionFormat.rgoAction[i];
 		std::cout << "\t\tName: " << action.lptszActionName << std::endl;
-	}
+}
 #endif
 
 	InputDevice* pInputDevice = new InputDevice;
@@ -221,7 +242,7 @@ BOOL CALLBACK DIEnumDevicesCallback(LPCDIDEVICEINSTANCE lpddi, PVOID pvRef)
 	pInputDevice->deviceType = deviceType;
 	pInputDevice->deviceSubType = deviceSubType;
 	attachedDevices.push_back(pInputDevice);
-	
+
 	//std::cout << "Initialized device " << (char*)lpddi->tszInstanceName << std::endl;
 
 

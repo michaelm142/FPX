@@ -1,15 +1,22 @@
 using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using System.Linq;
 using System.Reflection;
 using System.Xml;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Input;
 
 namespace FPX
 {
-    public class InputManager : IGameComponent, IUpdateable
+    public class Input : IGameComponent, IUpdateable
     {
+        [DllImport("InputModule.dll", EntryPoint = "InitializeInputModule", CharSet = CharSet.Unicode)]
+        private static extern int InitializeInputModule(int hwnd);
+        [DllImport("InputModule.dll", EntryPoint = "InputUpdate", CharSet = CharSet.Unicode)]
+        private static extern void InputUpdate();
+        [DllImport("InputModule.dll", CharSet = CharSet.Unicode)]
+        public static extern void IsKeyDown(KeyCode keyCode);
+
         public bool Enabled { get { return true; } }
 
         public int UpdateOrder { get; set; } = -1;
@@ -18,27 +25,27 @@ namespace FPX
         public event EventHandler<EventArgs> EnabledChanged;
         public event EventHandler<EventArgs> UpdateOrderChanged;
 
-        internal string Filename { get; set; }
-
-        private List<GamePadState> gamePads = new List<GamePadState>();
-
         private List<InputAxis> InputAxisList = new List<InputAxis>();
 
-        internal static InputManager Instance { get; set; }
+        internal static Input Instance { get; set; }
 
         public void Initialize()
         {
             if (Instance != null)
                 throw new InvalidOperationException("More than one instance of Input Manager!");
             Instance = this;
+            int windowHandle = (int)GameCore.gameInstance.Window.Handle;
+            int hresult = InitializeInputModule(windowHandle);
+            if (hresult != 0)
+                Debug.LogError("Failed to inilitize input module");
 
             XmlDocument doc = new XmlDocument();
-            doc.Load(Environment.CurrentDirectory + "\\" + Filename);
+            doc.Load(Environment.CurrentDirectory + "\\Settings.xml");
 
-            var rootNode = doc.SelectSingleNode("Scene") as XmlElement;
+            var rootNode = doc.SelectSingleNode("Settings") as XmlElement;
             var inputNode = rootNode.SelectSingleNode("Input") as XmlElement;
             if (inputNode == null)
-                Debug.LogError("No input Axis list loaded for scene {0}", Filename);
+                Debug.LogError("No input Axis list loaded in project settings");
             else
             {
                 foreach (XmlElement node in inputNode.SelectNodes("Axis"))
@@ -54,17 +61,11 @@ namespace FPX
 
             Debug.Log("Input Axis List:");
             InputAxisList.ForEach(a => Debug.Log("\tName:{0}\tPlatform:{1}\tType:{2}", a.Name, a.Platform, a.Type));
-
-            for (int i = 0; i < MaxGamePads; i++)
-                gamePads.Add(new GamePadState());
         }
 
         public void Update(GameTime gameTime)
         {
-            for (int i = 0; i < MaxGamePads; i++)
-            {
-                gamePads[i] = GamePad.GetState(i);
-            }
+            InputUpdate();
         }
 
         public enum InputPlatform

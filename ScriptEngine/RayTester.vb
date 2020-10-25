@@ -24,7 +24,7 @@ Public Class RayTester
 
             Dim length As Single
             Dim point As Vector3
-            Dim mouse As MouseState = Input.Mouse.GetState()
+            Dim mouse As MouseState = Microsoft.Xna.Framework.Input.Mouse.GetState()
 
             If mouse.LeftButton = ButtonState.Pressed Then
                 ray = Camera.Active.ScreenPointToRay(New Vector2(mouse.X, mouse.Y))

@@ -8,6 +8,8 @@
 
 #define KEYBOARD_BUFFER_SIZE 256
 
+#define EXPORT extern "C" _declspec(dllexport)
+
 typedef unsigned int uint;
 
 HWND hwnd;
@@ -31,8 +33,9 @@ struct InputDevice
 	} deviceState;
 };
 
-void Loop();
-void Initialize(HWND);
+EXPORT void __stdcall InputUpdate();
+EXPORT int __stdcall InitializeInputModule(int); 
+EXPORT BOOL _stdcall IsKeyDown(int);
 void Dispose();
 HRESULT ProcessDevice(InputDevice* pDevice);
 void UnaquireDevice(InputDevice* pDevice);

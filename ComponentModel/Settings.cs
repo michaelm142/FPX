@@ -77,7 +77,7 @@ namespace FPX
             bool boolVal = false;
             string strVal = setting.InnerText;
 
-            var childNodes = setting.ChildNodes.Cast<XmlNode>().ToList().FindAll(node => node is XmlElement).Cast<XmlElement>();
+            var childNodes = setting.ChildNodes.Cast<XmlNode>().ToList().FindAll(node => node is XmlElement && node.ParentNode.Name != "Input").Cast<XmlElement>();
             if (childNodes.ToList().Count == 0)
             {
                 if (int.TryParse(strVal, out intVal))

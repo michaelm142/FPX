@@ -10,7 +10,7 @@ Public Class TestSpriteController
     Public MoveSpeed As Single
 
     Public Sub Update(gameTime As GameTime)
-        Dim keyboard = Input.Keyboard.GetState()
+        Dim keyboard = Microsoft.Xna.Framework.Input.Keyboard.GetState()
         Dim vertical = 0.0F
         Dim horizontal = 0.0F
         If (keyboard.IsKeyDown(Keys.Up)) Then

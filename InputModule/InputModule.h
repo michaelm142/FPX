@@ -4,7 +4,7 @@
 #include <windows.h>
 #include <dinput.h>
 #include <consoleapi3.h>
-#include <vector>
+#include <list>
 
 typedef unsigned int uint;
 
@@ -26,10 +26,11 @@ struct InputDevice
 
 void Loop();
 void Initialize();
-void ProcessDevice(InputDevice* pDevice);
 void Dispose();
+HRESULT ProcessDevice(InputDevice* pDevice);
+void UnaquireDevice(InputDevice* pDevice);
 
-static std::vector<InputDevice*> attachedDevices;
+static std::list<InputDevice*> attachedDevices;
 
 BOOL CALLBACK DIEnumDevicesCallback(LPCDIDEVICEINSTANCE lpddi, PVOID pvRef); 
 BOOL CALLBACK DIEnumDeviceObjectsCallback(LPCDIDEVICEOBJECTINSTANCE lpddoi, LPVOID pvRef);

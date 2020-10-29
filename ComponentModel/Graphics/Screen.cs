@@ -17,5 +17,10 @@ namespace FPX
         {
             get { return GameCore.viewport.Height; }
         }
+
+        public static IntPtr handle
+        {
+            get { return GameCore.gameInstance.Window.Handle; }
+        }
     }
 }

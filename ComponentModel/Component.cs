@@ -234,8 +234,7 @@ namespace FPX
                 }
                 else if (property.PropertyType == typeof(Texture2D))
                 {
-                    var filenameAttr = memberXmlElement.Attributes["FileName"];
-                    Texture2D texVal = GameCore.content.Load<Texture2D>(filenameAttr.InnerText);
+                    Texture2D texVal = GameCore.content.Load<Texture2D>(memberXmlElement.InnerText);
                     propertyData = texVal;
                 }
 

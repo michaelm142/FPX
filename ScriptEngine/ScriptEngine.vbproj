@@ -126,6 +126,7 @@
     <Compile Include="GameControlTest.vb" />
     <Compile Include="LocalAxisRenderer.vb" />
     <Compile Include="MatrixTester.vb" />
+    <Compile Include="MousePositionTester.vb" />
     <Compile Include="ObjectFactory.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">

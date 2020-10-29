@@ -11,19 +11,19 @@
       <Transform>
         <Position X="250" Y="250" Z="0"/>
       </Transform>
+      <Material>
+        <DiffuseColor R="1.0" G="1.0" B="1.0" A="1.0"/>
+        <DiffuseMap FileName="Textures\\ball"/>
+      </Material>
 
-      <Sprite>
-        <Image>Textures\\ball</Image>
-      </Sprite>
+      <Sprite/>
+
+      <MousePositionTester/>
 
       <TestSpriteController>
         <MoveSpeed>5.0</MoveSpeed>
       </TestSpriteController>
 
-      <Material>
-        <DiffuseColor R="1.0" G="1.0" B="1.0" A="1.0"/>
-        <DiffuseMap FileName="Textures\\ball"/>
-      </Material>
     </Object>
   </Objects>
 </Scene>

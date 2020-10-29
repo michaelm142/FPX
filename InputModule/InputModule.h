@@ -29,6 +29,7 @@ struct InputDevice
 	{
 		char keys[KEYBOARD_BUFFER_SIZE];
 		DIJOYSTATE joypadState1;
+		DIJOYSTATE2 joypadState2;
 		DIMOUSESTATE mouseState;
 	} deviceState;
 };
@@ -36,6 +37,11 @@ struct InputDevice
 EXPORT void __stdcall InputUpdate();
 EXPORT int __stdcall InitializeInputModule(int); 
 EXPORT BOOL _stdcall IsKeyDown(int);
+EXPORT void _stdcall GetMouseButtons(int*);
+EXPORT void _stdcall GetMouseDeltas(LONG*);
+EXPORT void _stdcall GetMousePosition(int*);
+
+InputDevice* FindDeviceByType(uint type);
 void Dispose();
 HRESULT ProcessDevice(InputDevice* pDevice);
 void UnaquireDevice(InputDevice* pDevice);

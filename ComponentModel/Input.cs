@@ -15,7 +15,23 @@ namespace FPX
         [DllImport("InputModule.dll", EntryPoint = "InputUpdate", CharSet = CharSet.Unicode)]
         private static extern void InputUpdate();
         [DllImport("InputModule.dll", CharSet = CharSet.Unicode)]
-        public static extern void IsKeyDown(KeyCode keyCode);
+        public static extern bool IsKeyDown(KeyCode keyCode);
+        [DllImport("InputModule.dll", CharSet = CharSet.Unicode)]
+        private static extern void GetMouseButtons(IntPtr ptr);
+        [DllImport("InputModule.dll", CharSet = CharSet.Unicode)]
+        private static extern void GetMouseDeltas(IntPtr ptr);
+        [DllImport("InputModule.dll", CharSet = CharSet.Unicode)]
+        private static extern void GetMousePosition(IntPtr ptr);
+        [DllImport("user32.dll")]
+        private static extern void GetPhysicalCursorPos(ref Point point);
+        [DllImport("user32.dll")]
+        private static extern void PhysicalToLogicalPoint(IntPtr ptr, ref Point point);
+
+        private Vector2 mousePos;
+        public static Vector2 mousePosition { get { return Instance.mousePos; } }
+
+        private int mouseWheelDelta;
+        public static int MouseWheelDelta { get { return Instance.mouseWheelDelta; } }
 
         public bool Enabled { get { return true; } }
 
@@ -34,7 +50,8 @@ namespace FPX
             if (Instance != null)
                 throw new InvalidOperationException("More than one instance of Input Manager!");
             Instance = this;
-            int windowHandle = (int)GameCore.gameInstance.Window.Handle;
+            var window = GameCore.gameInstance.Window;
+            int windowHandle = (int)window.Handle;
             int hresult = InitializeInputModule(windowHandle);
             if (hresult != 0)
                 Debug.LogError("Failed to inilitize input module");
@@ -61,11 +78,42 @@ namespace FPX
 
             Debug.Log("Input Axis List:");
             InputAxisList.ForEach(a => Debug.Log("\tName:{0}\tPlatform:{1}\tType:{2}", a.Name, a.Platform, a.Type));
+
+            mousePos = new Vector2(Screen.Width / 2.0f, Screen.Height / 2.0f);
         }
 
         public void Update(GameTime gameTime)
         {
             InputUpdate();
+
+            mousedeltas deltas;
+            unsafe
+            {
+                int mouseButtons = 0;
+                GetMouseButtons(new IntPtr(&mouseButtons));
+                GetMouseDeltas(new IntPtr(&deltas));
+                mouseWheelDelta += deltas.lZ;
+
+            }
+
+            foreach (KeyCode key in Enum.GetValues(typeof(KeyCode)))
+            {
+                if (IsKeyDown(key))
+                    Debug.Log("{0} is down", key);
+            }
+
+            mousePos.X += deltas.lX;
+            mousePos.Y += deltas.lY;
+            mousePos = Vector2.Clamp(mousePos, Vector2.Zero, new Vector2(Screen.Width, Screen.Height));
+
+            Debug.Log("Mouse Position:{0}, Wheel Delta: {1}", mousePos, mouseWheelDelta);
+        }
+
+        struct mousedeltas
+        {
+            public int lX;
+            public int lY;
+            public int lZ;
         }
 
         public enum InputPlatform
@@ -87,7 +135,7 @@ namespace FPX
                 this.Name = Name;
                 this.Type = Type;
                 this.Platform = Platform;
-                
+
                 var data = this.Type.Split(new char[] { ' ' });
             }
         }

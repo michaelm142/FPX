@@ -187,10 +187,6 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\InputModule\InputModule.vcxproj">
-      <Project>{7fbf56be-8a15-4c71-8b02-78fa150b3751}</Project>
-      <Name>InputModule</Name>
-    </ProjectReference>
     <ProjectReference Include="..\LodeObj\LodeObj.csproj">
       <Project>{1011caf4-54ec-405a-a387-f59cf91afcb3}</Project>
       <Name>LodeObj</Name>

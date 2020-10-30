@@ -148,8 +148,9 @@
     <Compile Include="Graphics\Screen.cs" />
     <Compile Include="Graphics\SkyboxRenderer.cs" />
     <Compile Include="IgnoreInGUIAttribute.cs" />
-    <Compile Include="Input.cs" />
-    <Compile Include="KeyCode.cs" />
+    <Compile Include="Input\Input.Main.cs" />
+    <Compile Include="Input\Input.Structs.cs" />
+    <Compile Include="Input\KeyCode.cs" />
     <Compile Include="Physics\Collision.cs" />
     <Compile Include="Physics\Physics.Collisions.cs" />
     <Compile Include="Physics\Physics.cs" />
@@ -192,6 +193,7 @@
       <Name>LodeObj</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

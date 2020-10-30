@@ -8,7 +8,7 @@ using Microsoft.Xna.Framework;
 
 namespace FPX
 {
-    public class Input : IGameComponent, IUpdateable
+    public partial class Input : IGameComponent, IUpdateable
     {
         [DllImport("InputModule.dll", EntryPoint = "InitializeInputModule", CharSet = CharSet.Unicode)]
         private static extern int InitializeInputModule(int hwnd);
@@ -26,6 +26,8 @@ namespace FPX
         private static extern void GetPhysicalCursorPos(ref Point point);
         [DllImport("user32.dll")]
         private static extern void PhysicalToLogicalPoint(IntPtr ptr, ref Point point);
+        [DllImport("InputModule.dll", CharSet = CharSet.Unicode)]
+        private static extern void GetGamepadState(ref DIJOYSTATE2 state);
 
         private Vector2 mousePos;
         public static Vector2 mousePosition { get { return Instance.mousePos; } }
@@ -87,11 +89,13 @@ namespace FPX
             InputUpdate();
 
             mousedeltas deltas;
+            DIJOYSTATE2 state = new DIJOYSTATE2();
             unsafe
             {
                 int mouseButtons = 0;
                 GetMouseButtons(new IntPtr(&mouseButtons));
                 GetMouseDeltas(new IntPtr(&deltas));
+                GetGamepadState(ref state);
                 mouseWheelDelta += deltas.lZ;
 
             }
@@ -108,36 +112,6 @@ namespace FPX
 
             Debug.Log("Mouse Position:{0}, Wheel Delta: {1}", mousePos, mouseWheelDelta);
         }
-
-        struct mousedeltas
-        {
-            public int lX;
-            public int lY;
-            public int lZ;
-        }
-
-        public enum InputPlatform
-        {
-            Keyboard,
-            Mouse,
-            GamePad,
-        }
-
-        private struct InputAxis
-        {
-            public string Name { get; set; }
-            public string Type { get; set; }
-
-            public InputPlatform Platform { get; set; }
-
-            public InputAxis(string Name, string Type, InputPlatform Platform)
-            {
-                this.Name = Name;
-                this.Type = Type;
-                this.Platform = Platform;
-
-                var data = this.Type.Split(new char[] { ' ' });
-            }
-        }
+        
     }
 }

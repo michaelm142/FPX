@@ -46,7 +46,7 @@ HRESULT ProcessDevice(InputDevice* pDevice)
 		std::cout << "Gamepad axis 5: " << gamepadState.lRz << std::endl;
 
 		std::cout << "Gamepad axis 6: " << gamepadState.lVY << std::endl;
-		std::cout << "Gamepad axis 7: " << gamepadState.lVY<< std::endl;
+		std::cout << "Gamepad axis 7: " << gamepadState.lVY << std::endl;
 		std::cout << "Gamepad axis 8: " << gamepadState.lVX << std::endl;
 
 		std::cout << "Gamepad axis 9: " << gamepadState.lVRx << std::endl;
@@ -134,12 +134,69 @@ void UnaquireDevice(InputDevice* pDevice)
 	delete pDevice;
 }
 
-InputDevice* FindDeviceByType(uint type)
+InputDevice* FindDeviceByType(uint deviceType, uint index)
 {
-	for (auto i = attachedDevices.begin(); i != attachedDevices.end(); i++)
+	if (index == UINT_MAX)
 	{
-		if ((*i)->deviceType == type)
-			return (*i);
+		switch (deviceType)
+		{
+		case DI8DEVTYPE_GAMEPAD:
+		case DI8DEVTYPE_1STPERSON:
+			return connectedGamepads.Gamepad0;
+		case DI8DEVTYPE_KEYBOARD:
+			return connectedKeyboards.keyboard0;
+		case DI8DEVTYPE_MOUSE:
+			return connectedMouses.mouse0;
+		}
+	}
+	else
+	{
+		switch (deviceType)
+		{
+		case DI8DEVTYPE_GAMEPAD:
+		case DI8DEVTYPE_1STPERSON:
+			return connectedGamepads.a[index];
+		case DI8DEVTYPE_KEYBOARD:
+			return connectedKeyboards.a[index];
+		case DI8DEVTYPE_MOUSE:
+			return connectedMouses.a[index];
+		}
+	}
+}
+
+void AddMouse(InputDevice* pMouse)
+{
+	for (uint i = 0; i < MAX_INPUT_DEVICES; i++)
+	{
+		if (!connectedMouses.a[i])
+		{
+			connectedMouses.a[i] = pMouse;
+			return;
+		}
+	}
+}
+
+void AddKeyboard(InputDevice* pKeyboard)
+{
+	for (uint i = 0; i < MAX_INPUT_DEVICES; i++)
+	{
+		if (!connectedKeyboards.a[i])
+		{
+			connectedKeyboards.a[i] = pKeyboard;
+			return;
+		}
+	}
+}
+
+void AddGamepad(InputDevice* pGamepad)
+{
+	for (uint i = 0; i < MAX_INPUT_DEVICES; i++)
+	{
+		if (!connectedGamepads.a[i])
+		{
+			connectedGamepads.a[i] = pGamepad;
+			return;
+		}
 	}
 }
 
@@ -229,6 +286,12 @@ EXPORT void _stdcall GetMousePosition(int* pOut)
 	memcpy(pOut, &pos, sizeof(POINT));
 }
 
+EXPORT void _stdcall GetGamepadState(void* pOut)
+{
+	InputDevice* pGamepad = FindDeviceByType(DI8DEVTYPE_GAMEPAD);
+	memcpy(pOut, &pGamepad->deviceState, sizeof(DIJOYSTATE2));
+}
+
 BOOL CALLBACK DIEnumDevicesCallback(LPCDIDEVICEINSTANCE lpddi, PVOID pvRef)
 {
 	for (auto i = attachedDevices.begin(); i != attachedDevices.end(); i++)
@@ -282,7 +345,7 @@ BOOL CALLBACK DIEnumDevicesCallback(LPCDIDEVICEINSTANCE lpddi, PVOID pvRef)
 	{
 		DIACTION action = actionFormat.rgoAction[i];
 		std::cout << "\t\tName: " << action.lptszActionName << std::endl;
-	}
+}
 #endif
 
 	InputDevice* pInputDevice = new InputDevice;
@@ -293,13 +356,25 @@ BOOL CALLBACK DIEnumDevicesCallback(LPCDIDEVICEINSTANCE lpddi, PVOID pvRef)
 	pInputDevice->deviceType = deviceType;
 	pInputDevice->deviceSubType = deviceSubType;
 	attachedDevices.push_back(pInputDevice);
-
+	switch (deviceType)
+	{
+	case DI8DEVTYPE_GAMEPAD:
+	case DI8DEVTYPE_1STPERSON:
+		AddGamepad(pInputDevice);
+		break;
+	case DI8DEVTYPE_KEYBOARD:
+		AddKeyboard(pInputDevice);
+		break;
+	case DI8DEVTYPE_MOUSE:
+		AddMouse(pInputDevice);
+		break;
+	}
 	//std::cout << "Initialized device " << (char*)lpddi->tszInstanceName << std::endl;
 
 
 
 	return true;
-}
+	}
 
 BOOL CALLBACK DIEnumDeviceObjectsCallback(LPCDIDEVICEOBJECTINSTANCE lpddoi, LPVOID pvRef)
 {

@@ -1,17 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Settings>
+  
   <Physics>
     <TimeScale>1.0</TimeScale>
     <MaxPhysIterations>8</MaxPhysIterations>
   </Physics>
+  
   <FullScreen>false</FullScreen>
   <ScreenWidth>1600</ScreenWidth>
   <ScreenHeight>1200</ScreenHeight>
   <ControllerInput>One</ControllerInput>
   <FillMode Type="Microsoft.Xna.Framework.Graphics.PrimitiveType, Monogame.Framework">TriangleList</FillMode>
   <RenderMode>Deferred</RenderMode>
+  
   <Input>
-    <Axis Name="Horizontal" Platform="GamePad" Type="Thumbsticks Left Y"/>
-    <Axis Name="Vertical" Platform="GamePad" Type="Thumbsticks Right X"/>
+    <Axis Name="Horizontal" Platform="GamePad" PositiveButton="X" NegitiveButton="B" Gravity="0.2"/>
+    <Axis Name="Vertical" Platform="GamePad" Axis="axis1" DeadZone="0.2"/>
+    <Axis Name="2D Horizontal" Platform="Keyboard" PositiveButton="Right" NegitiveButton="Left" Sensitivity="0.2" Gravity="0.9"/>
+    <Axis Name="2D Vertical" Platform="Keyboard" PositiveButton="Down" NegitiveButton="Up" Sensitivity="0.2" Gravity="0.2"/>
   </Input>
+  
 </Settings>

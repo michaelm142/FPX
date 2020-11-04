@@ -1,29 +1,27 @@
 #ifndef _INPUT_MODULE_H
 #define _INPUT_MODULE_H
 
+#pragma region DECL
 #include <windows.h>
 #include <dinput.h>
 #include <consoleapi3.h>
 #include <list>
+#include <XInput.h>
 
 #define KEYBOARD_BUFFER_SIZE 256
 #define MAX_INPUT_DEVICES 8
+#define CHECK_CONNECTED_DEVICE_INTERVAL 5
 
 #define EXPORT extern "C" _declspec(dllexport)
 
 typedef unsigned int uint;
-
-HWND hwnd;
-HINSTANCE hinstance;
-
-static IDirectInput8* dInput = (IDirectInput8*)(NULL);
 
 struct InputDevice
 {
 	IDirectInputDevice8* pDevice;
 	uint deviceType;
 	uint deviceSubType;
-	uint pad;
+	uint deviceIndex;
 	DIDEVICEINSTANCE dvInfo;
 
 	union
@@ -32,75 +30,67 @@ struct InputDevice
 		DIJOYSTATE joypadState1;
 		DIJOYSTATE2 joypadState2;
 		DIMOUSESTATE mouseState;
+		XINPUT_STATE xInputState;
 	} deviceState;
 };
+#pragma endregion
+
+#pragma region Fields
+struct
+{
+	HWND hwnd;
+	HINSTANCE hinstance;
+	IDirectInput8* dInput;
+}app;
+
+
+static std::list<InputDevice*> attachedDevices;
 
 static union
 {
 	InputDevice* a[MAX_INPUT_DEVICES];
 	struct
 	{
-		InputDevice* mouse0;
-		InputDevice* mouse1;
-		InputDevice* mouse2;
-		InputDevice* mouse3;
-		InputDevice* mouse4;
-		InputDevice* mouse5;
-		InputDevice* mouse6;
-		InputDevice* mouse7;
+		InputDevice* device0;
+		InputDevice* device1;
+		InputDevice* device2;
+		InputDevice* device3;
+		InputDevice* device4;
+		InputDevice* device5;
+		InputDevice* device6;
+		InputDevice* device7;
 	};
-} connectedMouses;
+} connectedMouses, connectedKeyboards, connectedGamepads;
+#pragma endregion
 
-static union
-{
-	InputDevice* a[MAX_INPUT_DEVICES];
-	struct
-	{
-		InputDevice* keyboard0;
-		InputDevice* keyboard1;
-		InputDevice* keyboard2;
-		InputDevice* keyboard3;
-		InputDevice* keyboard4;
-		InputDevice* keyboard5;
-		InputDevice* keyboard6;
-		InputDevice* keyboard7;
-	};
-} connectedKeyboards;
-
-static union
-{
-	InputDevice* a[MAX_INPUT_DEVICES];
-	struct
-	{
-		InputDevice* Gamepad0;
-		InputDevice* Gamepad1;
-		InputDevice* Gamepad2;
-		InputDevice* Gamepad3;
-		InputDevice* Gamepad4;
-		InputDevice* Gamepad5;
-		InputDevice* Gamepad6;
-		InputDevice* Gamepad7;
-	};
-} connectedGamepads;
-
+#pragma region External
 EXPORT void __stdcall InputUpdate();
 EXPORT int __stdcall InitializeInputModule(int); 
 EXPORT BOOL _stdcall IsKeyDown(int);
-EXPORT void _stdcall GetMouseButtons(int*);
-EXPORT void _stdcall GetMouseDeltas(LONG*);
+EXPORT void _stdcall GetMouseState(void*);
 EXPORT void _stdcall GetMousePosition(int*);
 EXPORT void _stdcall GetGamepadState(void*);
+EXPORT void _stdcall Close();
+#pragma endregion
 
+#pragma region Devices
+void QueryDevices();
 InputDevice* FindDeviceByType(uint type, uint index = UINT_MAX);
-void Dispose();
 HRESULT ProcessDevice(InputDevice* pDevice);
 void UnaquireDevice(InputDevice* pDevice);
+
 void AddMouse(InputDevice* pMouse);
 void AddKeyboard(InputDevice* pKeyboard);
 void AddGamepad(InputDevice* pGamepad);
 
-static std::list<InputDevice*> attachedDevices;
+void RemoveMouse(InputDevice* pMouse);
+void RemoveKeyboard(InputDevice* pKeyboard);
+void RemoveGamepad(InputDevice* pGamepad);
+#pragma endregion
 
+#pragma region Enum
 BOOL CALLBACK DIEnumDevicesCallback(LPCDIDEVICEINSTANCE lpddi, PVOID pvRef);
 BOOL CALLBACK DIEnumDeviceObjectsCallback(LPCDIDEVICEOBJECTINSTANCE lpddoi, LPVOID pvRef);
+#pragma endregion
+
 #endif

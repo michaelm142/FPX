@@ -1,7 +1,5 @@
 ﻿Imports System.Xml
 Imports Microsoft.Xna.Framework
-Imports Microsoft.Xna.Framework.Input
-Imports Microsoft.Xna.Framework.Graphics
 Imports FPX
 
 Public Class TestSpriteController
@@ -10,20 +8,9 @@ Public Class TestSpriteController
     Public MoveSpeed As Single
 
     Public Sub Update(gameTime As GameTime)
-        Dim keyboard = Microsoft.Xna.Framework.Input.Keyboard.GetState()
-        Dim vertical = 0.0F
-        Dim horizontal = 0.0F
-        If (keyboard.IsKeyDown(Keys.Up)) Then
-            vertical += 1.0F
-        ElseIf keyboard.IsKeyDown(Keys.Down) Then
-            vertical -= 1.0F
-        End If
+        Dim vertical = Input.GetAxis("Vertical")
+        Dim horizontal = Input.GetAxis("Horizontal")
 
-        If keyboard.IsKeyDown(Keys.Left) Then
-            horizontal -= 1.0F
-        ElseIf keyboard.IsKeyDown(Keys.Right) Then
-            horizontal += 1.0F
-        End If
 
         transform.localPosition += New Vector3(horizontal, vertical, 0.0F) * MoveSpeed * gameTime.TotalGameTime.Seconds
     End Sub

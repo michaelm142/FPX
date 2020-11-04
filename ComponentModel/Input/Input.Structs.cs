@@ -10,45 +10,45 @@ namespace FPX
 {
     public partial class Input
     {
-        unsafe struct DIJOYSTATE2
+        unsafe struct GamepadState
         {
-            public int lX;
-            public int lY;
-            public int lZ;
-            public int lRx;
-            public int lRy;
-            public int lRz;
+            public int axis0;
+            public int axis1;
+            public int axis2;
+            public int axis3;
+            public int axis4;
+            public int axis5;
             public fixed int rglSlider[2];
             public fixed short rgdwPOV[4];
             public fixed byte rgbButtons[128];
-            public int lVX;
-            public int lVY;
-            public int lVZ;
-            public int lVRx;
-            public int lVRy;
-            public int lVRz;
+            public int axis6;
+            public int axis7;
+            public int axis8;
+            public int axis9;
+            public int axis10;
+            public int axis11;
             public fixed int rglVSlider[2];
-            public int lAX;
-            public int lAY;
-            public int lAZ;
-            public int lARx;
-            public int lARy;
-            public int lARz;
+            public int axis12;
+            public int axis13;
+            public int axis14;
+            public int axis15;
+            public int axis16;
+            public int axis17;
             public fixed int rglASlider[2];
-            public int lFX;
-            public int lFY;
-            public int lFZ;
-            public int lFRx;
-            public int lFRy;
-            public int lFRz;
+            public int axis18;
+            public int axis19;
+            public int axis20;
+            public int axis21;
+            public int axis22;
+            public int axis23;
             public fixed int rglFSlider[2];
         }
-
-        struct mousedeltas
+        unsafe struct MouseState
         {
             public int lX;
             public int lY;
             public int lZ;
+            public fixed byte rgbButtons[4];
         }
 
         public enum InputPlatform
@@ -58,20 +58,47 @@ namespace FPX
             GamePad,
         }
 
-        private struct InputAxis
+        private class InputAxis
         {
             public string Name { get; set; }
-            public string Type { get; set; }
+            public string Axis { get; set; }
+            public string PositiveButton { get; set; }
+            public string NegitiveButton { get; set; }
 
             public InputPlatform Platform { get; set; }
 
-            public InputAxis(string Name, string Type, InputPlatform Platform)
+            public float Sensitivity { get; set; }
+            public float DeadZone { get; set; }
+            public float Gravity { get; set; }
+            public float Value { get; set; }
+            /// <summary>
+            /// Positive Button Converted to T
+            /// </summary>
+            public T PositiveButtonAs<T>() where T : Enum
+            { 
+                return (T)Enum.Parse(typeof(T), PositiveButton);
+            }
+            /// <summary>
+            /// Negitive Button Converted to T
+            /// </summary>
+            public T NegitiveButtonAs<T>() where T : Enum
+            {
+                return (T)Enum.Parse(typeof(T), NegitiveButton);
+            }
+
+            public InputAxis(string Name, string Axis, InputPlatform Platform, float Sensitivity, float DeadZone, float Gravity, string PositiveButton, string NegitiveButton)
             {
                 this.Name = Name;
-                this.Type = Type;
+                this.Axis = Axis;
                 this.Platform = Platform;
+                this.Sensitivity = Sensitivity;
+                this.DeadZone = DeadZone;
+                this.PositiveButton = PositiveButton;
+                this.NegitiveButton = NegitiveButton;
+                this.Gravity = Gravity;
 
-                var data = this.Type.Split(new char[] { ' ' });
+                var data = this.Axis.Split(new char[] { ' ' });
+                Value = 0.0f;
             }
         }
     }

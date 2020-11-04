@@ -63,6 +63,11 @@ namespace FPX
             ForegroundColor = ConsoleColor.Gray;
         }
 
+        public static void ClearConsole()
+        {
+            Console.Clear();
+        }
+
         public static void DumpLog(string filename = "Log.txt")
         {
             if (writer == null)

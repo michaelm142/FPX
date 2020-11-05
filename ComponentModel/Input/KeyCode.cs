@@ -10,6 +10,10 @@ namespace FPX
         Mouse4 = (0xff << 24),
     }
 
+    public enum GamepadButton : uint
+    {
+    }
+
     public enum KeyCode : int
     {
         Escape = 0x01,

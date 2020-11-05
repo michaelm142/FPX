@@ -13,7 +13,7 @@ namespace FPX
     {
         public bool Visible { get { return true; } }
 
-        public int DrawOrder { get { return int.MaxValue; } }
+        public int DrawOrder { get { return 0; } }
 
         public event EventHandler<EventArgs> VisibleChanged;
         public event EventHandler<EventArgs> DrawOrderChanged;

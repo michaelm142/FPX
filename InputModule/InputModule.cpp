@@ -370,6 +370,20 @@ EXPORT BOOL _stdcall IsKeyDown(int keycode)
 	return pKeyboard->deviceState.keys[keycode] != 0;
 }
 
+EXPORT BOOL _stdcall IsDeviceConnected(uint type, uint index)
+{
+	switch (type)
+	{
+	case DI8DEVTYPE_GAMEPAD:
+	case DI8DEVTYPE_1STPERSON:
+		return connectedGamepads.a[index] != NULL;
+	case DI8DEVTYPE_KEYBOARD:
+		return connectedKeyboards.a[index] != NULL;
+	case DI8DEVTYPE_MOUSE:
+		return connectedMouses.a[index] != NULL;
+	}
+}
+
 EXPORT void _stdcall GetMouseState(void* pOut)
 {
 	InputDevice* pDevice = FindDeviceByType(DI8DEVTYPE_MOUSE);
@@ -385,10 +399,11 @@ EXPORT void _stdcall GetMousePosition(int* pOut)
 	memcpy(pOut, &pos, sizeof(POINT));
 }
 
-EXPORT void _stdcall GetGamepadState(void* pOut)
+EXPORT void _stdcall GetGamepadState(void* pOut, uint index)
 {
-	InputDevice* pGamepad = FindDeviceByType(DI8DEVTYPE_GAMEPAD);
-	memcpy(pOut, &pGamepad->deviceState, sizeof(DIJOYSTATE2));
+	InputDevice* pGamepad = FindDeviceByType(DI8DEVTYPE_GAMEPAD, index);
+	
+	memcpy(pOut, &pGamepad->deviceState.xInputState.Gamepad, sizeof(XINPUT_GAMEPAD));
 }
 #pragma endregion
 

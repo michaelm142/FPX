@@ -69,8 +69,9 @@ EXPORT int __stdcall InitializeInputModule(int);
 EXPORT BOOL _stdcall IsKeyDown(int);
 EXPORT void _stdcall GetMouseState(void*);
 EXPORT void _stdcall GetMousePosition(int*);
-EXPORT void _stdcall GetGamepadState(void*);
+EXPORT void _stdcall GetGamepadState(void*, uint index = 0);
 EXPORT void _stdcall Close();
+EXPORT BOOL _stdcall IsDeviceConnected(uint type, uint index);
 #pragma endregion
 
 #pragma region Devices

@@ -10,39 +10,17 @@ namespace FPX
 {
     public partial class Input
     {
-        unsafe struct GamepadState
+         unsafe struct GamepadState
         {
-            public int axis0;
-            public int axis1;
-            public int axis2;
-            public int axis3;
-            public int axis4;
-            public int axis5;
-            public fixed int rglSlider[2];
-            public fixed short rgdwPOV[4];
-            public fixed byte rgbButtons[128];
-            public int axis6;
-            public int axis7;
-            public int axis8;
-            public int axis9;
-            public int axis10;
-            public int axis11;
-            public fixed int rglVSlider[2];
-            public int axis12;
-            public int axis13;
-            public int axis14;
-            public int axis15;
-            public int axis16;
-            public int axis17;
-            public fixed int rglASlider[2];
-            public int axis18;
-            public int axis19;
-            public int axis20;
-            public int axis21;
-            public int axis22;
-            public int axis23;
-            public fixed int rglFSlider[2];
+            public ushort wButtons;
+            public byte LeftTrigger;
+            public byte RightTrigger;
+            public short LeftThumbstickX;
+            public short LeftThumbstickY;
+            public short RightThumbstickX;
+            public short RightThumbstickY;
         }
+
         unsafe struct MouseState
         {
             public int lX;
@@ -51,11 +29,11 @@ namespace FPX
             public fixed byte rgbButtons[4];
         }
 
-        public enum InputPlatform
+        public enum InputPlatform : uint
         {
-            Keyboard,
-            Mouse,
-            GamePad,
+            Keyboard = 0x13,
+            Mouse = 0x12,
+            GamePad = 0x18,
         }
 
         private class InputAxis
@@ -64,6 +42,10 @@ namespace FPX
             public string Axis { get; set; }
             public string PositiveButton { get; set; }
             public string NegitiveButton { get; set; }
+
+            public int DeviceIndex { get; set; }
+
+            public bool Invert { get; set; }
 
             public InputPlatform Platform { get; set; }
 
@@ -86,7 +68,8 @@ namespace FPX
                 return (T)Enum.Parse(typeof(T), NegitiveButton);
             }
 
-            public InputAxis(string Name, string Axis, InputPlatform Platform, float Sensitivity, float DeadZone, float Gravity, string PositiveButton, string NegitiveButton)
+            public InputAxis(string Name, string Axis, InputPlatform Platform, float Sensitivity, float DeadZone, 
+                float Gravity, string PositiveButton, string NegitiveButton, bool Invert, int DeviceIndex)
             {
                 this.Name = Name;
                 this.Axis = Axis;
@@ -96,8 +79,9 @@ namespace FPX
                 this.PositiveButton = PositiveButton;
                 this.NegitiveButton = NegitiveButton;
                 this.Gravity = Gravity;
+                this.Invert = Invert;
+                this.DeviceIndex = DeviceIndex;
 
-                var data = this.Axis.Split(new char[] { ' ' });
                 Value = 0.0f;
             }
         }

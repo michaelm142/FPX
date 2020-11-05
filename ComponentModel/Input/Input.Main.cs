@@ -9,8 +9,9 @@ using Microsoft.Xna.Framework.Graphics.PackedVector;
 
 namespace FPX
 {
-    public partial class Input : IGameComponent, IUpdateable, IDisposable
+    public partial class Input : IGameComponent, IUpdateable, IDisposable, IDrawable
     {
+        #region External
         [DllImport("InputModule.dll", EntryPoint = "InitializeInputModule", CharSet = CharSet.Unicode)]
         private static extern int InitializeInputModule(int hwnd);
         [DllImport("InputModule.dll", EntryPoint = "InputUpdate", CharSet = CharSet.Unicode)]
@@ -26,7 +27,12 @@ namespace FPX
         [DllImport("user32.dll")]
         private static extern void PhysicalToLogicalPoint(IntPtr ptr, ref Point point);
         [DllImport("InputModule.dll", CharSet = CharSet.Unicode)]
-        private static extern void GetGamepadState(ref GamepadState state);
+        private static extern void GetGamepadState(ref GamepadState state, uint index);
+        [DllImport("InputModule.dll", CharSet = CharSet.Unicode)]
+        private static extern void Close();
+        [DllImport("InputModule.dll", CharSet = CharSet.Unicode)]
+        private static extern bool IsDeviceConnected(uint type, int index);
+        #endregion
 
         private Vector2 mousePos;
         public static Vector2 mousePosition { get { return Instance.mousePos; } }
@@ -38,16 +44,23 @@ namespace FPX
 
         public int UpdateOrder { get; set; } = -1;
         const int MaxGamePads = 8;
+        const int AnyControler = int.MaxValue;
 
         public event EventHandler<EventArgs> EnabledChanged;
         public event EventHandler<EventArgs> UpdateOrderChanged;
+        public event EventHandler<EventArgs> DrawOrderChanged;
+        public event EventHandler<EventArgs> VisibleChanged;
 
         private List<InputAxis> InputAxisList = new List<InputAxis>();
 
-        private GamepadState gamepadstate;
+        private List<GamepadState> gamepads = new List<GamepadState>();
         private MouseState mousestate;
 
         internal static Input Instance { get; set; }
+
+        public int DrawOrder { get { return 1000; } }
+
+        public bool Visible => true;
 
         public static float GetAxis(string name)
         {
@@ -58,7 +71,7 @@ namespace FPX
                 return 0.0f;
             }
 
-            return Instance.ParseAxisValue(axis);
+            return axis.Value;
         }
 
         public void Initialize()
@@ -91,8 +104,10 @@ namespace FPX
                     var positiveButtonAttr = node.GetAttribute("PositiveButton");
                     var negitiveButtonAttr = node.GetAttribute("NegitiveButton");
                     var gravityAttr = node.GetAttribute("Gravity");
+                    var invertAttr = node.GetAttribute("Invert");
+                    var deviceIndexAttr = node.GetAttribute("DeviceIndex");
 
-                    float sensitivity = 0.0f;
+                    float sensitivity = 1.0f;
                     if (!string.IsNullOrEmpty(sensitivityAttr))
                         sensitivity = float.Parse(sensitivityAttr);
                     float deadZone = 0.0f;
@@ -101,9 +116,20 @@ namespace FPX
                     float gravity = 0.0f;
                     if (!string.IsNullOrEmpty(gravityAttr))
                         gravity = float.Parse(gravityAttr);
+                    bool invert = false;
+                    if (!string.IsNullOrEmpty(invertAttr))
+                        invert = bool.Parse(invertAttr);
+                    int deviceIndex = AnyControler;
+                    if (!string.IsNullOrEmpty(deviceIndexAttr))
+                    {
+                        if (deviceIndexAttr.ToLower() == "any")
+                            deviceIndex = AnyControler;
+                        else
+                            deviceIndex = int.Parse(deviceIndexAttr);
+                    }
 
                     InputPlatform platform = (InputPlatform)Enum.Parse(typeof(InputPlatform), platformAttr);
-                    InputAxisList.Add(new InputAxis(nameAttr, axisAttr, platform, sensitivity, deadZone, gravity, positiveButtonAttr, negitiveButtonAttr));
+                    InputAxisList.Add(new InputAxis(nameAttr, axisAttr, platform, sensitivity, deadZone, gravity, positiveButtonAttr, negitiveButtonAttr, invert, deviceIndex));
                 }
             }
 
@@ -112,7 +138,9 @@ namespace FPX
 
             mousePos = new Vector2(Screen.Width / 2.0f, Screen.Height / 2.0f);
 
-            gamepadstate = new GamepadState();
+            for (int i = 0; i < MaxGamePads; i++)
+                gamepads.Add(new GamepadState());
+
             mousestate = new MouseState();
         }
 
@@ -123,7 +151,15 @@ namespace FPX
             unsafe
             {
                 GetMouseState(ref mousestate);
-                GetGamepadState(ref gamepadstate);
+                for (int i = 0; i < MaxGamePads; i++)
+                {
+                    if (!IsDeviceConnected((uint)InputPlatform.GamePad, i))
+                        continue;
+
+                    GamepadState gamepad = gamepads[i];
+                    GetGamepadState(ref gamepad, (uint)i);
+                    gamepads[i] = gamepad;
+                }
                 mouseWheelDelta += mousestate.lZ;
             }
 
@@ -131,14 +167,16 @@ namespace FPX
             {
                 var axis = InputAxisList[i];
                 UpdateInputAxis(axis);
-                Debug.Log("Axis: {0} Value:{1}", axis.Name, ParseAxisValue(axis));
             }
 
-            foreach (GamePadButton button in Enum.GetValues(typeof(GamePadButton)))
+            for (int i = 0; i < MaxGamePads; i++)
             {
-                unsafe
+                if (!IsDeviceConnected((uint)InputPlatform.GamePad, i))
+                    continue;
+                foreach (GamePadButton button in Enum.GetValues(typeof(GamePadButton)))
                 {
-                    Debug.Log("Button {0} is {1}", button, gamepadstate.rgbButtons[(int)button]);
+                    if ((gamepads[i].wButtons & (ushort)button) != 0)
+                        Debug.Log("Button {0} is down on Controller{1}", button, i);
                 }
             }
             foreach (KeyCode key in Enum.GetValues(typeof(KeyCode)))
@@ -158,13 +196,30 @@ namespace FPX
             {
                 case InputPlatform.Keyboard:
                     if (IsKeyDown(axis.PositiveButtonAs<KeyCode>()))
-                        axis.Value += axis.Sensitivity;
+                        axis.Value += axis.Invert ? -axis.Sensitivity : axis.Sensitivity;
                     if (IsKeyDown(axis.NegitiveButtonAs<KeyCode>()))
-                        axis.Value -= axis.Sensitivity;
+                        axis.Value -= axis.Invert ? -axis.Sensitivity : axis.Sensitivity;
                     break;
                 case InputPlatform.GamePad:
                     if (!string.IsNullOrEmpty(axis.Axis))
+                    {
+                        int val = 0;
+                        if (axis.DeviceIndex == AnyControler)
+                        {
+                            for (int i = 0; i < MaxGamePads; i++)
+                            {
+                                if (IsDeviceConnected((uint)InputPlatform.GamePad, i))
+                                    val += (short)typeof(GamepadState).InvokeMember(axis.Axis, BindingFlags.GetField, null, gamepads[i], null);
+                            }
+                        }
+                        else
+                            val = (short)typeof(GamepadState).InvokeMember(axis.Axis, BindingFlags.GetField, null, gamepads[axis.DeviceIndex], null);
+                        float axisValue = val / (float)short.MaxValue;
+                        if (Math.Abs(axisValue) < axis.DeadZone)
+                            axisValue = 0.0f;
+                        axis.Value = axis.Invert ? -axisValue : axisValue;
                         break;
+                    }
 
                     bool hasNegitiveButton = !string.IsNullOrEmpty(axis.NegitiveButton);
 
@@ -175,39 +230,29 @@ namespace FPX
                         negitiveButton = axis.NegitiveButtonAs<GamePadButton>();
                     unsafe
                     {
-                        if (gamepadstate.rgbButtons[(int)positiveButton] != 0)
-                            axis.Value += axis.Sensitivity;
-                        if (hasNegitiveButton && gamepadstate.rgbButtons[(int)negitiveButton] != 0)
-                            axis.Value -= axis.Sensitivity;
+                        if (axis.DeviceIndex == AnyControler)
+                        {
+                            for (int i = 0; i < MaxGamePads; i++)
+                            {
+                                if ((gamepads[i].wButtons & (uint)positiveButton) != 0)
+                                    axis.Value += axis.Invert ? -axis.Sensitivity : axis.Sensitivity;
+                                if (hasNegitiveButton && (gamepads[i].wButtons & (uint)negitiveButton) != 0)
+                                    axis.Value -= axis.Invert ? -axis.Sensitivity : axis.Sensitivity;
+                            }
+                        }
+                        else
+                        {
+                            if ((gamepads[axis.DeviceIndex].wButtons & (uint)positiveButton) != 0)
+                                axis.Value += axis.Invert ? -axis.Sensitivity : axis.Sensitivity;
+                            if (hasNegitiveButton && (gamepads[axis.DeviceIndex].wButtons & (uint)negitiveButton) != 0)
+                                axis.Value -= axis.Invert ? -axis.Sensitivity : axis.Sensitivity;
+                        }
                     }
                     break;
             }
 
             axis.Value = MathHelper.Lerp(axis.Value, 0.0f, axis.Gravity);
             axis.Value = MathHelper.Clamp(axis.Value, -1.0f, 1.0f);
-        }
-
-        private float ParseAxisValue(InputAxis axis)
-        {
-            switch (axis.Platform)
-            {
-                case InputPlatform.GamePad:
-                    if (!string.IsNullOrEmpty(axis.Axis))
-                    {
-                        int val = (int)typeof(GamepadState).InvokeMember(axis.Axis, BindingFlags.GetField, null, gamepadstate, null);
-                        float axisVal = (val - 32767) / 32767.0f;
-
-                        if (Math.Abs(axisVal) < axis.DeadZone)
-                            return 0.0f;
-                        return axisVal;
-                    }
-                    return axis.Value;
-
-                case InputPlatform.Keyboard:
-                    return axis.Value;
-            }
-
-            return 0.0f;
         }
 
         private InputAxis FindAxis(string name)
@@ -217,7 +262,18 @@ namespace FPX
 
         public void Dispose()
         {
+            Close();
+        }
 
+        public void Draw(GameTime gameTime)
+        {
+            var spriteBatch = GameCore.spriteBatch;
+            string output = "Input Axis List\n";
+            foreach (var axis in InputAxisList)
+                output += string.Format("{0}: {1}\n", axis.Name, axis.Value);
+            spriteBatch.Begin();
+            spriteBatch.DrawString(GameCore.fonts["SegoeUI"], output, Vector2.Zero, Color.White);
+            spriteBatch.End();
         }
     }
 }

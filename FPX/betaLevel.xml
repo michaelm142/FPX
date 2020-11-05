@@ -17,7 +17,7 @@
       </Camera>
       <GameControlTest>
         <MoveSpeed>100</MoveSpeed>
-        <RotationSpeed>15</RotationSpeed>
+        <RotationSpeed>100</RotationSpeed>
       </GameControlTest>
     </Object>
 

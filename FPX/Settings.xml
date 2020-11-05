@@ -14,10 +14,12 @@
   <RenderMode>Deferred</RenderMode>
   
   <Input>
-    <Axis Name="Horizontal" Platform="GamePad" PositiveButton="X" NegitiveButton="B" DeadZone="0.2" Gravity="0.2" Invert="true"/>
-    <Axis Name="Vertical" Platform="GamePad" PositiveButton="Y" NegitiveButton="A" DeadZone="0.2" Invert="true" Gravity="0.2"/>
+    <Axis Name="Horizontal" Platform="GamePad" Axis="LeftThumbStickX" DeadZone="0.1"/>
+    <Axis Name="Vertical" Platform="GamePad" Axis="LeftThumbStickY" DeadZone="0.1"/>
     <Axis Name="2D Horizontal" Platform="Keyboard" PositiveButton="Right" NegitiveButton="Left" Sensitivity="0.2" Gravity="0.9"/>
     <Axis Name="2D Vertical" Platform="Keyboard" PositiveButton="Down" NegitiveButton="Up" Sensitivity="0.2" Gravity="0.2"/>
+    <Axis Name="Yaw" Platform="GamePad" Axis="RightThumbStickX" DeadZone="0.1" Invert="true"/>
+    <Axis Name="Pitch" Platform="GamePad" Axis="RightThumbStickY" DeadZone="0.1"/>
   </Input>
   
 </Settings>

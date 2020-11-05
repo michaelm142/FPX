@@ -15,10 +15,10 @@ namespace FPX
             public ushort wButtons;
             public byte LeftTrigger;
             public byte RightTrigger;
-            public short LeftThumbstickX;
-            public short LeftThumbstickY;
-            public short RightThumbstickX;
-            public short RightThumbstickY;
+            public short LeftThumbStickX;
+            public short LeftThumbStickY;
+            public short RightThumbStickX;
+            public short RightThumbStickY;
         }
 
         unsafe struct MouseState

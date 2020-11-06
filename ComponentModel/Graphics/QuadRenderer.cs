@@ -5,7 +5,7 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace ComponentModel
+namespace FPX
 {
     public class QuadRenderer : IGameComponent
     {
@@ -53,29 +53,35 @@ namespace ComponentModel
             device.DrawUserPrimitives(PrimitiveType.TriangleStrip, vertecies, 0, 2);
         }
 
-        public void RenderQuad(Texture2D texture, Vector2 position, Effect effect)
+        public void RenderQuad(Texture2D texture, Vector2 position, Effect effect, bool useWVPPrams = true)
         {
             GraphicsDevice device = GameCore.graphicsDevice;
 
             device.SamplerStates[0] = SamplerState.AnisotropicWrap;
             device.Textures[0] = texture;
-            effect.Parameters["World"].SetValue(Matrix.CreateTranslation(position.ToVector3()));
-            effect.Parameters["View"].SetValue(Matrix.Identity);
-            effect.Parameters["Projection"].SetValue(Matrix.CreateOrthographic(device.Viewport.Width, device.Viewport.Height, 0.0f, 1.0f));
+            if (useWVPPrams)
+            {
+                effect.Parameters["World"].SetValue(Matrix.CreateTranslation(position.ToVector3()));
+                effect.Parameters["View"].SetValue(Matrix.Identity);
+                effect.Parameters["Projection"].SetValue(Matrix.CreateOrthographic(device.Viewport.Width, device.Viewport.Height, 0.0f, 1.0f));
+            }
             effect.CurrentTechnique.Passes[0].Apply();
 
             device.DrawUserPrimitives(PrimitiveType.TriangleStrip, vertecies, 0, 2);
         }
 
-        public void RenderQuad(Texture2D texture, Rectangle rect, Effect effect)
+        public void RenderQuad(Texture2D texture, Rectangle rect, Effect effect, bool useWVPPrams = true)
         {
             GraphicsDevice device = GameCore.graphicsDevice;
 
             device.SamplerStates[0] = SamplerState.AnisotropicWrap;
             device.Textures[0] = texture;
-            effect.Parameters["World"].SetValue(Matrix.CreateScale(rect.Width, rect.Height, 1.0f) * Matrix.CreateTranslation(rect.Location.ToVector2().ToVector3()));
-            effect.Parameters["View"].SetValue(Matrix.Identity);
-            effect.Parameters["Projection"].SetValue(Matrix.CreateOrthographic(device.Viewport.Width, device.Viewport.Height, -1.0f, 1.0f));
+            if (useWVPPrams)
+            {
+                effect.Parameters["World"].SetValue(Matrix.CreateScale(rect.Width, rect.Height, 1.0f) * Matrix.CreateTranslation(rect.Location.ToVector2().ToVector3()));
+                effect.Parameters["View"].SetValue(Matrix.Identity);
+                effect.Parameters["Projection"].SetValue(Matrix.CreateOrthographic(device.Viewport.Width, device.Viewport.Height, -1.0f, 1.0f));
+            }
             effect.CurrentTechnique.Passes[0].Apply();
 
             device.DrawUserPrimitives(PrimitiveType.TriangleStrip, vertecies, 0, 2);

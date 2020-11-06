@@ -1,0 +1,55 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<Scene>
+  <Objects>
+    
+    <Object Name="Camera">
+      <Transform>
+        <Position X="0" Y="0" Z="10"/>
+        <Rotation X="0" Y="0" Z="0"/>
+      </Transform>
+      <Camera>
+        <FieldOfView>60.0</FieldOfView>
+      </Camera>
+      <CameraController>
+        <MoveSpeed>10</MoveSpeed>
+        <RotationSpeed>5</RotationSpeed>
+      </CameraController>
+    </Object>
+
+    <Prefab Filename="Prefabs\\Box.xml" Name="Rigidbody1">
+      <Transform>
+        <Position X="-3.0" Y="0" Z="0.5"/>
+      </Transform>
+      <Rigidbody>
+        <Drag>0.1</Drag>
+        <AngularDrag>0.05</AngularDrag>
+      </Rigidbody>
+      <StartingForce>
+        <StartingForce X="20" Y="0.0" Z="0.0"/>
+      </StartingForce>
+      <Material>
+        <DiffuseMap FileName ="Textures\\TestTexture"/>
+      </Material>
+    </Prefab>
+
+    <Prefab Filename="Prefabs\\Box.xml" Name="Rigidbody2">
+      <Transform>
+        <Position X="3.0" Y="0.75" Z="0"/>
+      </Transform>
+      <Rigidbody>
+        <Drag>0.1</Drag>
+        <AngularDrag>0.05</AngularDrag>
+      </Rigidbody>
+      <StartingForce>
+        <StartingForce X="-1" Y="0.0" Z="0.0"/>
+        <StartingTorque Y="20"/>
+      </StartingForce>
+      <Material>
+        <DiffuseColor R="255" G="255" B="255" A="255"/>
+        <DiffuseMap FileName ="Textures\\TestTexture"/>
+      </Material>
+    </Prefab>
+    
+  </Objects>
+</Scene>

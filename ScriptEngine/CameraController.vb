@@ -1,8 +1,7 @@
 ﻿Imports System.Xml
 Imports Microsoft.Xna.Framework
-Imports Microsoft.Xna.Framework.Input
 Imports Microsoft.Xna.Framework.Graphics
-Imports ComponentModel
+Imports FPX
 
 Public Class CameraController
     Inherits Component
@@ -17,35 +16,34 @@ Public Class CameraController
         Dim turnH As Single
         Dim turnV As Single
 
-        Dim keyboardState As KeyboardState = Keyboard.GetState()
 
-        If keyboardState.IsKeyDown(Keys.W) Then
+        If Input.IsKeyDown(KeyCode.W) Then
             forward += 1.0F
-        ElseIf keyboardState.IsKeyDown(Keys.S) Then
+        ElseIf Input.IsKeyDown(KeyCode.S) Then
             forward -= 1.0F
         End If
 
-        If keyboardState.IsKeyDown(Keys.D) Then
+        If Input.IsKeyDown(KeyCode.D) Then
             right += 1.0F
-        ElseIf keyboardState.IsKeyDown(Keys.A) Then
+        ElseIf Input.IsKeyDown(KeyCode.A) Then
             right -= 1.0F
         End If
 
-        If keyboardState.IsKeyDown(Keys.Q) Then
+        If Input.IsKeyDown(KeyCode.Q) Then
             up += 1.0F
-        ElseIf keyboardState.IsKeyDown(Keys.E) Then
+        ElseIf Input.IsKeyDown(KeyCode.E) Then
             up -= 1.0F
         End If
 
-        If keyboardState.IsKeyDown(Keys.Right) Then
+        If Input.IsKeyDown(KeyCode.Right) Then
             turnH -= 1.0F
-        ElseIf keyboardState.IsKeyDown(Keys.Left) Then
+        ElseIf Input.IsKeyDown(KeyCode.Left) Then
             turnH += 1.0F
         End If
 
-        If keyboardState.IsKeyDown(Keys.Up) Then
+        If Input.IsKeyDown(KeyCode.Up) Then
             turnV -= 1.0F
-        ElseIf keyboardState.IsKeyDown(Keys.Down) Then
+        ElseIf Input.IsKeyDown(KeyCode.Down) Then
             turnV += 1.0F
         End If
 
@@ -59,7 +57,7 @@ Public Class CameraController
         spriteBatch.DrawString(GameCore.fonts("SegoeUI"), String.Format("Camera Rotation:{0}", transform.rotation.GetEulerAngles()), Vector2.UnitY * 20.0F, Color.Black)
     End Sub
 
-    Public Sub LoadXml(node As XmlElement)
+    Public Overrides Sub LoadXml(node As XmlElement)
         Dim moveSpeedNode = node.SelectSingleNode("MoveSpeed")
         Dim rotationSpeedNode = node.SelectSingleNode("RotationSpeed")
 

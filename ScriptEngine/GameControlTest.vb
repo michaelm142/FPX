@@ -2,8 +2,7 @@
 Imports System.Xml
 Imports System.Linq
 Imports Microsoft.Xna.Framework
-Imports Microsoft.Xna.Framework.Input
-Imports ComponentModel
+Imports FPX
 
 Public Class GameControlTest
     Inherits Component
@@ -25,32 +24,30 @@ Public Class GameControlTest
     End Sub
 
     Public Sub Update(ByVal gametime As GameTime)
-        Dim controllerIndex = Settings.GetSetting(Of String)("ControllerInput")
-        Dim gamepadstate = GamePad.GetState([Enum].Parse(GetType(PlayerIndex), controllerIndex))
         Dim t = gameObject.GetComponent(Of Transform)
-        Dim Right = gamepadstate.ThumbSticks.Left.X
-        Dim Forward = gamepadstate.ThumbSticks.Left.Y
-        Dim Up = gamepadstate.Triggers.Right - gamepadstate.Triggers.Left
-        Dim turnX = -gamepadstate.ThumbSticks.Right.X * RotationSpeed
-        Dim turnY = gamepadstate.ThumbSticks.Right.Y * RotationSpeed
-        Dim reset = gamepadstate.Buttons.Start = ButtonState.Pressed
-        Dim speed = If(gamepadstate.Buttons.A = ButtonState.Pressed, 5.0F, 1.0)
+        Dim Right = Input.GetAxis("Horizontal")
+        Dim Forward = Input.GetAxis("Vertical")
+        'Dim Up = gamepadstate.Triggers.Right - gamepadstate.Triggers.Left
+        Dim turnX = Input.GetAxis("Pitch")
+        Dim turnY = Input.GetAxis("Yaw")
+        'Dim reset = gamepadstate.Buttons.Start = ButtonState.Pressed
+        'Dim speed = If(gamepadstate.Buttons.A = ButtonState.Pressed, 5.0F, 1.0)
 
-        If (reset) Then
-            t.localPosition = startPosition
-            t.localRotation = startRotation
-        End If
+        'If (reset) Then
+        '    t.localPosition = startPosition
+        '    t.localRotation = startRotation
+        'End If
 
-        t.position += (t.worldPose.Right * Right + t.worldPose.Forward * Forward + Vector3.Up * Up) * gametime.ElapsedGameTime.TotalSeconds * MoveSpeed * speed
+        position += (t.worldPose.Right * Right + t.worldPose.Forward * Forward) * gametime.ElapsedGameTime.TotalSeconds * MoveSpeed ' * speed
 
-        angle.Y += turnX * gametime.ElapsedGameTime.TotalSeconds * RotationSpeed
-        angle.X += turnY * gametime.ElapsedGameTime.TotalSeconds * RotationSpeed
+        angle.X += turnX * gametime.ElapsedGameTime.TotalSeconds * RotationSpeed
+        angle.Y += turnY * gametime.ElapsedGameTime.TotalSeconds * RotationSpeed
 
         localRotation = Quaternion.CreateFromYawPitchRoll(MathHelper.ToRadians(angle.Y), MathHelper.ToRadians(angle.X), 0.0F)
 
     End Sub
 
-    Public Sub LoadXml(ByVal node As XmlElement)
+    Public Overrides Sub LoadXml(ByVal node As XmlElement)
         Dim moveSpeedNode = node.SelectSingleNode("MoveSpeed")
         Dim rotationSpeedNode = node.SelectSingleNode("RotationSpeed")
 

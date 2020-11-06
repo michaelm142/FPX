@@ -9,7 +9,7 @@ using System.Reflection;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 
-namespace ComponentModel
+namespace FPX
 {
     public class Scene : IGameComponent, IUpdateable
     {
@@ -54,6 +54,14 @@ namespace ComponentModel
             GameObject obj = sender as GameObject;
             obj.BroadcastMessage("Awake");
             Debug.Log("Spawned object {0} in scene.", obj);
+        }
+
+        public GameObject Spawn(GameObject obj)
+        {
+            spawnedObjects.Add(obj);
+            ObjectInstanciated(obj, new EventArgs());
+
+            return obj;
         }
 
         public GameObject Spawn(params Type[] Components)
@@ -249,6 +257,11 @@ namespace ComponentModel
             }
 
             var scene = doc.SelectSingleNode("Scene");
+            if (scene == null)
+            {
+                Debug.LogError("Could not load scene {0} because it does not contain scene content", sceneName);
+                return;
+            }
             var objectCollection = scene.FirstChild as XmlElement;
 
             // parse xml into game scene
@@ -270,12 +283,12 @@ namespace ComponentModel
                 {
                     Component comp = obj.GetComponents<Component>().Find(c => c.GetType().ToString().IndexOf(element.Name) != -1);
                     if (comp != null)
-                        comp.SendMessage("LoadXml", element);
+                        comp.LoadXml(element);
                     else
                     {
                         var createType = Utill.FindTypeFromAssemblies(element.Name);
                         comp = Activator.CreateInstance(createType) as Component;
-                        comp.SendMessage("LoadXml", element);
+                        comp.LoadXml(element);
                         obj.AddComponent(comp);
                     }
                 }

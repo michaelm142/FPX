@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<Scene>
+  <Objects>
+    <Object Name="TestSprite">
+      <Camera>
+        <FieldOfView>60</FieldOfView>
+        <NearPlaneDistance>0.01</NearPlaneDistance>
+        <FarPlaneDistance>1000.0</FarPlaneDistance>
+      </Camera>
+      <Transform>
+        <Position X="250" Y="250" Z="0"/>
+      </Transform>
+      <Material>
+        <DiffuseColor R="1.0" G="1.0" B="1.0" A="1.0"/>
+        <DiffuseMap FileName="Textures\\ball"/>
+      </Material>
+
+      <Sprite/>
+
+      <TestSpriteController>
+        <MoveSpeed>5.0</MoveSpeed>
+      </TestSpriteController>
+
+    </Object>
+  </Objects>
+</Scene>

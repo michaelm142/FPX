@@ -4,12 +4,19 @@ using System.Linq;
 using System.Text;
 using System.Xml;
 using Microsoft.Xna.Framework;
+using FPX.Editor;
 
-namespace ComponentModel
+namespace FPX
 {
     [Editor(typeof(TransformEditor))]
     public class Transform : Component
     {
+        public new Transform transform
+        {
+            get { return this; }
+        }
+
+        [IgnoreInGUI]
         public new Vector3 position
         {
             get { return GetPosition(parent, localPosition); }
@@ -17,6 +24,7 @@ namespace ComponentModel
             set { localPosition = parent == null ? value : Vector3.Transform(value, Matrix.CreateTranslation(parent.position)); }
         }
 
+        [IgnoreInGUI]
         public new Quaternion rotation
         {
             get { return GetRotation(parent, localRotation); }
@@ -90,18 +98,23 @@ namespace ComponentModel
 
         private string parentName;
 
-        public void LoadXml(XmlElement node)
+        public override void LoadXml(XmlElement node)
         {
             parentName = node.Attributes["Parent"] == null ? null : node.Attributes["Parent"].Value;
+            var idAttr = node.Attributes["Id"];
+            if (idAttr != null)
+                Id = uint.Parse(idAttr.Value);
+            else
+                Id = (uint)FindObjectsOfType<Transform>().Count;
 
             var positionNode = node.SelectSingleNode("Position") as XmlElement;
             var rotationNode = node.SelectSingleNode("Rotation") as XmlElement;
             var scaleNode = node.SelectSingleNode("Scale") as XmlElement;
 
             if (positionNode != null)
-                localPosition = LinearAlgebraUtil.Vector3FromXml(positionNode);
+                position = LinearAlgebraUtil.Vector3FromXml(positionNode);
             if (rotationNode != null)
-                localRotation = LinearAlgebraUtil.EulerFromXml(rotationNode);
+                rotation = LinearAlgebraUtil.EulerFromXml(rotationNode);
             if (scaleNode != null)
                 localScale = LinearAlgebraUtil.Vector3FromXml(scaleNode);
         }
@@ -120,6 +133,10 @@ namespace ComponentModel
             var rotationNode = LinearAlgebraUtil.Vector3ToXml(node.OwnerDocument, "Rotation", eulerRotation);
 
             var scaleNode = LinearAlgebraUtil.Vector3ToXml(node.OwnerDocument, "Scale", localScale);
+
+            var idAttr = node.OwnerDocument.CreateAttribute("Id");
+            idAttr.Value = Id.ToString();
+            node.Attributes.Append(idAttr);
 
             node.AppendChild(positionNode);
             node.AppendChild(rotationNode);

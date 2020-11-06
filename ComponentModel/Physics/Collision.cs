@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Microsoft.Xna.Framework;
 
-namespace ComponentModel
+namespace FPX
 {
     public class Collision
     {
@@ -24,11 +25,33 @@ namespace ComponentModel
         Collider a;
         Collider b;
 
+        public Vector3 L;
+        public Vector3 ContactNormal;
+
+        public float Psudodistance;
+        public float PenetrationDistance;
+
         public Collision(Collider a, Collider b)
         {
             this.a = a;
             this.b = b;
 
+        }
+
+        public Collider this[int index]
+        {
+            get
+            {
+                switch (index)
+                {
+                    case 0:
+                        return a;
+                    case 1:
+                        return b;
+                    default:
+                        throw new IndexOutOfRangeException();
+                }
+            }
         }
     }
 }

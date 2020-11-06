@@ -6,10 +6,12 @@ using System.Xml;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace ComponentModel
+namespace FPX
 {
     public class Material : Component
     {
+        public BlendState blendState = BlendState.Opaque;
+
         public Color AmbientColor = Color.White;
         public Color SpecularColor;
         public Color DiffuseColor = Color.White;
@@ -18,7 +20,11 @@ namespace ComponentModel
         public Texture2D NormalMap;
         public Texture2D SpecularMap;
 
-        public void LoadXml(XmlElement node)
+        public float Roughness = 1.0f;
+        public float SpecularPower = 1.0f;
+        public float SpecularIntensity = 0.02f;
+
+        public override void LoadXml(XmlElement node)
         {
             var ambientNode = node.SelectSingleNode("AmbientColor") as XmlElement;
             var specularNode = node.SelectSingleNode("SpecularColor") as XmlElement;
@@ -28,12 +34,23 @@ namespace ComponentModel
             var normalMapNode = node.SelectSingleNode("NormalMap") as XmlElement;
             var specularMapNode = node.SelectSingleNode("SpecularMap") as XmlElement;
 
+            var roughnessNode = node.SelectSingleNode("Roughness") as XmlElement;
+            var specularIntensityNode = node.SelectSingleNode("SpecularIntensity") as XmlElement;
+            var specularPowerNode = node.SelectSingleNode("SpecularPower") as XmlElement;
+
+            if (roughnessNode != null && !float.TryParse(roughnessNode.InnerText, out Roughness))
+                Debug.LogError("Failed to read roughness from material");
+            if (specularIntensityNode != null && !float.TryParse(specularIntensityNode.InnerText, out SpecularIntensity))
+                Debug.LogError("Failed to read specular intensity from material");
+            if (specularPowerNode != null && !float.TryParse(specularPowerNode.InnerText, out SpecularIntensity))
+                Debug.LogError("Failed to read specular power from material");
+
             if (ambientNode != null)
-                AmbientColor = new Color(LinearAlgebraUtil.Vector4FromXml(ambientNode));
+                AmbientColor = LinearAlgebraUtil.ColorFromXml(ambientNode);
             if (specularNode != null)
-                SpecularColor = new Color(LinearAlgebraUtil.Vector4FromXml(specularNode));
+                SpecularColor = LinearAlgebraUtil.ColorFromXml(specularNode);
             if (diffuseNode != null)
-                DiffuseColor = new Color(LinearAlgebraUtil.Vector4FromXml(diffuseNode));
+                DiffuseColor = LinearAlgebraUtil.ColorFromXml(diffuseNode);
 
             if (diffuseMapNode != null && !(diffuseMapNode.Attributes["FileName"] == null || diffuseMapNode.Attributes["FileName"].Value == "Default"))
             {

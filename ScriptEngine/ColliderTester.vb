@@ -1,6 +1,6 @@
 ﻿Imports System.Xml
 Imports Microsoft.Xna.Framework
-Imports ComponentModel
+Imports FPX
 
 Public Class ColliderTester
     Inherits Component
@@ -24,9 +24,5 @@ Public Class ColliderTester
     Public Sub OnCollisionExit(other As Collider)
         GetComponent(Of Material)().DiffuseColor = startColor
         Console.WriteLine("Collision exit")
-    End Sub
-
-    Public Sub LoadXml(node As XmlElement)
-        Dim m = Matrix.Identity
     End Sub
 End Class

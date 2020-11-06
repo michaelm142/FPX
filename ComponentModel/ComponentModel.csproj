@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>ComponentModel</RootNamespace>
     <AssemblyName>ComponentModel</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -46,6 +46,8 @@
     <PlatformTarget>x86</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+    <UseVSHostingProcess>true</UseVSHostingProcess>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
     <OutputPath>bin\x86\Release\</OutputPath>
@@ -56,17 +58,41 @@
     <PlatformTarget>x86</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.Xna.Framework, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86" />
-    <Reference Include="Microsoft.Xna.Framework.Content.Pipeline, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86" />
-    <Reference Include="Microsoft.Xna.Framework.Content.Pipeline.EffectImporter, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=MSIL" />
-    <Reference Include="Microsoft.Xna.Framework.Game, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86" />
-    <Reference Include="Microsoft.Xna.Framework.Graphics, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86" />
-    <Reference Include="Microsoft.Xna.Framework.Storage, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=MSIL" />
+    <Reference Include="MonoGame.Framework, Version=3.6.0.1625, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files (x86)\MonoGame\v3.0\Assemblies\Windows\MonoGame.Framework.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Caching" />
+    <Reference Include="System.Runtime.DurableInstancing" />
+    <Reference Include="System.Runtime.Remoting" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
@@ -76,6 +102,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Audio\AudioListener.cs" />
+    <Compile Include="Audio\AudioSource.cs" />
     <Compile Include="Editors\AmbientLightEditor.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -107,15 +135,23 @@
     <Compile Include="Editors\TransformEditor.Designer.cs">
       <DependentUpon>TransformEditor.cs</DependentUpon>
     </Compile>
-    <Compile Include="Graphics\AmbientLight.cs" />
+    <Compile Include="Graphics\Light.cs" />
     <Compile Include="Graphics\Camera.cs" />
     <Compile Include="Colliders\Collider.cs" />
     <Compile Include="Colliders\BoxCollider.cs" />
     <Compile Include="Colliders\SphereCollider.cs" />
     <Compile Include="Graphics\ILightSource.cs" />
+    <Compile Include="Graphics\LineRenderer.cs" />
     <Compile Include="Graphics\ModelReader.cs" />
-    <Compile Include="Graphics\Renderer.cs" />
+    <Compile Include="Graphics\PostProcessor.cs" />
+    <Compile Include="Graphics\DeferredRenderer.cs" />
+    <Compile Include="Graphics\Screen.cs" />
     <Compile Include="Graphics\SkyboxRenderer.cs" />
+    <Compile Include="IgnoreInGUIAttribute.cs" />
+    <Compile Include="Input\GamePadButton.cs" />
+    <Compile Include="Input\Input.Main.cs" />
+    <Compile Include="Input\Input.Structs.cs" />
+    <Compile Include="Input\KeyCode.cs" />
     <Compile Include="Physics\Collision.cs" />
     <Compile Include="Physics\Physics.Collisions.cs" />
     <Compile Include="Physics\Physics.cs" />
@@ -123,6 +159,7 @@
     <Compile Include="Debug.cs" />
     <Compile Include="GameObject.cs" />
     <Compile Include="GameCore.cs" />
+    <Compile Include="Physics\Time.cs" />
     <Compile Include="Prefab.cs" />
     <Compile Include="Graphics\QuadRenderer.cs" />
     <Compile Include="Graphics\Graphics.cs" />
@@ -138,12 +175,6 @@
     <Compile Include="Utill.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\LodeObj\LodeObj.csproj">
-      <Project>{1011caf4-54ec-405a-a387-f59cf91afcb3}</Project>
-      <Name>LodeObj</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Editors\AmbientLightEditor.resx">
       <DependentUpon>AmbientLightEditor.cs</DependentUpon>
     </EmbeddedResource>
@@ -157,6 +188,13 @@
       <DependentUpon>TransformEditor.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\LodeObj\LodeObj.csproj">
+      <Project>{1011caf4-54ec-405a-a387-f59cf91afcb3}</Project>
+      <Name>LodeObj</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

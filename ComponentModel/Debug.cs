@@ -7,7 +7,7 @@ using System.IO;
 
 using Diagnostics = System.Diagnostics.Debug;
 
-namespace ComponentModel
+namespace FPX
 {
     public static class Debug
     {
@@ -47,9 +47,11 @@ namespace ComponentModel
 
         public static void LogWarning(string warning, params object[] args)
         {
-            ForegroundColor = ConsoleColor.Yellow;
+            ForegroundColor = ConsoleColor.Black;
+            BackgroundColor = ConsoleColor.DarkYellow;
             Log(warning, ConsoleColor.Yellow, args);
             ForegroundColor = ConsoleColor.Gray;
+            BackgroundColor = ConsoleColor.Black;
         }
 
         public static void LogError(string error, params object[] args)
@@ -59,6 +61,11 @@ namespace ComponentModel
             Log(error, args);
             BackgroundColor = ConsoleColor.Black;
             ForegroundColor = ConsoleColor.Gray;
+        }
+
+        public static void ClearConsole()
+        {
+            Console.Clear();
         }
 
         public static void DumpLog(string filename = "Log.txt")
@@ -73,6 +80,7 @@ namespace ComponentModel
             var sb = writer.GetStringBuilder();
             writer.Close();
             writer = null;
+
             using (StreamWriter writer = new StreamWriter(logFile.Open(FileMode.Append, FileAccess.Write)))
             {
                 var date = DateTime.Now.Date;

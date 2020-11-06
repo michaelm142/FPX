@@ -5,14 +5,19 @@ using System.Text;
 using System.Xml;
 using Microsoft.Xna.Framework;
 
-namespace ComponentModel
+namespace FPX
 {
     public class SphereCollider : Collider
     {
 
         public float radius { get; set; }
 
-        public void LoadXml(XmlElement node)
+        public override Vector3 Psudosize
+        {
+            get { return Vector3.One * radius; }
+        }
+
+        public override void LoadXml(XmlElement node)
         {
 
             radius = Single.Parse(node.SelectSingleNode("Radius").InnerText);
@@ -41,7 +46,7 @@ namespace ComponentModel
             var length = MathHelper.Clamp(L.Length(), 0.0F, radius);
             L.Normalize();
 
-            return L * length;
+            return position + L * length;
         }
 
         public override Vector3 ClosestPoint(Vector3 point, out Vector3 normal)

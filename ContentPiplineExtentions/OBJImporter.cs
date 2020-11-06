@@ -9,7 +9,7 @@ using Microsoft.Xna.Framework.Content.Pipeline.Graphics;
 using LodeObj;
 
 // TODO: replace this with the type you want to import.
-using TImport = Microsoft.Xna.Framework.Content.Pipeline.Graphics.NodeContent;
+using TImport = LodeObj.NodeContent;
 
 namespace ContentPiplineExtentions
 {

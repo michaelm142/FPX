@@ -8,7 +8,7 @@ using System.Reflection;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace ComponentModel
+namespace FPX
 {
     public static class Utill
     {
@@ -24,7 +24,15 @@ namespace ComponentModel
                 if (file.Extension != ".dll")
                     continue;
 
-                Assembly assembly = Assembly.LoadFile(file.FullName);
+                Assembly assembly = null;
+                try
+                {
+                    assembly = Assembly.LoadFile(file.FullName);
+                }
+                catch (BadImageFormatException)
+                {
+                    continue;
+                }
 
                 if (assembly == null)
                     continue;

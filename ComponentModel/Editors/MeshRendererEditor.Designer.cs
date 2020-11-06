@@ -1,4 +1,4 @@
-﻿namespace ComponentModel
+﻿namespace FPX
 {
     partial class MeshRendererEditor
     {

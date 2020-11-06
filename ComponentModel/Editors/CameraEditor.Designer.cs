@@ -1,4 +1,4 @@
-﻿namespace ComponentModel
+﻿namespace FPX
 {
     partial class CameraEditor
     {
@@ -35,7 +35,7 @@
             this.farPlaneLabel = new System.Windows.Forms.Label();
             this.farPlaneTextBox = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
-            this.colorPicker1 = new ComponentModel.ColorPicker();
+            this.colorPicker1 = new FPX.ColorPicker();
             this.SuspendLayout();
             // 
             // label1

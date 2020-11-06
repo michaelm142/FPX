@@ -1,7 +1,7 @@
 ﻿using System.Xml;
 using Microsoft.Xna.Framework;
 
-namespace ComponentModel
+namespace FPX
 {
     public class Rigidbody : Component
     {
@@ -9,8 +9,10 @@ namespace ComponentModel
         public Vector3 acceleration = Vector3.Zero;
         public Vector3 torque = Vector3.Zero;
         public Vector3 angularVelocity = Vector3.Zero;
+        private Vector3 startPosition;
+        private Vector3 startRotation;
 
-        public float mass = 0.0F;
+        public float mass = 1.0F;
         public float drag = 0.0F;
         public float angularDrag = 0.0f;
 
@@ -21,8 +23,19 @@ namespace ComponentModel
             get { return GetComponent<Collider>(); }
         }
 
-        //public void Update(GameTime gameTime)
-        //{
+        public void Start()
+        {
+            startPosition = transform.position;
+            startRotation = transform.rotation.GetEulerAngles();
+        }
+
+        public void Update(GameTime gameTime)
+        {
+            if (isKinematic)
+            {
+                transform.position = startPosition;
+                transform.rotation.SetEulerAngles(startRotation);
+            }
         //    if (isKinematic || (acceleration.Length() == 0.0f && velocity.Length() == 0.0f))
         //        return;
 
@@ -38,25 +51,21 @@ namespace ComponentModel
         //        acceleration = Vector3.Zero;
         //    if (LinearAlgebraUtil.isEpsilon(velocity))
         //        velocity = Vector3.Zero;
-        //}
+       }
 
         public void OnCollisionEnter(Collider other)
         {
-            Rigidbody otherBody = other.GetComponent<Rigidbody>();
-            if (otherBody == null)
-                return;
 
-            float e = 1.0f;
-            Vector3 p1 = collider.ClosestPoint(other.position);
-            Vector3 p2 = other.ClosestPoint(position);
-            Vector3 r1 = p1 - position;
-            Vector3 r2 = p2 - other.position;
+        }
 
-            Vector3 Vr = Vector3.Zero;
-            Vector3 normal = Vector3.Zero;
-            float mass1 = mass;
-            float mass2 = otherBody.mass;
+        public void AddForce(Vector3 force)
+        {
+            acceleration += force / mass;
+        }
 
+        public void AddTorque(Vector3 torque)
+        {
+            torque += torque / mass;
         }
 
         public void Reset()
@@ -67,7 +76,7 @@ namespace ComponentModel
             angularVelocity = Vector3.Zero;
         }
 
-        public void LoadXml(XmlElement element)
+        public override void LoadXml(XmlElement element)
         {
             var velocityNode = element.SelectSingleNode("Velocity") as XmlElement;
             var torqueNode = element.SelectSingleNode("Torque") as XmlElement;

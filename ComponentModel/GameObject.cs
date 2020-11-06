@@ -7,7 +7,7 @@ using System.Reflection;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace ComponentModel
+namespace FPX
 {
     public sealed class GameObject
     {
@@ -69,17 +69,21 @@ namespace ComponentModel
             set { transform.rotation = value; }
         }
 
+        internal uint Id { get; private set; }
+
         private static List<GameObject> _instances = new List<GameObject>();
 
         private GameObject(bool isEmpty)
         {
             _instances.Add(this);
+            Id = (uint)GetHashCode();
         }
 
         public GameObject()
         {
             _instances.Add(this);
             AddComponent<Transform>();
+            Id = (uint)GetHashCode();
         }
 
         ~GameObject()
@@ -100,13 +104,8 @@ namespace ComponentModel
 
         public void Run(GameTime gameTime)
         {
-            if (firstFrame)
-            {
-                BroadcastMessage("Start");
-                firstFrame = false;
-            }
-            else
-                BroadcastMessage("Update", new object[] { gameTime });
+            for (int i = 0; i < components.Count; i++)
+                components[i].Run();
         }
 
         public void Draw(GameTime gameTime)
@@ -165,6 +164,11 @@ namespace ComponentModel
             return _instances.Find(g => g.Name == name);
         }
 
+        public static GameObject Find(uint Id)
+        {
+            return _instances.Find(g => g.Id == Id);
+        }
+
         public static GameObject Load(XmlElement node)
         {
             GameObject obj = Empty;
@@ -175,6 +179,9 @@ namespace ComponentModel
             var enabledAttribute = node.Attributes["Enabled"];
             if (enabledAttribute != null)
                 obj.Enabled = bool.Parse(enabledAttribute.InnerText);
+            var idAttr = node.Attributes["Id"];
+            if (idAttr != null)
+                obj.Id = uint.Parse(idAttr.Value);
 
             foreach (XmlElement componentNode in node.ChildNodes)
             {
@@ -182,12 +189,17 @@ namespace ComponentModel
                 Component c = Activator.CreateInstance(createType) as Component;
                 if (c == null)
                 {
-                    Debug.LogError("Could not load game component {0} because it does not exist", createType);
+                    Debug.LogError("Could not find type {0} in assembly", createType);
                     continue;
                 }
-                c.SendMessage("LoadXml", componentNode);
+                c.gameObject = obj;
+                c.LoadXml(componentNode);
                 obj.AddComponent(c);
             }
+
+            var transform = obj.GetComponent<Transform>();
+            if (transform == null)
+                obj.AddComponent<Transform>();
 
             return obj;
         }

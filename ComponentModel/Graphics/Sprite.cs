@@ -6,7 +6,7 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace ComponentModel
+namespace FPX
 {
     public class Sprite : Component, IDrawable
     {
@@ -60,7 +60,6 @@ namespace ComponentModel
 
         public void Draw(GameTime gameTime)
         {
-            throw new NotImplementedException();
         }
 
         public void DrawUI(SpriteBatch spriteBatch)

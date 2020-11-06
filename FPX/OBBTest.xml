@@ -1,0 +1,64 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<Scene>
+  <Objects>
+    <Object Name="Camera 1">
+      <Transform>
+        <Position X="0.0" Y="1.0" Z="10.0"/>
+        <Rotation X="0.0" Y="0.0" Z="0.0"/>
+        <Scale X="1.0" Y="1.0" Z="1.0" />
+      </Transform>
+      <Camera>
+        <FieldOfView>60.0</FieldOfView>
+        <NearPlaneDistance>0.01</NearPlaneDistance>
+        <FarPlaneDistance>1000.0</FarPlaneDistance>
+      </Camera>
+      <MatrixTester/>
+      <CameraController>
+        <MoveSpeed>5.0</MoveSpeed>
+        <RotationSpeed>10.0</RotationSpeed>
+      </CameraController>
+      <PusdodistanceTester>
+        <IDA>Box 1</IDA>
+        <IDB>WorldBox</IDB>
+      </PusdodistanceTester>
+    </Object>
+
+    <Object Name="Box 1" Id="0">
+      <Transform>
+        <Position X="0" Y="2.5" Z="0"/>
+      </Transform>
+      <LocalAxisRenderer/>
+      <RigidbodyController>
+        <MoveSpeed>5.0</MoveSpeed>
+        <RotationSpeed>10.0</RotationSpeed>
+      </RigidbodyController>
+      <AxisAlignedTester>
+        <Target>1</Target>
+      </AxisAlignedTester>
+      <BoxRenderer>
+        <Color B="255" G="255"/>
+      </BoxRenderer>
+      <BoxCollider>
+        <Size X="1" Y="1" Z="1"/>
+      </BoxCollider>
+      <Rigidbody>
+        <Drag>0.1</Drag>
+        <AngularDrag>0.05</AngularDrag>
+      </Rigidbody>
+    </Object>
+
+    <Object Name="WorldBox" Id="1">
+      <BoxCollider>
+        <Size X="1" Y="1" Z="1"/>
+      </BoxCollider>
+      <BoxRenderer/>
+      <Rigidbody>
+        <Drag>0.01</Drag>
+        <AngularDrag>0.1</AngularDrag>
+        <IsKinematic>true</IsKinematic>
+      </Rigidbody>
+    </Object>
+    
+  </Objects>
+</Scene>

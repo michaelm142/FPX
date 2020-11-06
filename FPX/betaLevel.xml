@@ -1,0 +1,113 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<Scene>
+  <Objects>
+
+    <Object Name="Camera">
+      <Transform >
+        <Position X="0.0" Y="1.0" Z ="25"/>
+        <Rotation Y="43"/>
+      </Transform>
+      <DebugDeviceTextures/>
+      <Camera>
+        <FieldOfView>60</FieldOfView>
+        <NearPlaneDistance>0.001</NearPlaneDistance>
+        <FarPlaneDistance>1000.0</FarPlaneDistance>
+        <ClearColor Name="CornflowerBlue"/>
+      </Camera>
+      <GameControlTest>
+        <MoveSpeed>100</MoveSpeed>
+        <RotationSpeed>100</RotationSpeed>
+      </GameControlTest>
+    </Object>
+
+    <Object Name="Point Light 1">
+      <Transform Parent="Camera">
+        <Rotation X="45"/>
+        <Position Y="1.0"/>
+      </Transform>
+      <Light>
+        <LightType>Point</LightType>
+        <DiffuseColor Name="Yellow" B="0.75"/>
+        <SpecularColor Name="White"/>
+        <Intensity>1.0</Intensity>
+        <Range>80</Range>
+      </Light>
+    </Object>
+
+    <Object Name="Ambient Light 1">
+      <Transform>
+        <Rotation X="45"/>
+        <Position Y="1.0"/>
+      </Transform>
+      <Light>
+        <LightType>Ambient</LightType>
+        <DiffuseColor Name="Yellow" B="0.75"/>
+        <SpecularColor Name="White"/>
+        <Intensity>0.1</Intensity>
+      </Light>
+    </Object>
+
+    <Object Name="The Sun">
+      <Transform>
+        <Rotation X="45"/>
+        <Position Y="1.0"/>
+      </Transform>
+      <Light>
+        <LightType>Directional</LightType>
+        <DiffuseColor Name="Purple" B="0.75"/>
+        <SpecularColor Name="White"/>
+        <Intensity>1.0</Intensity>
+      </Light>
+    </Object>
+
+    <Prefab Filename="Prefabs\\Gun.xml">
+      <Transform Parent="Camera">
+        <Position X="1.5" Y="-0.5" Z="-2.5"/>
+        <Rotation X="0.0" Y="180.0" Z="0.0"/>
+      </Transform>
+      <Material>
+        <SpecularColor Name="Gray"/>
+      </Material>
+    </Prefab>
+
+    <Prefab Filename="Prefabs\\Sphere.xml"/>
+    
+    <!--Prefabs\Room.cluster POSX=-20 POSY=0 POSZ=10-->
+    <!--Prefabs\Room.cluster POSX=20 POSY=0 POSZ=-10-->
+    <!--Prefabs\Ground.cluster-->
+    
+    <Prefab Name="Box1" Filename="Prefabs\\Box.xml">
+      <Transform Parent="Sphere">
+        <Position X="2.0" Y="0.0" Z="0.0"/>
+      </Transform>
+      <Material>
+        <DiffuseColor R="1.0" G="0.0" B="0.0" A="1.0"/>
+      </Material>
+    </Prefab>
+
+    <Prefab Name="Box2" Filename="Prefabs\\Box.xml">
+      <Transform Parent="Sphere">
+        <Position X="0.0" Y="2.0" Z="0.0"/>
+      </Transform>
+      <Material>
+        <DiffuseColor R="0.0" G="1.0" B="0.0" A="1.0"/>
+      </Material>
+    </Prefab>
+
+    <Prefab Filename="Prefabs\\Box.xml" Name="Box3">
+      <Transform Parent="Sphere">
+        <Position X="0.0" Y="0.0" Z="2.0"/>
+      </Transform>
+      <Material>
+        <DiffuseColor R="0.0" G="0.0" B="1.0" A="1.0"/>
+      </Material>
+      <EditorTester>
+        <FloatValue>3.0</FloatValue>
+        <IntValue>200</IntValue>
+        <StringValue>Candy hole</StringValue>
+      </EditorTester>
+    </Prefab>
+
+  </Objects>
+</Scene>

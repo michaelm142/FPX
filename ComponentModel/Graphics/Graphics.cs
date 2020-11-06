@@ -7,13 +7,13 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using LodeObj;
 
-namespace ComponentModel
+namespace FPX
 {
     public class Graphics : IGameComponent, IDrawable, IDisposable
     {
         public bool Visible { get { return true; } }
 
-        public int DrawOrder { get { return int.MaxValue; } }
+        public int DrawOrder { get { return 0; } }
 
         public event EventHandler<EventArgs> VisibleChanged;
         public event EventHandler<EventArgs> DrawOrderChanged;
@@ -28,6 +28,8 @@ namespace ComponentModel
 
         private Texture2D transparentTexture;
 
+        public PrimitiveType fillMode = PrimitiveType.TriangleList;
+
 
         public void Initialize()
         {
@@ -36,8 +38,14 @@ namespace ComponentModel
             clearDepthShader = GameCore.content.Load<Effect>("Shaders\\ClearDepth");
             transparentTexture = new Texture2D(GameCore.graphicsDevice, 1, 1);
             transparentTexture.SetData(new Color[] { Color.Transparent });
+
+            fillMode = Settings.GetSetting<PrimitiveType>("FillMode");
+
             GameCore.gameInstance.Components.Add(new QuadRenderer());
             GameCore.graphicsDevice.SamplerStates[0] = SamplerState.AnisotropicWrap;
+
+            Mode = Settings.GetSetting<string>("RenderMode");
+            Debug.Log("Current Render Mode: {0}", Mode);
         }
 
         public static void ClearDepth()
@@ -57,20 +65,29 @@ namespace ComponentModel
 
         public void Draw(GameTime gameTime)
         {
-            if (Camera.Active == null)
-                return;
-            if (!GameCore.currentLevel.IsLoaded)
+            if (!GameCore.currentLevel.IsLoaded || Camera.Active == null)
             {
                 GameCore.graphicsDevice.Clear(Color.Magenta);
                 return;
             }
+
             if (Mode == "Default")
             {
-                GameCore.graphicsDevice.Clear(Camera.Active.ClearColor);
-                var drawables = Component.g_collection.ToList().FindAll(c => c is IDrawable).Cast<IDrawable>().ToList();
+                var drawables = Component.g_collection.ToList().FindAll(c => c is IDrawable && c.gameObject.Visible).Cast<IDrawable>().ToList();
                 drawables.Sort(SortRenderables);
+
+                var postProcessor = Camera.Active.GetComponent<PostProcessor>();
+                if (postProcessor != null)
+                    postProcessor.Begin();
+
+                GameCore.graphicsDevice.Clear(Camera.Active.ClearColor);
+
                 foreach (var drawable in drawables)
                     drawable.Draw(gameTime);
+
+                if (postProcessor != null)
+                    postProcessor.End();
+
             }
             else if (Mode == "Deferred")
             {
@@ -80,11 +97,19 @@ namespace ComponentModel
             {
                 renderer.BeginRenderGBuffers();
                 foreach (var obj in Component.g_collection.FindAll(c => c is MeshRenderer).Cast<MeshRenderer>())
+                {
+                    if (!obj.gameObject.Visible)
+                        continue;
                     renderer.RenderObject(obj);
+                }
                 renderer.EndRenderGBuffers();
+
+
 
                 renderer._debug_renderGBufferResults();
             }
+            else
+                Debug.LogError("Unknown render mode {0} is active", Mode);
 
             GameCore.spriteBatch.Begin();
             {

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
 
-namespace ComponentModel
+namespace FPX
 {
     public abstract class Collider : Component
     {
@@ -14,6 +14,8 @@ namespace ComponentModel
         {
             get { return transform.position + center; }
         }
+
+        public abstract Vector3 Psudosize { get; }
 
         public abstract bool Contains(Vector3 point);
 

@@ -1,6 +1,6 @@
 ﻿Imports Microsoft.Xna.Framework
 Imports Microsoft.Xna.Framework.Input
-Imports ComponentModel
+Imports FPX
 
 Public Class DebugDeviceTextures
     Inherits Component
@@ -9,7 +9,7 @@ Public Class DebugDeviceTextures
 
     Public Sub Update(ByVal gameTime As GameTime)
         Dim keys = Keyboard.GetState()
-        If keys.IsKeyDown(Input.Keys.Enter) And keyboardPrev.IsKeyUp(Input.Keys.Enter) Then
+        If keys.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.Enter) And keyboardPrev.IsKeyUp(Microsoft.Xna.Framework.Input.Keys.Enter) Then
             GameCore.Graphics.renderer._debug_OutuptGBuffers()
         End If
 

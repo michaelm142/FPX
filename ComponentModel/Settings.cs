@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.IO;
 using System.Xml;
 
-namespace ComponentModel
+
+namespace FPX
 {
     public static class Settings
     {
@@ -59,24 +61,61 @@ namespace ComponentModel
 
                 foreach (XmlElement setting in root.ChildNodes)
                 {
-                    float floatVal = 0.0f;
-                    int intVal = 0;
-                    string strVal = setting.InnerText;
-
-                    if (int.TryParse(setting.InnerText, out intVal))
-                        settings.Add(setting.Name, intVal);
-                    else if (float.TryParse(setting.InnerText, out floatVal))
-                        settings.Add(setting.Name, floatVal);
-                    else
-                        settings.Add(setting.Name, strVal);
+                    ReadSetting(setting);
                 }
             }
 
             isInilitized = true;
         }
 
+        private static void ReadSetting(XmlElement setting, string existingText = "")
+        {
+            string keyValue = existingText + setting.Name;
+
+            float floatVal = 0.0f;
+            int intVal = 0;
+            bool boolVal = false;
+            string strVal = setting.InnerText;
+
+            var childNodes = setting.ChildNodes.Cast<XmlNode>().ToList().FindAll(node => node is XmlElement && node.ParentNode.Name != "Input").Cast<XmlElement>();
+            if (childNodes.ToList().Count == 0)
+            {
+                if (int.TryParse(strVal, out intVal))
+                    settings.Add(keyValue, intVal);
+                else if (bool.TryParse(strVal, out boolVal))
+                    settings.Add(keyValue, boolVal);
+                else if (float.TryParse(strVal, out floatVal))
+                    settings.Add(keyValue, floatVal);
+                else if (setting.Attributes["Type"] != null)
+                {
+                    var typeAttr = setting.Attributes["Type"];
+                    string typename = typeAttr.Value;
+
+                    Type enumType = Type.GetType(typename);
+                    if (enumType == null)
+                    {
+                        Debug.LogError("Settings | Unknown enum type: {0}", typename);
+                        return;
+                    }
+
+                    Enum enumVal = Enum.Parse(enumType, strVal) as Enum;
+                    settings.Add(keyValue, enumVal);
+
+                }
+                else
+                    settings.Add(keyValue, strVal);
+            }
+            else
+            {
+                existingText += setting.Name + "/";
+                foreach (XmlElement childSetting in childNodes)
+                    ReadSetting(childSetting, existingText);
+            }
+        }
+
         public static void ShutDown()
         {
+            return;
             XmlDocument doc = new XmlDocument();
             var root = doc.CreateNode(XmlNodeType.Element, "Settings", null);
             doc.AppendChild(root);

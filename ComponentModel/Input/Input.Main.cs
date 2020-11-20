@@ -267,6 +267,7 @@ namespace FPX
 
         public void Draw(GameTime gameTime)
         {
+            return;
             var spriteBatch = GameCore.spriteBatch;
             string output = "Input Axis List\n";
             foreach (var axis in InputAxisList)
@@ -274,6 +275,8 @@ namespace FPX
             spriteBatch.Begin();
             spriteBatch.DrawString(GameCore.fonts["SegoeUI"], output, Vector2.Zero, Color.White);
             spriteBatch.End();
+
+            GameCore.graphicsDevice.DepthStencilState = Microsoft.Xna.Framework.Graphics.DepthStencilState.Default;
         }
     }
 }

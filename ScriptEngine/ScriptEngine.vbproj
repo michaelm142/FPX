@@ -127,6 +127,7 @@
     <Compile Include="LocalAxisRenderer.vb" />
     <Compile Include="MatrixTester.vb" />
     <Compile Include="MousePositionTester.vb" />
+    <Compile Include="MoveAxisSin.vb" />
     <Compile Include="ObjectFactory.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
@@ -147,6 +148,7 @@
     <Compile Include="RayTester.vb" />
     <Compile Include="RigidbodyController.vb" />
     <Compile Include="StartringForce.vb" />
+    <Compile Include="TestScript.vb" />
     <Compile Include="TestSpriteController.vb" />
   </ItemGroup>
   <ItemGroup>

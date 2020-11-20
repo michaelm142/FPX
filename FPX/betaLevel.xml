@@ -55,7 +55,7 @@
       </Transform>
       <Light>
         <LightType>Directional</LightType>
-        <DiffuseColor Name="Purple" B="0.75"/>
+        <DiffuseColor Name="White" B="0.75"/>
         <SpecularColor Name="White"/>
         <Intensity>1.0</Intensity>
       </Light>
@@ -71,7 +71,8 @@
       </Material>
     </Prefab>
 
-    <Prefab Filename="Prefabs\\Sphere.xml"/>
+    <Prefab Filename="Prefabs\\Sphere.xml">
+    </Prefab>
     
     <!--Prefabs\Room.cluster POSX=-20 POSY=0 POSZ=10-->
     <!--Prefabs\Room.cluster POSX=20 POSY=0 POSZ=-10-->
@@ -108,6 +109,42 @@
         <StringValue>Candy hole</StringValue>
       </EditorTester>
     </Prefab>
+
+    <Object Name="Point Light 2">
+      <Transform>
+        <Position Y="1.0"/>
+      </Transform>
+      <Light>
+        <LightType>Point</LightType>
+        <DiffuseColor Name="Lime"/>
+        <SpecularColor Name="White"/>
+        <Intensity>1.0</Intensity>
+        <Range>8</Range>
+      </Light>
+      <MoveAxisSin>
+        <Axis X="10.0"/>
+        <Length>10</Length>
+        <Speed>1</Speed>
+      </MoveAxisSin>
+    </Object>
+
+    <Object Name="Point Light 3">
+      <Transform>
+        <Position X="4.0" Y="3.0"/>
+      </Transform>
+      <Light>
+        <LightType>Point</LightType>
+        <DiffuseColor Name="Blue"/>
+        <SpecularColor Name="White"/>
+        <Intensity>10.0</Intensity>
+        <Range>20</Range>
+      </Light>
+      <MoveAxisSin>
+        <Axis Z="10.0"/>
+        <Length>10</Length>
+        <Speed>1</Speed>
+      </MoveAxisSin>
+    </Object>
 
   </Objects>
 </Scene>

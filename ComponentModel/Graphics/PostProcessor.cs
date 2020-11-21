@@ -15,7 +15,7 @@ namespace FPX
 
         private RenderTarget2D renderTarget;
 
-        public void LoadXml(XmlElement node)
+        public override void LoadXml(XmlElement node)
         {
             foreach (XmlElement layer in node.SelectNodes("Layer"))
                 ProcessLayers.Add(LoadLayer(layer));
@@ -35,16 +35,24 @@ namespace FPX
         {
             GameCore.graphicsDevice.SetRenderTarget(null);
             GameCore.graphicsDevice.Clear(Color.LightBlue);
-            var prevState = GameCore.graphicsDevice.RasterizerState;
+            var prevRasterState = GameCore.graphicsDevice.RasterizerState;
+            var prevBlendState = GameCore.graphicsDevice.BlendState;
+
+            GameCore.graphicsDevice.BlendState = BlendState.Opaque;
             GameCore.graphicsDevice.RasterizerState = RasterizerState.CullNone;
 
             foreach (var layer in ProcessLayers)
             {
                 layer.Parameters["Scene"].SetValue(renderTarget);
+                var imageSizeParam = layer.Parameters.ToList().Find(p => p.Name == "iResolution");
+                if (imageSizeParam != null)
+                    imageSizeParam.SetValue(new Vector2(renderTarget.Width, renderTarget.Height));
+
                 QuadRenderer.Instance.RenderQuad(renderTarget, new Rectangle(0, 0, Screen.Width / 2, -Screen.Height / 2), layer);
             }
 
-            GameCore.graphicsDevice.RasterizerState = prevState;
+            GameCore.graphicsDevice.RasterizerState = prevRasterState;
+            GameCore.graphicsDevice.BlendState = prevBlendState;
         }
 
         private Effect LoadLayer(XmlElement node)

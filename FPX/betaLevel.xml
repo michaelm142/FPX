@@ -55,7 +55,7 @@
       </Transform>
       <Light>
         <LightType>Directional</LightType>
-        <DiffuseColor Name="White" B="0.75"/>
+        <DiffuseColor Name="White" B="0.75" G="0.8"/>
         <SpecularColor Name="White"/>
         <Intensity>1.0</Intensity>
       </Light>
@@ -73,11 +73,11 @@
 
     <Prefab Filename="Prefabs\\Sphere.xml">
     </Prefab>
-    
+
     <!--Prefabs\Room.cluster POSX=-20 POSY=0 POSZ=10-->
     <!--Prefabs\Room.cluster POSX=20 POSY=0 POSZ=-10-->
     <!--Prefabs\Ground.cluster-->
-    
+
     <Prefab Name="Box1" Filename="Prefabs\\Box.xml">
       <Transform Parent="Sphere">
         <Position X="2.0" Y="0.0" Z="0.0"/>

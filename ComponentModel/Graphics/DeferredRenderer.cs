@@ -155,7 +155,12 @@ namespace FPX
 
             EndRenderGBuffers();
 
+            var postProcessor = Camera.Active.GetComponent<PostProcessor>();
+            if (postProcessor != null) postProcessor.Begin();
+
             RenderLights();
+
+            if (postProcessor != null) postProcessor.End();
         }
 
         public void BeginRenderGBuffers(Camera camera = null)

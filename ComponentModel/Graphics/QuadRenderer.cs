@@ -76,6 +76,7 @@ namespace FPX
 
             device.SamplerStates[0] = SamplerState.AnisotropicWrap;
             device.Textures[0] = texture;
+
             if (useWVPPrams)
             {
                 effect.Parameters["World"].SetValue(Matrix.CreateScale(rect.Width, rect.Height, 1.0f) * Matrix.CreateTranslation(rect.Location.ToVector2().ToVector3()));

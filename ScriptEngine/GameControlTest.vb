@@ -30,6 +30,7 @@ Public Class GameControlTest
         'Dim Up = gamepadstate.Triggers.Right - gamepadstate.Triggers.Left
         Dim turnX = Input.GetAxis("Pitch")
         Dim turnY = Input.GetAxis("Yaw")
+        Dim vertical = Input.GetAxis("Up") + Input.GetAxis("Down")
         'Dim reset = gamepadstate.Buttons.Start = ButtonState.Pressed
         'Dim speed = If(gamepadstate.Buttons.A = ButtonState.Pressed, 5.0F, 1.0)
 
@@ -38,7 +39,7 @@ Public Class GameControlTest
         '    t.localRotation = startRotation
         'End If
 
-        position += (t.worldPose.Right * Right + t.worldPose.Forward * Forward) * gametime.ElapsedGameTime.TotalSeconds * MoveSpeed ' * speed
+        position += (t.worldPose.Right * Right + t.worldPose.Forward * Forward + t.transform.up * vertical) * gametime.ElapsedGameTime.TotalSeconds * MoveSpeed ' * speed
 
         angle.X += turnX * gametime.ElapsedGameTime.TotalSeconds * RotationSpeed
         angle.Y += turnY * gametime.ElapsedGameTime.TotalSeconds * RotationSpeed

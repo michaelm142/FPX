@@ -204,17 +204,42 @@ namespace FPX
                     if (!string.IsNullOrEmpty(axis.Axis))
                     {
                         int val = 0;
+                        int maxVal = int.MaxValue;
                         if (axis.DeviceIndex == AnyControler)
                         {
                             for (int i = 0; i < MaxGamePads; i++)
                             {
                                 if (IsDeviceConnected((uint)InputPlatform.GamePad, i))
-                                    val += (short)typeof(GamepadState).InvokeMember(axis.Axis, BindingFlags.GetField, null, gamepads[i], null);
+                                {
+                                    object invokedVal = typeof(GamepadState).InvokeMember(axis.Axis, BindingFlags.GetField, null, gamepads[i], null);
+                                    if (invokedVal is short)
+                                    {
+                                        val += (short)invokedVal;
+                                        maxVal = short.MaxValue;
+                                    }
+                                    if (invokedVal is byte)
+                                    {
+                                        val += (byte)invokedVal;
+                                        maxVal = byte.MaxValue;
+                                    }
+                                }
                             }
                         }
-                        else
-                            val = (short)typeof(GamepadState).InvokeMember(axis.Axis, BindingFlags.GetField, null, gamepads[axis.DeviceIndex], null);
-                        float axisValue = val / (float)short.MaxValue;
+                        else if (IsDeviceConnected((uint)InputPlatform.GamePad, axis.DeviceIndex))
+                        {
+                            object invokedVal = typeof(GamepadState).InvokeMember(axis.Axis, BindingFlags.GetField, null, gamepads[axis.DeviceIndex], null);
+                            if (invokedVal is short)
+                            {
+                                val = (short)invokedVal;
+                                maxVal = short.MaxValue;
+                            }
+                            else if (invokedVal is byte)
+                            {
+                                val = (byte)invokedVal;
+                                maxVal = byte.MaxValue;
+                            }
+                        }
+                        float axisValue = val / (float)maxVal;
                         if (Math.Abs(axisValue) < axis.DeadZone)
                             axisValue = 0.0f;
                         axis.Value = axis.Invert ? -axisValue : axisValue;

@@ -6,13 +6,19 @@ float4x4 Projection;
 
 struct VertexShaderInput
 {
-    float4 Position : POSITION0;
+    float4 Position : SV_Position;
 };
 
 struct VertexShaderOutput
 {
-    float4 Position : POSITION0;
+    float4 Position : SV_Position;
 	float3 normal : TEXCOORD0;
+};
+
+struct PixelShaderOutput
+{
+	float4 color : SV_Target0;
+	float depth : SV_Depth;
 };
 
 VertexShaderOutput VertexShaderFunction(VertexShaderInput input)
@@ -29,10 +35,15 @@ VertexShaderOutput VertexShaderFunction(VertexShaderInput input)
     return output;
 }
 
-float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
+PixelShaderOutput PixelShaderFunction(VertexShaderOutput input)
 {
+	PixelShaderOutput output = (PixelShaderOutput)0;
+
 	float4 col = texCUBE(SkyboxSampler, input.normal);
-	return col;
+	output.color = float4(col.rgb, 1.0f);
+	output.depth = 0.8f;
+
+	return output;
 }
 
 technique Technique1

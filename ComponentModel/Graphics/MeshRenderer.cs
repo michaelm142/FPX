@@ -111,10 +111,21 @@ namespace FPX
                         Indicies = new int[indicies.Length];
                         for (int i = 0; i < Indicies.Length; i++)
                             Indicies[i] = (int)indicies[i];
+                        for (int i = 0; i < indicies.Length; i += 3)
+                        {
+                            ushort index1 = indicies[i];
+                            ushort index2 = indicies[i + 1];
+                            ushort index3 = indicies[i + 2];
 
-                        int index = 0;
-                        // Graphics.instance.renderer.AppendVertecies(verts, out index);
-                        startIndex = index;
+                            var vert1 = Vertecies[index1];
+                            var vert2 = Vertecies[index2];
+                            var vert3 = Vertecies[index3];
+
+                            Vector3 binormal = (vert3.Position - vert1.Position).ToVector3().Normalized();
+                            vert1.Binormal = vert2.Binormal = vert3.Binormal = binormal;
+                        }
+
+                        startIndex = 0;
                         primitiveCount = indicies.Length / 3;
                         indexCount = indicies.Length;
                     }

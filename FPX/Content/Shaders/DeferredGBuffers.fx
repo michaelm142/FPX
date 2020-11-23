@@ -1,53 +1,11 @@
-float4x4 World;
-float4x4 ViewProjection;
-float3 CameraForward;
-
+#include "Headers//Camera.h"
 #include "Headers//Textureing.h"
 #include "Headers/MaterialInfo.h"
+#include "Headers//GBuffers.h"
 
-struct VertexShaderInput
+GBufferPSOutput PixelShaderFunction(GBufferVSOutput input)
 {
-	float4 Position : POSITION0;
-	float3 Normal : NORMAL0;
-	float2 uv : TEXCOORD0;
-	float3 binormal : BINORMAL0;
-};
-
-struct VertexShaderOutput
-{
-	float4 position : SV_Position;
-	float4 depth : NORMAL1;
-	float3 binormal : BINORMAL0;
-	float3 normal : NORMAL0;
-	float2 uv : TEXCOORD0;
-};
-
-struct PixelShaderOutput
-{
-	float4 diffuse :	SV_Target0;
-	float4 normal :		SV_Target1;
-	float4 specular :	SV_Target2;
-	float4 depth :		SV_Target3;
-};
-
-VertexShaderOutput VertexShaderFunction(VertexShaderInput input)
-{
-	VertexShaderOutput output;
-
-	float4 worldPosition = mul(input.Position, World);
-	output.position = mul(worldPosition, ViewProjection);
-
-	output.binormal = mul(input.binormal, (float3x3)World);
-	output.normal = mul(input.Normal, (float3x3)World);
-	output.uv = input.uv;
-	output.depth = float4(output.position.z, output.position.w, 0, 0);
-
-	return output;
-}
-
-PixelShaderOutput PixelShaderFunction(VertexShaderOutput input)
-{
-	PixelShaderOutput output;
+	GBufferPSOutput output;
 
 	output.diffuse = DiffuseMap.Sample(DiffuseMapSampler, input.uv) * DiffuseColor;
 	output.diffuse.a = 1.0f;
@@ -76,7 +34,7 @@ technique Technique1
 	{
 		// TODO: set renderstates here.
 
-		VertexShader = compile vs_5_0 VertexShaderFunction();
+		VertexShader = compile vs_5_0 GBufferVS();
 		PixelShader = compile ps_5_0 PixelShaderFunction();
 	}
 }

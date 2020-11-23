@@ -147,6 +147,7 @@
     <Compile Include="Graphics\DeferredRenderer.cs" />
     <Compile Include="Graphics\Screen.cs" />
     <Compile Include="Graphics\SkyboxRenderer.cs" />
+    <Compile Include="Graphics\Terrain.cs" />
     <Compile Include="IgnoreInGUIAttribute.cs" />
     <Compile Include="Input\GamePadButton.cs" />
     <Compile Include="Input\Input.Main.cs" />

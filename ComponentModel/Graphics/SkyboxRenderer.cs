@@ -9,7 +9,7 @@ namespace FPX
 {
     public class SkyboxRenderer : Component, IDrawable
     {
-        public bool Visible { get; set; }
+        public bool Visible => false;
 
         public int DrawOrder { get { return -1000; } }
 
@@ -27,15 +27,14 @@ namespace FPX
         {
             SkyCube = GameCore.content.Load<TextureCube>("Textures\\CubeMap");
 
-            model = GameCore.content.Load<Model>("Models\\Cube");
+            model = GameCore.content.Load<Model>("Models\\CubeInverse");
             SkyCubeShader = GameCore.content.Load<Effect>("Shaders\\CubeMapRender");
         }
 
         public void Draw(GameTime gameTime)
         {
             var device = GameCore.graphicsDevice;
-            device.RasterizerState = RasterizerState.CullNone;
-            device.DepthStencilState = DepthStencilState.None;
+            device.BlendState = BlendState.Opaque;
             device.Textures[4] = SkyCube;
             foreach (var mesh in model.Meshes)
             {
@@ -43,17 +42,13 @@ namespace FPX
                 SkyCubeShader.Parameters["View"].SetValue(Matrix.Invert(Matrix.CreateFromQuaternion(Camera.Active.rotation)));
                 SkyCubeShader.Parameters["Projection"].SetValue(Camera.Active.ProjectionMatrix);
                 device.SamplerStates[4] = SamplerState.LinearClamp;
+                SkyCubeShader.Parameters["SkyboxSampler"].SetValue(SkyCube);
                 SkyCubeShader.CurrentTechnique.Passes[0].Apply();
                 device.SetVertexBuffer(mesh.MeshParts[0].VertexBuffer);
                 device.Indices = mesh.MeshParts[0].IndexBuffer;
 
                 device.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, mesh.MeshParts[0].NumVertices, 0, mesh.MeshParts[0].PrimitiveCount);
             }
-            device.RasterizerState = RasterizerState.CullCounterClockwise;
-
-            device.DepthStencilState = DepthStencilState.Default;
-
-            Graphics.ClearDepth();
         }
     }
 }

@@ -22,17 +22,16 @@ float4 CalculateWorldSpacePosition(float2 pixelPosition, float pixelDepth,
 
 	return viewPos / viewPos.w;
 }
-
-struct VertexShaderOutput
+struct GB_VS_OUT
 {
 	float4 position : POSITION0;
 	float2 scrPos : TEXCOORD1;
 	float2 uv : TEXCOORD0;
 };
 
-VertexShaderOutput VertexShaderFunction(float4 position : POSITION0, float2 uv : TEXCOORD0)
+GB_VS_OUT VertexShaderFunction(float4 position : POSITION0, float2 uv : TEXCOORD0)
 {
-	VertexShaderOutput output;
+	GB_VS_OUT output;
 
 	output.position = position;
 	output.scrPos = position.xy;
@@ -40,5 +39,11 @@ VertexShaderOutput VertexShaderFunction(float4 position : POSITION0, float2 uv :
 
 	return output;
 }
+
+struct LightPsOut
+{
+	float4 color : SV_Target0;
+	float depth : SV_Depth;
+};
 
 #endif

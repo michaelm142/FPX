@@ -5,7 +5,7 @@
 
     <Object Name="Camera">
       <Transform >
-        <Position X="0.0" Y="1.0" Z ="25"/>
+        <Position Y="1.0" Z ="25"/>
         <Rotation Y="43"/>
       </Transform>
       <DebugDeviceTextures/>
@@ -13,26 +13,13 @@
         <FieldOfView>60</FieldOfView>
         <NearPlaneDistance>0.001</NearPlaneDistance>
         <FarPlaneDistance>1000.0</FarPlaneDistance>
-        <ClearColor Name="CornflowerBlue"/>
+        <ClearColor Name="Green"/>
       </Camera>
       <GameControlTest>
         <MoveSpeed>100</MoveSpeed>
         <RotationSpeed>100</RotationSpeed>
       </GameControlTest>
-    </Object>
-
-    <Object Name="Point Light 1">
-      <Transform Parent="Camera">
-        <Rotation X="45"/>
-        <Position Y="1.0"/>
-      </Transform>
-      <Light>
-        <LightType>Point</LightType>
-        <DiffuseColor Name="Yellow" B="0.75"/>
-        <SpecularColor Name="White"/>
-        <Intensity>1.0</Intensity>
-        <Range>80</Range>
-      </Light>
+      <SkyboxRenderer/>
     </Object>
 
     <Object Name="Ambient Light 1">
@@ -42,10 +29,14 @@
       </Transform>
       <Light>
         <LightType>Ambient</LightType>
-        <DiffuseColor Name="Yellow" B="0.75"/>
+        <DiffuseColor B="0.05"/>
         <SpecularColor Name="White"/>
-        <Intensity>0.1</Intensity>
+        <Intensity>1</Intensity>
       </Light>
+    </Object>
+
+    <Object Name="Terrain">
+      <Terrain/>
     </Object>
 
     <Object Name="The Sun">
@@ -57,7 +48,7 @@
         <LightType>Directional</LightType>
         <DiffuseColor Name="White" B="0.75" G="0.8"/>
         <SpecularColor Name="White"/>
-        <Intensity>1.0</Intensity>
+        <Intensity>0.1</Intensity>
       </Light>
     </Object>
 
@@ -106,7 +97,7 @@
       <EditorTester>
         <FloatValue>3.0</FloatValue>
         <IntValue>200</IntValue>
-        <StringValue>Candy hole</StringValue>
+        <StringValue>Text</StringValue>
       </EditorTester>
     </Prefab>
 
@@ -130,14 +121,14 @@
 
     <Object Name="Point Light 3">
       <Transform>
-        <Position X="4.0" Y="3.0"/>
+        <Position X="4.0" Y="300.0"/>
       </Transform>
       <Light>
         <LightType>Point</LightType>
         <DiffuseColor Name="Blue"/>
         <SpecularColor Name="White"/>
         <Intensity>10.0</Intensity>
-        <Range>20</Range>
+        <Range>400</Range>
       </Light>
       <MoveAxisSin>
         <Axis Z="10.0"/>

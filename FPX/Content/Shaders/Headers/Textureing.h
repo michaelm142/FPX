@@ -5,7 +5,9 @@ texture2D DiffuseMap	: register(t0);
 texture2D NormalMap		: register(t1);
 texture2D SpecularMap	: register(t2);
 texture2D DepthMap		: register(t3);
-TextureCube Skybox		: register(t0);
+texture2D OcclusionMap	: register(t4);
+texture2D HeightMap		: register(t5);
+TextureCube Skybox		: register(t6);
 
 SamplerState DiffuseMapSampler
 {
@@ -43,6 +45,15 @@ SamplerState DepthMapSampler
 	AddressU = Wrap;
 	AddressV = Wrap;
 };
+SamplerState HeightMapSampler
+{
+	Texture = <HeightMap>;
+	MinFilter = Linear;
+	MagFilter = Linear;
+	MipFilter = Linear;
+	AddressU = Wrap;
+	AddressV = Wrap;
+};
 
-samplerCUBE SkyboxSampler : register(s0);
+samplerCUBE SkyboxSampler : register(s5);
 #endif

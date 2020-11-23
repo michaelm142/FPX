@@ -34,11 +34,13 @@ namespace FPX
         private PrimitiveType PrimitiveType { get { return Settings.GetSetting<PrimitiveType>("FillMode"); } }
 
         public SamplerState anisoSampler;
+        private BlendState lightBlend;
 
         RenderTarget2D diffuseMap;
         RenderTarget2D normalMap;
         RenderTarget2D specularMap;
         RenderTarget2D depthMap;
+        RenderTarget2D occlusionMap;
 
         RenderTargetBinding[] rt_bindings;
 
@@ -51,11 +53,6 @@ namespace FPX
         VertexBuffer TestQuad;
         VertexBuffer ScreenQuad;
         VertexBuffer vBuffer;
-
-        Texture2D testRed;
-        Texture2D testGreen;
-        Texture2D testBlue;
-        Texture2D testYellow;
 
         VertexPositionTexture[] testQuadVertecies;
 
@@ -75,7 +72,7 @@ namespace FPX
                 diffuseMap,
                 normalMap,
                 specularMap,
-                depthMap
+                depthMap,
             };
             // GBufferShader = Content.Load<Effect>("Shaders\\DeferredGBuffers");
             // DirectionalLightShader = Content.Load<Effect>("Shaders\\Lights\\DirectionalLight");
@@ -107,7 +104,6 @@ namespace FPX
 
             vBuffer = new VertexBuffer(Device, typeof(VertexPositionNormalTextureBinormal), 1, BufferUsage.None);
 
-            anisoSampler = SamplerState.AnisotropicWrap;
             anisoSampler = new SamplerState();
             anisoSampler.AddressU = TextureAddressMode.Wrap;
             anisoSampler.AddressV = TextureAddressMode.Wrap;
@@ -117,6 +113,8 @@ namespace FPX
             anisoSampler.MaxAnisotropy = 16;
             anisoSampler.MaxMipLevel = 4;
             anisoSampler.FilterMode = TextureFilterMode.Comparison;
+
+            lightBlend = new BlendState();
 
             Device.SamplerStates[0] = Device.SamplerStates[1] = Device.SamplerStates[2] = Device.SamplerStates[3] = anisoSampler;
 
@@ -141,6 +139,8 @@ namespace FPX
             specularMap.Name = "Specular Map";
             depthMap = new RenderTarget2D(Device, ScreenWidth, ScreenHeight, false, SurfaceFormat.Vector4, DepthFormat.Depth24Stencil8, 0, RenderTargetUsage.PreserveContents);
             depthMap.Name = "Depth Map";
+            occlusionMap = new RenderTarget2D(Device, ScreenWidth, ScreenHeight, false, SurfaceFormat.Vector4, DepthFormat.Depth24Stencil8, 0, RenderTargetUsage.PreserveContents);
+            occlusionMap.Name = "Occlusion Map";
 
             Device.SetRenderTargets(rt_bindings);
         }
@@ -149,17 +149,30 @@ namespace FPX
         public void Draw(GameTime gameTime)
         {
             BeginRenderGBuffers(Camera.Active);
+            {
+                foreach (MeshRenderer meshRender in Component.g_collection.FindAll(c => c is MeshRenderer))
+                    RenderObject(meshRender);
 
-            foreach (MeshRenderer meshRender in Component.g_collection.FindAll(c => c is MeshRenderer))
-                RenderObject(meshRender);
+                var renderables = Component.g_collection.FindAll(c => c is IDrawable && c.GetType() != typeof(MeshRenderer)).Cast<IDrawable>().ToList();
+                renderables.ToList().Sort(Graphics.SortRenderables);
+                foreach (IDrawable drawable in renderables)
+                {
+                    if (!drawable.Visible)
+                        continue;
 
+                    drawable.Draw(gameTime);
+                }
+            }
             EndRenderGBuffers();
 
             var postProcessor = Camera.Active.GetComponent<PostProcessor>();
             if (postProcessor != null) postProcessor.Begin();
-
-            RenderLights();
-
+            {
+                RenderLights();
+                var skyboxes = Component.g_collection.FindAll(c => c is SkyboxRenderer);
+                foreach (SkyboxRenderer skybox in skyboxes)
+                    skybox.Draw(gameTime);
+            }
             if (postProcessor != null) postProcessor.End();
         }
 
@@ -176,7 +189,6 @@ namespace FPX
             GBufferShader.Parameters["CameraForward"].SetValue(cameraForward);
 
             GBufferShader.CurrentTechnique.Passes[0].Apply();
-
 
             Device.Clear(Color.Transparent);
             // Device.SetVertexBuffer(vBuffer);
@@ -220,13 +232,14 @@ namespace FPX
         {
             var camera = Camera.Active;
 
-            Device.Clear(Color.Black);
+            Device.Clear(camera.ClearColor);
             Device.SetVertexBuffer(ScreenQuad);
             Device.BlendState = BlendState.Additive;
             Device.SamplerStates[0] = SamplerState.AnisotropicWrap;
             Device.SamplerStates[1] = SamplerState.AnisotropicWrap;
             Device.SamplerStates[2] = SamplerState.AnisotropicWrap;
             Device.SamplerStates[3] = SamplerState.AnisotropicWrap;
+
 
             var Lights = Component.g_collection.FindAll(c => c is Light && c.gameObject.Visible).Cast<Light>().ToList();
 
@@ -240,7 +253,9 @@ namespace FPX
                 DirectionalLightShader.Parameters["Intensity"].SetValue(light.Intensity);
                 DirectionalLightShader.Parameters["gInvViewProj"].SetValue(Matrix.Invert(camera.ViewMatrix * camera.ProjectionMatrix));
                 DirectionalLightShader.Parameters["LightDirection"].SetValue(light.transform.forward);
+
                 DirectionalLightShader.CurrentTechnique.Passes[0].Apply();
+
                 Device.Textures[0] = diffuseMap;
                 Device.Textures[1] = normalMap;
                 Device.Textures[2] = specularMap;
@@ -259,8 +274,8 @@ namespace FPX
                 PointLightShader.Parameters["LightPosition"].SetValue(pointLight.position);
                 PointLightShader.Parameters["Range"].SetValue(pointLight.Range);
 
-
-                PointLightShader.CurrentTechnique.Passes[0].Apply();
+                PointLightShader.CurrentTechnique.Passes[0].Apply(); 
+                
                 Device.Textures[0] = diffuseMap;
                 Device.Textures[1] = normalMap;
                 Device.Textures[2] = specularMap;
@@ -275,8 +290,13 @@ namespace FPX
                 AmbientLightShader.Parameters["SpecularColor"].SetValue(light.SpecularColor.ToVector4());
                 AmbientLightShader.Parameters["gCameraPos"].SetValue(Camera.Active.transform.position);
                 AmbientLightShader.Parameters["Intensity"].SetValue(light.Intensity);
+
                 AmbientLightShader.CurrentTechnique.Passes[0].Apply();
+                
                 Device.Textures[0] = diffuseMap;
+                Device.Textures[1] = normalMap;
+                Device.Textures[2] = specularMap;
+                Device.Textures[3] = depthMap;
 
                 Device.DrawPrimitives(PrimitiveType.TriangleStrip, 0, 2);
             }

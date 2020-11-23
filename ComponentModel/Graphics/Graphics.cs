@@ -58,7 +58,7 @@ namespace FPX
             device.BlendState = blendState;
         }
 
-        static int SortRenderables(IDrawable a, IDrawable b)
+        public static int SortRenderables(IDrawable a, IDrawable b)
         {
             return a.DrawOrder.CompareTo(b.DrawOrder);
         }
@@ -96,14 +96,24 @@ namespace FPX
             else if (Mode == "DeferredDebug")
             {
                 renderer.BeginRenderGBuffers();
-                foreach (var obj in Component.g_collection.FindAll(c => c is MeshRenderer).Cast<MeshRenderer>())
                 {
-                    if (!obj.gameObject.Visible)
-                        continue;
-                    renderer.RenderObject(obj);
+                    foreach (var obj in Component.g_collection.FindAll(c => c is MeshRenderer).Cast<MeshRenderer>())
+                    {
+                        if (!obj.gameObject.Visible)
+                            continue;
+                        renderer.RenderObject(obj);
+                    }
+                    var drawables = Component.g_collection.ToList().FindAll(c => c is IDrawable && c.gameObject.Visible && c.GetType() != typeof(MeshRenderer)).Cast<IDrawable>().ToList();
+                    drawables.Sort(SortRenderables);
+                    foreach (var drawable in drawables)
+                    {
+                        if (!drawable.Visible)
+                            continue;
+
+                        drawable.Draw(gameTime);
+                    }
                 }
                 renderer.EndRenderGBuffers();
-
 
 
                 renderer._debug_renderGBufferResults();

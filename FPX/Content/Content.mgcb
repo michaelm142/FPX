@@ -349,7 +349,7 @@
 #begin Shaders/TerrainGBuffers.fx
 /importer:EffectImporter
 /processor:EffectProcessor
-/processorParam:DebugMode=Debug
+/processorParam:DebugMode=Auto
 /build:Shaders/TerrainGBuffers.fx
 
 #begin Shaders/Headers/Camera.h
@@ -388,4 +388,28 @@
 /processorParam:SwapWindingOrder=False
 /processorParam:TextureFormat=Compressed
 /build:Models/CubeHighRes.fbx
+
+#begin Textures/CubMapTest2.dds
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/CubMapTest2.dds
+
+#begin Textures/SkyboxField.dds
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/SkyboxField.dds
 

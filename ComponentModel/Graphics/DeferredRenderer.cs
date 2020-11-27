@@ -232,7 +232,7 @@ namespace FPX
         {
             var camera = Camera.Active;
 
-            Device.Clear(camera.ClearColor);
+            Device.Clear(Color.Black);
             Device.SetVertexBuffer(ScreenQuad);
             Device.BlendState = BlendState.Additive;
             Device.SamplerStates[0] = SamplerState.AnisotropicWrap;

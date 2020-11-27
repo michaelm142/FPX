@@ -5,7 +5,7 @@ LightPsOut PixelShaderFunction(GB_VS_OUT input) : COLOR0
 {
 	float4 diffuse = DiffuseMap.Sample(DiffuseMapSampler, input.uv);
 	float4 depth = DepthMap.Sample(DepthMapSampler, input.uv);
-	if (depth.x / depth.y == 0.0f)
+	if (depth.x == 0.0f || depth.y == 0.0f)
 		discard;
 
 	float4 finalDiffuse = diffuse * DiffuseColor;

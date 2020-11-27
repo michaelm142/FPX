@@ -11,6 +11,7 @@ namespace FPX
     [Editor(typeof(LightEditor))]
     public class Light : Component, ILightSource
     {
+        private static GameObject shadowCam;
 
         public Color DiffuseColor { get; set; }
 
@@ -34,6 +35,13 @@ namespace FPX
 
         public override void LoadXml(XmlElement element)
         {
+            if (shadowCam == null)
+            {
+                shadowCam = new GameObject();
+                var cam = shadowCam.AddComponent<Camera>();
+                cam.nearPlaneDistance = 0.01f;
+            }
+
             XmlElement diffuseColorElement = element.SelectSingleNode("DiffuseColor") as XmlElement;
             XmlElement specularColorElement = element.SelectSingleNode("SpecularColor") as XmlElement;
             XmlElement specularIntensityelement = element.SelectSingleNode("SpecularIntensity") as XmlElement;
@@ -74,12 +82,44 @@ namespace FPX
                 case LightType.Point:
                     shadowCube = new RenderTargetCube(GameCore.graphicsDevice, ShadowMapSize, true, SurfaceFormat.Single, DepthFormat.Depth16);
                     break;
-                        
+
             }
         }
 
         public void RenderShadows()
         {
+            var device = GameCore.graphicsDevice;
+
+            shadowCam.position = position;
+
+            foreach (CubeMapFace face in Enum.GetValues(typeof(CubeMapFace)))
+            {
+                switch (face)
+                {
+                    case CubeMapFace.NegativeX:
+                        shadowCam.rotation = Quaternion.CreateFromRotationMatrix(Matrix.CreateLookAt(Vector3.Zero, -transform.right, transform.up));
+                        break;
+                    case CubeMapFace.PositiveX:
+                        shadowCam.rotation = Quaternion.CreateFromRotationMatrix(Matrix.CreateLookAt(Vector3.Zero, transform.right, transform.up));
+                        break;
+                    case CubeMapFace.NegativeY:
+                        shadowCam.rotation = Quaternion.CreateFromRotationMatrix(Matrix.CreateLookAt(Vector3.Zero, -transform.up, transform.forward));
+                        break;
+                    case CubeMapFace.PositiveY:
+                        shadowCam.rotation = Quaternion.CreateFromRotationMatrix(Matrix.CreateLookAt(Vector3.Zero, transform.up, transform.forward));
+                        break;
+                    case CubeMapFace.NegativeZ:
+                        shadowCam.rotation = Quaternion.CreateFromRotationMatrix(Matrix.CreateLookAt(Vector3.Zero, -transform.forward, transform.up));
+                        break;
+                    case CubeMapFace.PositiveZ:
+                        shadowCam.rotation = Quaternion.CreateFromRotationMatrix(Matrix.CreateLookAt(Vector3.Zero, transform.forward, transform.up));
+                        break;
+                }
+
+                device.SetRenderTarget(shadowCube, CubeMapFace.NegativeX);
+
+                // TODO: Render scene geometry to shadow maps
+            }
         }
     }
 

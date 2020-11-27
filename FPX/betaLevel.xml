@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 
+
 <Scene>
   <Objects>
-
     <Object Name="Camera">
       <Transform >
         <Position Y="1.0" Z ="25"/>
@@ -19,7 +19,9 @@
         <MoveSpeed>100</MoveSpeed>
         <RotationSpeed>100</RotationSpeed>
       </GameControlTest>
-      <SkyboxRenderer/>
+      <SkyboxRenderer>
+        <Texture Name="Textures//SkyboxField"/>
+      </SkyboxRenderer>
     </Object>
 
     <Object Name="Ambient Light 1">
@@ -29,9 +31,9 @@
       </Transform>
       <Light>
         <LightType>Ambient</LightType>
-        <DiffuseColor B="0.05"/>
+        <DiffuseColor Name="White"/>
         <SpecularColor Name="White"/>
-        <Intensity>1</Intensity>
+        <Intensity>0.5</Intensity>
       </Light>
     </Object>
 
@@ -58,6 +60,7 @@
         <Rotation X="0.0" Y="180.0" Z="0.0"/>
       </Transform>
       <Material>
+        <DiffuseColor Name="Purple"/>
         <SpecularColor Name="Gray"/>
       </Material>
     </Prefab>
@@ -121,14 +124,14 @@
 
     <Object Name="Point Light 3">
       <Transform>
-        <Position X="4.0" Y="300.0"/>
+        <Position X="4.0" Y="3.0"/>
       </Transform>
       <Light>
         <LightType>Point</LightType>
         <DiffuseColor Name="Blue"/>
         <SpecularColor Name="White"/>
-        <Intensity>10.0</Intensity>
-        <Range>400</Range>
+        <Intensity>1.0</Intensity>
+        <Range>10</Range>
       </Light>
       <MoveAxisSin>
         <Axis Z="10.0"/>

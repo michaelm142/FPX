@@ -3,15 +3,14 @@
 
 LightPsOut PixelShaderFunction(GB_VS_OUT input) : COLOR0
 {
-	LightPsOut output = (LightPsOut)0;
 
 	float4 diffuse = DiffuseMap.Sample(DiffuseMapSampler, input.uv);
 	float3 normal = NormalMap.Sample(NormalMapSampler, input.uv).xyz;
 	float4 specular = SpecularMap.Sample(SpecularMapSampler, input.uv);
 	float4 misc = DepthMap.Sample(DepthMapSampler, input.uv);
-	float depth = misc.r / misc.g;
-	if (depth == 0.0f)
+	if (misc.x == 0.0f || misc.y == 0.0f)
 		discard;
+	float depth = misc.r / misc.g;
 	float SpecularIntensity = misc.b * 10.0f;
 	float SpecularPower = misc.a * 10.0f;
 
@@ -28,6 +27,7 @@ LightPsOut PixelShaderFunction(GB_VS_OUT input) : COLOR0
 	float4 finalDiffuse = saturate(nDotL) * diffuse * DiffuseColor;
 	float4 finalSpecular = specular * saturate(SpecularMod) * specular_nDotL *  (specular_nDotL > 0.0f ? float4(SpecularColor.xyz, 1.f) : (float4)0);
 
+	LightPsOut output = (LightPsOut)0;
 	float3 cVal = (finalDiffuse + finalSpecular).xyz;
 	output.color = float4(cVal * Intensity, diffuse.a);
 	output.depth = depth;

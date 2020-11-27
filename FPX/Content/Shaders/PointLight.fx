@@ -21,7 +21,7 @@ LightPsOut PixelShaderFunction(GB_VS_OUT input) : COLOR0
 	float3 normal = NormalMap.Sample(NormalMapSampler, texCoord).xyz;
 	float4 misc = DepthMap.Sample(DepthMapSampler, texCoord);
 	float depth = misc.r / misc.g;
-	if (depth == 0.0f)
+	if (misc.x == 0.0f || misc.y == 0.0f)
 		discard;
 	float4 posWorld = CalculateWorldSpacePosition(input.scrPos.xy, depth, gInvViewProj);
 	float3 toLight = LightPosition - posWorld;

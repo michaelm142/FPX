@@ -18,6 +18,11 @@ namespace FPX
             get { return GameCore.viewport.Height; }
         }
 
+        public static float AspectRatio
+        {
+            get { return Width / (float)Height; }
+        }
+
         public static IntPtr handle
         {
             get { return GameCore.gameInstance.Window.Handle; }

@@ -49,7 +49,7 @@ technique BasicColorDrawing
 {
 	pass P0
 	{
-		VertexShader = compile vs_5_0 TerrainVS();
-		PixelShader = compile ps_5_0 MainPS();
+		VertexShader = compile vs_4_0 TerrainVS();
+		PixelShader = compile ps_4_0 MainPS();
 	}
 };

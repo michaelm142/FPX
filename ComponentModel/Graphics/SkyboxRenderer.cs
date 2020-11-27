@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Xml;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -25,7 +26,6 @@ namespace FPX
 
         public void Start()
         {
-            SkyCube = GameCore.content.Load<TextureCube>("Textures\\CubeMap");
 
             model = GameCore.content.Load<Model>("Models\\CubeInverse");
             SkyCubeShader = GameCore.content.Load<Effect>("Shaders\\CubeMapRender");
@@ -48,6 +48,20 @@ namespace FPX
                 device.Indices = mesh.MeshParts[0].IndexBuffer;
 
                 device.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, mesh.MeshParts[0].NumVertices, 0, mesh.MeshParts[0].PrimitiveCount);
+            }
+        }
+
+        public override void LoadXml(XmlElement element)
+        {
+            base.LoadXml(element);
+
+            var textureNode = element.SelectSingleNode("Texture");
+            if (textureNode != null)
+            {
+                var textureAttr = textureNode.Attributes["Name"];
+
+                if (textureAttr != null)
+                    SkyCube = GameCore.content.Load<TextureCube>(textureAttr.Value);
             }
         }
     }

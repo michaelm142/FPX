@@ -7,7 +7,7 @@ GBufferPSOutput PixelShaderFunction(GBufferVSOutput input)
 {
 	GBufferPSOutput output;
 
-	output.diffuse = DiffuseMap.Sample(DiffuseMapSampler, input.uv) * DiffuseColor;
+	output.diffuse = DiffuseMap.Sample(Sampler, input.uv) * DiffuseColor;
 	output.diffuse.a = 1.0f;
 
 	float3x3 tangentSpace = (float3x3)0;
@@ -15,11 +15,11 @@ GBufferPSOutput PixelShaderFunction(GBufferVSOutput input)
 	tangentSpace[1] = input.binormal;
 	tangentSpace[0] = cross(tangentSpace[1], tangentSpace[2]);
 
-	float3 normal = NormalMap.Sample(NormalMapSampler, input.uv) * Roughness;
+	float3 normal = NormalMap.Sample(Sampler, input.uv) * Roughness;
 	normal = mul(normal, tangentSpace);
 
 	output.normal = float4((normal + 1.f) / 2.f * Roughness, 1.f);
-	output.specular = float4(SpecularMap.Sample(SpecularMapSampler, input.uv).rgb * SpecularColor.rgb, 1.0f);
+	output.specular = float4(SpecularMap.Sample(Sampler, input.uv).rgb * SpecularColor.rgb, 1.0f);
 	output.depth.r = input.depth.x;
 	output.depth.g = input.depth.y;
 	output.depth.b = SpecularPower;

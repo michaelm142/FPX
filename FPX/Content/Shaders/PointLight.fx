@@ -16,10 +16,10 @@ LightPsOut PixelShaderFunction(GB_VS_OUT input) : COLOR0
 	float2 pixelPosition = float2(input.scrPos.x, input.scrPos.y);
 	float2 texCoord = input.uv;
 
-	float4 diffuse = DiffuseMap.Sample(DiffuseMapSampler, texCoord);
-	float4 specular = SpecularMap.Sample(SpecularMapSampler, texCoord);
-	float3 normal = NormalMap.Sample(NormalMapSampler, texCoord).xyz;
-	float4 misc = DepthMap.Sample(DepthMapSampler, texCoord);
+	float4 diffuse = DiffuseMap.Sample(Sampler, texCoord);
+	float4 specular = SpecularMap.Sample(Sampler, texCoord);
+	float3 normal = NormalMap.Sample(Sampler, texCoord).xyz;
+	float4 misc = DepthMap.Sample(Sampler, texCoord);
 	float depth = misc.r / misc.g;
 	if (misc.x == 0.0f || misc.y == 0.0f)
 		discard;

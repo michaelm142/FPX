@@ -37,10 +37,6 @@
       </Light>
     </Object>
 
-    <Object Name="Terrain">
-      <Terrain/>
-    </Object>
-
     <Object Name="The Sun">
       <Transform>
         <Rotation X="45"/>

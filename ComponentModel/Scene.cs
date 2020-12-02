@@ -113,6 +113,7 @@ namespace FPX
             spawnedObjects.Clear();
         }
 
+
         public void Load()
         {
             Load(sceneName);

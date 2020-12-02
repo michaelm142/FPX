@@ -67,13 +67,6 @@ namespace FPX
             DirectionalLightShader = Content.Load<Effect>("Shaders\\DirectionalLight");
             PointLightShader = Content.Load<Effect>("Shaders\\PointLight");
 
-            rt_bindings = new RenderTargetBinding[4]
-            {
-                diffuseMap,
-                normalMap,
-                specularMap,
-                depthMap,
-            };
             // GBufferShader = Content.Load<Effect>("Shaders\\DeferredGBuffers");
             // DirectionalLightShader = Content.Load<Effect>("Shaders\\Lights\\DirectionalLight");
             // AmbientLightShader = Content.Load<Effect>("Shaders\\Lights\\AmbientLight");
@@ -123,13 +116,18 @@ namespace FPX
 
         private void GraphicsDevice_DeviceReset(object sender, EventArgs e)
         {
-            //DeviceUpdate(GameCore.viewport.Width, GameCore.viewport.Height);
+            DeviceUpdate(GameCore.viewport.Width, GameCore.viewport.Height);
         }
 
         private void DeviceUpdate(int ScreenWidth, int ScreenHeight)
         {
             if (ScreenHeight == 0 || ScreenWidth == 0)
                 return;
+
+            if (diffuseMap != null) diffuseMap.Dispose();
+            if (normalMap != null) normalMap.Dispose();
+            if (specularMap != null) specularMap.Dispose();
+            if (depthMap != null) depthMap.Dispose();
 
             diffuseMap = new RenderTarget2D(Device, ScreenWidth, ScreenHeight, false, SurfaceFormat.Rgba64, DepthFormat.Depth24Stencil8, 0, RenderTargetUsage.PreserveContents);
             diffuseMap.Name = "Diffuse Map";
@@ -142,33 +140,56 @@ namespace FPX
             occlusionMap = new RenderTarget2D(Device, ScreenWidth, ScreenHeight, false, SurfaceFormat.Vector4, DepthFormat.Depth24Stencil8, 0, RenderTargetUsage.PreserveContents);
             occlusionMap.Name = "Occlusion Map";
 
+            rt_bindings = new RenderTargetBinding[4]
+            {
+                diffuseMap,
+                normalMap,
+                specularMap,
+                depthMap,
+            };
+
             Device.SetRenderTargets(rt_bindings);
         }
 
+        public void RenderGeometry(Camera camera = null)
+        {
+            if (camera != null)
+            {
+                GBufferShader.Parameters["ViewProjection"].SetValue(camera.ViewMatrix * camera.ProjectionMatrix);
+                Vector3 cameraForward = camera.transform.forward;
+                cameraForward.Normalize();
+                GBufferShader.Parameters["CameraForward"].SetValue(cameraForward);
+            }
+
+            foreach (MeshRenderer meshRender in Component.g_collection.FindAll(c => c is MeshRenderer))
+                RenderObject(meshRender);
+
+            var renderables = Component.g_collection.FindAll(c => c is IDrawable && c.GetType() != typeof(MeshRenderer) && c.GetType() != typeof(SkyboxRenderer)).Cast<IDrawable>().ToList();
+            renderables.ToList().Sort(Graphics.SortRenderables);
+            foreach (IDrawable drawable in renderables)
+            {
+                if (!drawable.Visible)
+                    continue;
+
+                drawable.Draw(Time.GameTime);
+            }
+        }
 
         public void Draw(GameTime gameTime)
         {
             BeginRenderGBuffers(Camera.Active);
-            {
-                foreach (MeshRenderer meshRender in Component.g_collection.FindAll(c => c is MeshRenderer))
-                    RenderObject(meshRender);
 
-                var renderables = Component.g_collection.FindAll(c => c is IDrawable && c.GetType() != typeof(MeshRenderer)).Cast<IDrawable>().ToList();
-                renderables.ToList().Sort(Graphics.SortRenderables);
-                foreach (IDrawable drawable in renderables)
-                {
-                    if (!drawable.Visible)
-                        continue;
+            RenderGeometry();
 
-                    drawable.Draw(gameTime);
-                }
-            }
             EndRenderGBuffers();
 
             var postProcessor = Camera.Active.GetComponent<PostProcessor>();
             if (postProcessor != null) postProcessor.Begin();
             {
-                RenderLights();
+                var lights = Component.g_collection.FindAll(c => c is Light).Cast<Light>().ToList();
+                lights.ForEach(l => l.RenderShadows());
+                RenderLights(lights);
+
                 var skyboxes = Component.g_collection.FindAll(c => c is SkyboxRenderer);
                 foreach (SkyboxRenderer skybox in skyboxes)
                     skybox.Draw(gameTime);
@@ -228,7 +249,12 @@ namespace FPX
             Device.SetRenderTargets(null);
         }
 
-        public void RenderLights()
+        public void RenderShadows(List<Light> lights)
+        {
+            lights.ForEach(l => l.RenderShadows());
+        }
+
+        public void RenderLights(List<Light> Lights)
         {
             var camera = Camera.Active;
 
@@ -239,11 +265,6 @@ namespace FPX
             Device.SamplerStates[1] = SamplerState.AnisotropicWrap;
             Device.SamplerStates[2] = SamplerState.AnisotropicWrap;
             Device.SamplerStates[3] = SamplerState.AnisotropicWrap;
-
-
-            var Lights = Component.g_collection.FindAll(c => c is Light && c.gameObject.Visible).Cast<Light>().ToList();
-
-            Lights.ForEach(l => l.RenderShadows());
 
             foreach (Light light in Lights.FindAll(l => l.LightType == LightType.Directional))
             {
@@ -274,8 +295,8 @@ namespace FPX
                 PointLightShader.Parameters["LightPosition"].SetValue(pointLight.position);
                 PointLightShader.Parameters["Range"].SetValue(pointLight.Range);
 
-                PointLightShader.CurrentTechnique.Passes[0].Apply(); 
-                
+                PointLightShader.CurrentTechnique.Passes[0].Apply();
+
                 Device.Textures[0] = diffuseMap;
                 Device.Textures[1] = normalMap;
                 Device.Textures[2] = specularMap;
@@ -292,7 +313,7 @@ namespace FPX
                 AmbientLightShader.Parameters["Intensity"].SetValue(light.Intensity);
 
                 AmbientLightShader.CurrentTechnique.Passes[0].Apply();
-                
+
                 Device.Textures[0] = diffuseMap;
                 Device.Textures[1] = normalMap;
                 Device.Textures[2] = specularMap;

@@ -208,5 +208,16 @@ namespace FPX
         {
             GameCore.currentLevel.BroadcastMessage(message, prams);
         }
+        public static T FindObjectOfType<T>()
+            where T : Component
+        {
+            return Component.g_collection.Find(c => c is T) as T;
+        }
+
+        public static List<T> FindObjectsOfType<T>()
+            where T : Component
+        {
+            return Component.g_collection.FindAll(c => c is T).Cast<T>().ToList();
+        }
     }
 }

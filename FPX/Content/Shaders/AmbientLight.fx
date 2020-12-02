@@ -3,8 +3,8 @@
 
 LightPsOut PixelShaderFunction(GB_VS_OUT input) : COLOR0
 {
-	float4 diffuse = DiffuseMap.Sample(DiffuseMapSampler, input.uv);
-	float4 depth = DepthMap.Sample(DepthMapSampler, input.uv);
+	float4 diffuse = DiffuseMap.Sample(Sampler, input.uv);
+	float4 depth = DepthMap.Sample(Sampler, input.uv);
 	if (depth.x == 0.0f || depth.y == 0.0f)
 		discard;
 

@@ -44,6 +44,7 @@ namespace FPX
         {
             DoubleBuffered = true;
             sceneCamera = new GameObject();
+            sceneCamera.Name = "Scene Camera";
             Camera.Active = sceneCamera.AddComponent<Camera>();
             Resize += GameView_Resize;
             MouseMove += GameView_MouseMove;

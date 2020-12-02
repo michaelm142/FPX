@@ -63,6 +63,11 @@ namespace FPX
             return a.DrawOrder.CompareTo(b.DrawOrder);
         }
 
+        public void RenderScene(Camera camera = null)
+        {
+            renderer.RenderGeometry(camera);
+        }
+
         public void Draw(GameTime gameTime)
         {
             if (!GameCore.currentLevel.IsLoaded || Camera.Active == null)
@@ -70,7 +75,6 @@ namespace FPX
                 GameCore.graphicsDevice.Clear(Color.Magenta);
                 return;
             }
-
             if (Mode == "Default")
             {
                 var drawables = Component.g_collection.ToList().FindAll(c => c is IDrawable && c.gameObject.Visible).Cast<IDrawable>().ToList();

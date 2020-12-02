@@ -7,8 +7,8 @@
   </Physics>
   
   <FullScreen>false</FullScreen>
-  <ScreenWidth>1600</ScreenWidth>
-  <ScreenHeight>1200</ScreenHeight>
+  <ScreenWidth>1200</ScreenWidth>
+  <ScreenHeight>800</ScreenHeight>
   <ControllerInput>One</ControllerInput>
   <FillMode Type="Microsoft.Xna.Framework.Graphics.PrimitiveType, Monogame.Framework">TriangleList</FillMode>
   <RenderMode>Deferred</RenderMode>

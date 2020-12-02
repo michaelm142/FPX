@@ -27,18 +27,18 @@ GBufferPSOutput MainPS(GBufferVSOutput input)
 {
 	GBufferPSOutput output = (GBufferPSOutput)0;
 
-	output.diffuse = float4(DiffuseMap.Sample(DiffuseMapSampler, input.uv).xyz, 1.0f);
+	output.diffuse = float4(DiffuseMap.Sample(Sampler, input.uv).xyz, 1.0f);
 
 	float3x3 tangentSpace = (float3x3)0;
 	tangentSpace[2] = input.normal;
 	tangentSpace[1] = input.binormal;
 	tangentSpace[0] = cross(tangentSpace[1], tangentSpace[2]);
 
-	float3 normal = NormalMap.Sample(NormalMapSampler, input.uv);
+	float3 normal = NormalMap.Sample(Sampler, input.uv);
 	normal = mul(normal, tangentSpace);
 
 	output.normal = float4((normal + 1.f) / 2.f, 1.f);
-	output.specular = SpecularMap.Sample(SpecularMapSampler, input.uv);
+	output.specular = SpecularMap.Sample(Sampler, input.uv);
 	output.depth.x = input.depth.x;
 	output.depth.y = input.depth.y;
 

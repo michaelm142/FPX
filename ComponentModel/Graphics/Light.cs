@@ -38,6 +38,7 @@ namespace FPX
             if (shadowCam == null)
             {
                 shadowCam = new GameObject();
+                shadowCam.Name = "Shadow Camera";
                 var cam = shadowCam.AddComponent<Camera>();
                 cam.nearPlaneDistance = 0.01f;
             }
@@ -116,9 +117,10 @@ namespace FPX
                         break;
                 }
 
-                device.SetRenderTarget(shadowCube, CubeMapFace.NegativeX);
-
-                // TODO: Render scene geometry to shadow maps
+                device.SetRenderTarget(shadowCube, face);
+                device.Clear(ClearOptions.DepthBuffer, Color.Transparent, 1.0f, 1);
+                Graphics.instance.RenderScene(shadowCam.GetComponent<Camera>());
+                device.SetRenderTarget(null);
             }
         }
     }

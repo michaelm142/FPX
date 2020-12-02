@@ -310,6 +310,8 @@ InputDevice* FindDeviceByType(uint deviceType, uint index)
 			return connectedMouses.a[index];
 		}
 	}
+
+	return nullptr;
 }
 
 #pragma region External
@@ -365,7 +367,8 @@ EXPORT void __stdcall InputUpdate()
 
 EXPORT BOOL _stdcall IsKeyDown(int keycode)
 {
-	InputDevice* pKeyboard = FindDeviceByType(DI8DEVTYPE_KEYBOARD);
+	InputDevice* pKeyboard = nullptr;
+	pKeyboard = FindDeviceByType(DI8DEVTYPE_KEYBOARD);
 	if (!pKeyboard) return false;
 	return pKeyboard->deviceState.keys[keycode] != 0;
 }
@@ -386,7 +389,8 @@ EXPORT BOOL _stdcall IsDeviceConnected(uint type, uint index)
 
 EXPORT void _stdcall GetMouseState(void* pOut)
 {
-	InputDevice* pDevice = FindDeviceByType(DI8DEVTYPE_MOUSE);
+	InputDevice* pDevice = nullptr;
+	pDevice = FindDeviceByType(DI8DEVTYPE_MOUSE);
 	LONG* dataPtr = reinterpret_cast<LONG*>(&pDevice->deviceState.mouseState);
 	memcpy(pOut, dataPtr, sizeof(DIMOUSESTATE));
 }
@@ -401,7 +405,8 @@ EXPORT void _stdcall GetMousePosition(int* pOut)
 
 EXPORT void _stdcall GetGamepadState(void* pOut, uint index)
 {
-	InputDevice* pGamepad = FindDeviceByType(DI8DEVTYPE_GAMEPAD, index);
+	InputDevice* pGamepad = nullptr;
+	pGamepad = FindDeviceByType(DI8DEVTYPE_GAMEPAD, index);
 	
 	memcpy(pOut, &pGamepad->deviceState.xInputState.Gamepad, sizeof(XINPUT_GAMEPAD));
 }

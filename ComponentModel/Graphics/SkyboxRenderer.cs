@@ -18,7 +18,6 @@ namespace FPX
         public event EventHandler<EventArgs> DrawOrderChanged;
 
         private TextureCube SkyCube;
-        private Texture2D testTexture;
 
         private Effect SkyCubeShader;
 

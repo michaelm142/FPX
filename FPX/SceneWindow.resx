@@ -56,7 +56,7 @@
 
     mimetype: application/x-microsoft.net.object.bytearray.base64
     value   : The object must be serialized into a byte array 
-            : using a System.FPX.TypeConverter
+            : using a System.ComponentModel.TypeConverter
             : and then encoded with base64 encoding.
     -->
   <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
@@ -117,4 +117,18 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <metadata name="toolStrip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>17, 17</value>
+  </metadata>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="toolStripButton1.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAADQSURBVDhPvVGxDcMgEMwoGSEjRN7CXQp6965SMQVSRsgG
+        eAl6D0CRBkP54QhY4GDJcaK8dEIn/o6/5/Czcs5dpmkaIm6en621d3CcxphTbH0v33RVSlHf99R1HQkh
+        SGtNnPPAcYKvmvgXHm3bUtM0MxhjBYcJJomSsvxF0VwDJkGcKCnLjzYuX0ScnCMWdhMlZWGBeWYpJcYN
+        orQTxPR9xygJGjwcCJq3IgkTnw3ycdeQRPgxRN5lgDg5/9hgyf9v8HUEoLrErah+4556GZnxCR4k+794
+        pxxiAAAAAElFTkSuQmCC
+</value>
+  </data>
 </root>

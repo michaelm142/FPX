@@ -47,8 +47,10 @@ namespace FPX
             transform.rotation = startRotation;
         }
 
-        public void LoadXml(XmlElement node)
+        public override void LoadXml(XmlElement node)
         {
+            base.LoadXml(node);
+
             var fieldOfViewNode = node.SelectSingleNode("FieldOfView");
             var nearPlaneDistanceNode = node.SelectSingleNode("NearPlaneDistance");
             var farPlaneDistanceNode = node.SelectSingleNode("FarPlaneDistance");
@@ -61,7 +63,7 @@ namespace FPX
             if (farPlaneDistanceNode != null)
                 farPlaneDistance = float.Parse(farPlaneDistanceNode.InnerText);
             if (clearColorNode != null)
-                ClearColor = new Color(LinearAlgebraUtil.Vector4FromXml(clearColorNode));
+                ClearColor = LinearAlgebraUtil.ColorFromXml(clearColorNode);
         }
 
         public void SaveXml(XmlElement node)

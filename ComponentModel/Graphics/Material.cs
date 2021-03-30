@@ -24,6 +24,8 @@ namespace FPX
         public float SpecularPower = 1.0f;
         public float SpecularIntensity = 0.02f;
 
+        public Effect shader;
+
         public override void LoadXml(XmlElement node)
         {
             var ambientNode = node.SelectSingleNode("AmbientColor") as XmlElement;
@@ -37,6 +39,11 @@ namespace FPX
             var roughnessNode = node.SelectSingleNode("Roughness") as XmlElement;
             var specularIntensityNode = node.SelectSingleNode("SpecularIntensity") as XmlElement;
             var specularPowerNode = node.SelectSingleNode("SpecularPower") as XmlElement;
+
+            var shaderNode = node.SelectSingleNode("Shader") as XmlElement;
+
+            if (shaderNode != null)
+                shader = GameCore.content.Load<Effect>(shaderNode.InnerText);
 
             if (roughnessNode != null && !float.TryParse(roughnessNode.InnerText, out Roughness))
                 Debug.LogError("Failed to read roughness from material");

@@ -10,8 +10,6 @@
 
 #-------------------------------- References --------------------------------#
 
-/reference:..\bin\Windows\x86\Debug\ContentPiplineExtentions.dll
-
 #---------------------------------- Content ---------------------------------#
 
 #begin Models/Cube.fbx

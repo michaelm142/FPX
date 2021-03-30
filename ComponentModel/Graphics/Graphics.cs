@@ -134,6 +134,11 @@ namespace FPX
             GameCore.graphicsDevice.DepthStencilState = DepthStencilState.Default;
         }
 
+        public static void Blit(Material material, Rectangle? rect = null)
+        {
+            material.shader.CurrentTechnique.Passes[0].Apply();
+        }
+
         public void Dispose()
         {
             renderer = null;

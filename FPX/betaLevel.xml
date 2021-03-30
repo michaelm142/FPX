@@ -61,6 +61,10 @@
       </Material>
     </Prefab>
 
+    <Object Name="Terrain">
+      <Terrain/>
+    </Object>
+
     <Prefab Filename="Prefabs\\Sphere.xml">
     </Prefab>
 

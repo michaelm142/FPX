@@ -192,11 +192,13 @@ namespace FPX
             if (element == null)
                 return Vector4.Zero;
 
+
             if (element.Attributes["X"] != null)
                 return new Vector4(float.Parse(element.Attributes["X"].Value),
                     float.Parse(element.Attributes["Y"].Value),
                     float.Parse(element.Attributes["Z"].Value),
                     float.Parse(element.Attributes["W"].Value));
+            
             else
                 return new Vector4(float.Parse(element.Attributes["R"].Value),
                                    float.Parse(element.Attributes["G"].Value),

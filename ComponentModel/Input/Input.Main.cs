@@ -169,6 +169,7 @@ namespace FPX
                 UpdateInputAxis(axis);
             }
 
+#if FALSE
             for (int i = 0; i < MaxGamePads; i++)
             {
                 if (!IsDeviceConnected((uint)InputPlatform.GamePad, i))
@@ -184,6 +185,7 @@ namespace FPX
                 if (IsKeyDown(key))
                     Debug.Log("{0} is down", key);
             }
+#endif
 
             mousePos.X += mousestate.lX;
             mousePos.Y += mousestate.lY;
@@ -288,6 +290,7 @@ namespace FPX
         public void Dispose()
         {
             Close();
+            Instance = null;
         }
 
         public void Draw(GameTime gameTime)

@@ -43,6 +43,7 @@ namespace FPX
         RenderTarget2D occlusionMap;
 
         RenderTargetBinding[] rt_bindings;
+        RenderTargetBinding[] null_bindings;
 
         Effect GBufferShader;
         Effect DirectionalLightShader;
@@ -147,7 +148,6 @@ namespace FPX
                 specularMap,
                 depthMap,
             };
-
             Device.SetRenderTargets(rt_bindings);
         }
 
@@ -177,6 +177,13 @@ namespace FPX
 
         public void Draw(GameTime gameTime)
         {
+            if (GameCore.currentLevel == null)
+            {
+                for (int i = 0; i < 8; i++)
+                    Device.SetRenderTargets(null);
+                return;
+            }
+
             BeginRenderGBuffers(Camera.Active);
 
             RenderGeometry();

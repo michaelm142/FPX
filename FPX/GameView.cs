@@ -138,7 +138,7 @@ namespace FPX
         {
             if (!DesignMode)
             {
-                simulation = GameCore.CreateGameInstance(sceneName, Handle) as World;
+                simulation = GameCore.CreateGameInstance(Handle) as World;
                 var scene = simulation.Components.ToList().Find(c => c.GetType() == typeof(Scene)) as Scene;
                 scene.ObjectInstanciated += Scene_ObjectInstanciated;
                 simulation.GetType().GetMethods(BindingFlags.Instance | BindingFlags.NonPublic).ToList().Find(method => method.Name == "Initialize").Invoke(simulation, new object[] { });

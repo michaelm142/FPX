@@ -92,9 +92,6 @@ namespace FPX
         {
             if (!GameCore.fonts.ContainsKey("SegoeUI"))
                 GameCore.fonts.Add("SegoeUI", GameCore.content.Load<SpriteFont>("SegoeUI"));
-
-            Scene = Components.ToList().Find(c => c is Scene) as Scene;
-            Scene.Load();
         }
 
         /// <summary>
@@ -126,7 +123,6 @@ namespace FPX
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-
             base.Draw(gameTime);
         }
     }

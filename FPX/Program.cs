@@ -139,9 +139,14 @@ namespace FPX
             Debug.LogError(e.Exception.StackTrace);
         }
 
-        public static void LoadScene(string levelName)
+        public static void Run()
         {
-            GameCore.Run(levelName);
+            GameCore.Run();
+        }
+
+        public static void LoadScene(string sceneName)
+        {
+            GameCore.LoadScene(sceneName);
         }
 
         public static void Editor()

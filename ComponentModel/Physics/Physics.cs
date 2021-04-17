@@ -63,6 +63,8 @@ namespace FPX
 
         public void Update(GameTime gameTime)
         {
+            if (GameCore.currentLevel == null)
+                return;
             //Debug.Log("==================<Begin Physics Frame>==================");
             // detect and cull collisions
             List<Collision> collisions = new List<Collision>();

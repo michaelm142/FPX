@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
-using System.Runtime;
+using System.Runtime.InteropServices;
 using System.Reflection;
 using System.Windows.Forms;
 using Microsoft.Xna.Framework;
@@ -49,7 +49,7 @@ namespace FPX
             get { return gameInstance.Components.ToList().Find(c => c is Graphics) as Graphics; }
         }
 
-        public static Game CreateGameInstance(string sceneName, IntPtr? windowHandle = null)
+        public static Game CreateGameInstance(IntPtr? windowHandle = null)
         {
             var gametype = Assembly.GetEntryAssembly().GetTypes().ToList().Find(t => t.BaseType.FullName == "Microsoft.Xna.Framework.Game");
             ConstructorInfo gameConstructor = null;
@@ -70,10 +70,6 @@ namespace FPX
 
             gameInstance.Exiting += GameInstance_Exiting;
 
-            Scene level = new Scene();
-            level.sceneName = sceneName;
-
-            gameInstance.Components.Add(level);
             gameInstance.Components.Add(new Time());
             gameInstance.Components.Add(new Physics());
             gameInstance.Components.Add(new Graphics());
@@ -99,16 +95,49 @@ namespace FPX
         }
 
         [STAThread]
-        public static void Run(string sceneName, IntPtr? windowHandle = null)
+        public static void Run(IntPtr? windowHandle = null)
         {
             Debug.BackgroundColor = ConsoleColor.Red;
             Debug.Log("ENGINE LAUNCH");
             Debug.ResetColors();
 
-            IsRunning = true;
-            using (Game gameInstance = CreateGameInstance(sceneName, windowHandle))
+            if (windowHandle == null)
             {
-                gameInstance.Run();
+                GameForm form = new GameForm();
+                form.Show();
+                windowHandle = form.Handle;
+            }
+
+
+            Thread t = new Thread(new ParameterizedThreadStart(GameLoop));
+            t.Start(windowHandle);
+        }
+
+        public static void LoadScene(string sceneName)
+        {
+            if (!IsRunning || gameInstance == null)
+            {
+                Debug.LogError("Engine is not currently running");
+                return;
+            }
+
+            Scene scene = new Scene();
+            scene.sceneName = sceneName;
+            scene.Initialize();
+            scene.Load();
+
+            gameInstance.Components.Add(scene);
+        }
+
+        private static void GameLoop(object param)
+        {
+            IntPtr windowHandle = param == null ? IntPtr.Zero : (IntPtr)param;
+
+            IsRunning = true;
+            using (Game gameInstance = CreateGameInstance(windowHandle))
+            {
+                while (IsRunning)
+                    gameInstance.RunOneFrame();
             }
 
             Camera.Active = null;

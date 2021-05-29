@@ -104,13 +104,17 @@ namespace FPX
             if (windowHandle == null)
             {
                 GameForm form = new GameForm();
+                form.Width = Settings.GetSetting<int>("ScreenWidth");
+                form.Height = Settings.GetSetting<int>("ScreenHeight");
                 form.Show();
                 windowHandle = form.Handle;
             }
 
 
-            Thread t = new Thread(new ParameterizedThreadStart(GameLoop));
-            t.Start(windowHandle);
+            // Thread t = new Thread(new ParameterizedThreadStart(GameLoop));
+            // t.Start(windowHandle);
+            WaitCallback callback = new WaitCallback(GameLoop);
+            ThreadPool.QueueUserWorkItem(callback, windowHandle);
         }
 
         public static void LoadScene(string sceneName)
@@ -148,21 +152,6 @@ namespace FPX
             Debug.ForegroundColor = ConsoleColor.Black;
             Debug.Log("Engine Shutdown");
             Debug.ResetColors();
-        }
-
-        private static void GameForm_Paint(object sender, PaintEventArgs e)
-        {
-            gameInstance.GraphicsDevice.Present();
-        }
-
-        private static void BeginRun(Game game)
-        {
-            typeof(Game).GetMethods(BindingFlags.InvokeMethod | BindingFlags.NonPublic | BindingFlags.Instance).ToList().Find(m => m.Name == "BeginRun").Invoke(game, null);
-        }
-
-        private static void EndRun(Game game)
-        {
-            typeof(Game).GetMethods(BindingFlags.InvokeMethod | BindingFlags.NonPublic | BindingFlags.Instance).ToList().Find(m => m.Name == "EndRun").Invoke(game, null);
         }
     }
 }

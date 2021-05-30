@@ -6,7 +6,7 @@ using System.Threading;
 using System.Security.Permissions;
 using System.Reflection;
 using System.Windows;
-using FPX;
+using FPX.Editor;
 
 using Application = System.Windows.Forms.Application;
 
@@ -150,26 +150,24 @@ namespace FPX
             Debug.Log("EDITOR");
             Debug.ResetColors();
 
-            Application.EnableVisualStyles();
-            try
-            {
-                Application.SetCompatibleTextRenderingDefault(true);
-            }
-            catch (InvalidOperationException) { }
-
-            Application.Run(new EditorWindow());
+            EditorMainWindow editorMainWindow = new EditorMainWindow();
+            editorMainWindow.UpdateLayout();
+            editorMainWindow.ShowDialog();
         }
 
         public static void Editor(string sceneName)
         {
-            try
-            {
-                Application.EnableVisualStyles();
-                Application.SetCompatibleTextRenderingDefault(true);
-            }
-            catch (Exception) { }
+            Debug.BackgroundColor = ConsoleColor.Blue;
+            Debug.Log("EDITOR");
+            Debug.ResetColors();
 
-            Application.Run(new EditorWindow(sceneName));
+            Window w = new Window
+            {
+                Title = "FPX Exitor",
+                Content = new EditorMainWindow()
+            };
+
+            w.ShowDialog();
         }
 
         public static void Close()

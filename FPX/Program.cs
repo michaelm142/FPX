@@ -150,9 +150,8 @@ namespace FPX
             Debug.Log("EDITOR");
             Debug.ResetColors();
 
-            EditorMainWindow editorMainWindow = new EditorMainWindow();
-            editorMainWindow.UpdateLayout();
-            editorMainWindow.ShowDialog();
+            EditorMainWindow window = new EditorMainWindow();
+            window.ShowDialog();
         }
 
         public static void Editor(string sceneName)
@@ -161,13 +160,8 @@ namespace FPX
             Debug.Log("EDITOR");
             Debug.ResetColors();
 
-            Window w = new Window
-            {
-                Title = "FPX Exitor",
-                Content = new EditorMainWindow()
-            };
-
-            w.ShowDialog();
+            EditorMainWindow window = new EditorMainWindow(); 
+            window.ShowDialog();
         }
 
         public static void Close()

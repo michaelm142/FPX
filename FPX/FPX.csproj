@@ -83,11 +83,17 @@
     <Compile Include="Editor\EditorMainWindow.xaml.cs">
       <DependentUpon>EditorMainWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Editor\EditorSceneWindow.xaml.cs">
+      <DependentUpon>EditorSceneWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Editor\EditorWindow.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Editor\EditorWindow.Designer.cs">
       <DependentUpon>EditorWindow.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Editor\MoveHandle.xaml.cs">
+      <DependentUpon>MoveHandle.xaml</DependentUpon>
     </Compile>
     <Compile Include="Editor\ObjectDropField.cs">
       <SubType>UserControl</SubType>
@@ -277,6 +283,14 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="Editor\EditorMainWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Editor\EditorSceneWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Editor\MoveHandle.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

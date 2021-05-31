@@ -16,14 +16,13 @@ using System.Windows.Shapes;
 namespace FPX.Editor
 {
     /// <summary>
-    /// Interaction logic for EditorMainWindow.xaml
+    /// Interaction logic for EditorSceneWindow.xaml
     /// </summary>
-    public partial class EditorMainWindow : Window
+    public partial class EditorSceneWindow : UserControl
     {
-        public EditorMainWindow()
+        public EditorSceneWindow()
         {
             InitializeComponent();
-
         }
     }
 }

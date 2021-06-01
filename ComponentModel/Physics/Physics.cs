@@ -20,12 +20,12 @@ namespace FPX
 
         IEnumerable<GameObject> colliderObjects
         {
-            get { return GameCore.currentLevel.Objects.ToList().FindAll(o => o.GetComponent<Collider>() != null); }
+            get { return GameCore.currentScene.Objects.ToList().FindAll(o => o.GetComponent<Collider>() != null); }
         }
 
         IEnumerable<GameObject> rigidbodyObjects
         {
-            get { return GameCore.currentLevel.Objects.ToList().FindAll(o => o.GetComponent<Rigidbody>() != null); }
+            get { return GameCore.currentScene.Objects.ToList().FindAll(o => o.GetComponent<Rigidbody>() != null); }
         }
 
         IEnumerable<Collider> colliderEnumerable

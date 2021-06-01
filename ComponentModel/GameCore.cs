@@ -22,7 +22,7 @@ namespace FPX
 
         public static bool IsRunning { get; private set; }
 
-        public static Scene currentLevel
+        public static Scene currentScene
         {
             get { return gameInstance.Components.ToList().Find(c => c is Scene) as Scene; }
         }
@@ -49,7 +49,7 @@ namespace FPX
             get { return gameInstance.Components.ToList().Find(c => c is Graphics) as Graphics; }
         }
 
-        public static Game CreateGameInstance(string sceneName, IntPtr? windowHandle = null)
+        public static Game CreateGameInstance(IntPtr? windowHandle = null)
         {
             var gametype = Assembly.GetEntryAssembly().GetTypes().ToList().Find(t => t.BaseType.FullName == "Microsoft.Xna.Framework.Game");
             ConstructorInfo gameConstructor = null;
@@ -70,10 +70,6 @@ namespace FPX
 
             gameInstance.Exiting += GameInstance_Exiting;
 
-            Scene level = new Scene();
-            level.sceneName = sceneName;
-
-            gameInstance.Components.Add(level);
             gameInstance.Components.Add(new Time());
             gameInstance.Components.Add(new Physics());
             gameInstance.Components.Add(new Graphics());
@@ -82,6 +78,13 @@ namespace FPX
             gameInstance.Activated += Outval_Activated;
 
             return gameInstance;
+        }
+
+        public Game CreateGameInstanceAndServices(params object[] Services)
+        {
+            var game = CreateGameInstance(null);
+            Services.ToList().ForEach(s => game.Services.AddService(s.GetType(), s));
+            return game;
         }
 
         private static void Outval_Activated(object sender, EventArgs e)
@@ -106,7 +109,7 @@ namespace FPX
             Debug.ResetColors();
 
             IsRunning = true;
-            using (Game gameInstance = CreateGameInstance(sceneName, windowHandle))
+            using (Game gameInstance = CreateGameInstance(windowHandle))
             {
                 gameInstance.Run();
             }

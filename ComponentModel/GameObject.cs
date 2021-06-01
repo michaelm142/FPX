@@ -206,7 +206,7 @@ namespace FPX
 
         public static void GlobalBroadcastMessage(string message, params object[] prams)
         {
-            GameCore.currentLevel.BroadcastMessage(message, prams);
+            GameCore.currentScene.BroadcastMessage(message, prams);
         }
         public static T FindObjectOfType<T>()
             where T : Component

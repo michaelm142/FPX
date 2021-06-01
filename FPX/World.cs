@@ -28,7 +28,7 @@ namespace FPX
             graphics.GraphicsProfile = GraphicsProfile.HiDef;
             graphics.PreparingDeviceSettings += Graphics_PreparingDeviceSettings;
             Content.RootDirectory = "Content";
-            var gdm = Services.GetService(typeof(IGraphicsDeviceManager)) as IGraphicsDeviceManager;
+            var gdm = Services.GetService<IGraphicsDeviceManager>();
             gdm.CreateDevice();
         }
 
@@ -40,7 +40,7 @@ namespace FPX
             targetWindowHandle = windowHandle;
             Content.RootDirectory = "Content";
             this.IsMouseVisible = true;
-            var gdm = Services.GetService(typeof(IGraphicsDeviceManager)) as IGraphicsDeviceManager;
+            var gdm = Services.GetService<IGraphicsDeviceManager>();
             gdm.CreateDevice();
         }
 
@@ -92,9 +92,6 @@ namespace FPX
         {
             if (!GameCore.fonts.ContainsKey("SegoeUI"))
                 GameCore.fonts.Add("SegoeUI", GameCore.content.Load<SpriteFont>("SegoeUI"));
-
-            Scene = Components.ToList().Find(c => c is Scene) as Scene;
-            Scene.Load();
         }
 
         /// <summary>
@@ -129,5 +126,9 @@ namespace FPX
 
             base.Draw(gameTime);
         }
+
+        public void _init() { Initialize(); LoadContent(); }
+        public void _update(GameTime gameTime) { Update(gameTime); }
+        public void _draw(GameTime gameTime) { Draw(gameTime); }
     }
 }

@@ -11,14 +11,14 @@ Public Class RayTester
     Private ray As Ray
 
     Public Sub Start()
-        sphere = ObjectFactory.Create(PrimitiveType.Sphere, GameCore.currentLevel)
+        sphere = ObjectFactory.Create(PrimitiveType.Sphere, GameCore.currentScene)
         sphere.transform.localScale = Vector3.One * 0.1F
 
         arrow = GameObject.Find("Arrow")
     End Sub
 
     Public Sub Update(gameTime As GameTime)
-        For Each obj In GameCore.currentLevel.Objects
+        For Each obj In GameCore.currentScene.Objects
             Dim sphereCollider = obj.GetComponent(Of SphereCollider)
             Dim boxCollider = obj.GetComponent(Of BoxCollider)
 

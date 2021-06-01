@@ -20,9 +20,31 @@ namespace FPX.Editor
     /// </summary>
     public partial class EditorMainWindow : Window
     {
-        public EditorMainWindow()
+        public static EditorMainWindow Instance { get; private set; }
+        private string sceneName;
+        public EditorMainWindow(string sceneName = null)
         {
+            if (Instance != null)
+                throw new InvalidOperationException("More than one instance Main Window");
+            Instance = this;
+
             InitializeComponent();
+            this.sceneName = sceneName;
+        }
+
+        private void LoadScene(object sender, RoutedEventArgs e)
+        {
+            Debug.Log("Scene Loaded");
+        }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (string.IsNullOrEmpty(sceneName))
+                return;
+
+            var scene = new Scene();
+            scene.Load(sceneName);
+            GameCore.gameInstance.Components.Add(scene);
 
         }
     }

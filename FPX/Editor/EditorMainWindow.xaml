@@ -4,27 +4,29 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:FPX.Editor"
-             mc:Ignorable="d" Height="425.746" Width="858.21">
-    <Grid>
+             mc:Ignorable="d" Height="425.746" Width="858.21" Loaded="Window_Loaded">
+    <Grid RenderTransformOrigin="0.628,0.492">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="773*"/>
-            <ColumnDefinition Width="19*"/>
+            <ColumnDefinition Width="211*"/>
+            <ColumnDefinition Width="204*"/>
+            <ColumnDefinition Width="10*"/>
         </Grid.ColumnDefinitions>
-        <Menu x:Name="menu" Height="27" VerticalAlignment="Top" Grid.ColumnSpan="2" RenderTransformOrigin="0.5,0.5">
-            <MenuItem Header="File" Height="27" Width="100">
+        <Menu x:Name="menu" Height="27" VerticalAlignment="Top" Grid.ColumnSpan="3" RenderTransformOrigin="0.5,0.5">
+            <MenuItem Header="File" Height="27" Width="37">
                 <ListBoxItem Content="New"/>
                 <Separator/>
-                <ListBoxItem Content="Load"/>
+                <ListBoxItem Content="Load" Selected="LoadScene"/>
                 <ListBoxItem Content="Save"/>
             </MenuItem>
-            <MenuItem Header="Edit" Height="27" Width="100"/>
-            <MenuItem Header="View" Height="27" Width="100">
+            <MenuItem Header="Edit" Height="27" Width="31"/>
+            <MenuItem Header="View" Height="27" Width="38">
                 <MenuItem Header="Scene"/>
                 <MenuItem Header="Anylizer"/>
                 <MenuItem Header="Hierarchy"/>
                 <MenuItem Header="Content"/>
             </MenuItem>
         </Menu>
+        <local:GameView  HorizontalAlignment="Left" Margin="10,32,0,0" VerticalAlignment="Top" Grid.ColumnSpan="2" Height="342" Width="820" RenderTransformOrigin="0.504,0.482"/>
 
     </Grid>
 </Window>

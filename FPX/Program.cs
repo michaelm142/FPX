@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Linq;
-using System.Windows.Forms;
+using System.Windows;
 using System.Collections.Generic;
 using System.Threading;
 using System.Security.Permissions;
 using System.Reflection;
-using System.Windows;
 using FPX.Editor;
 
 using Application = System.Windows.Forms.Application;
@@ -37,7 +36,7 @@ namespace FPX
                 Console.BackgroundColor = ConsoleColor.Black;
                 Console.ForegroundColor = ConsoleColor.White;
                 Console.Write(">");
-                if (args.Length >= 2 && frame == 0)
+                if (args.Length >= 1 && frame == 0)
                 {
                     args.ToList().ForEach(a => Console.Write(a + " "));
                     Console.WriteLine();
@@ -154,13 +153,14 @@ namespace FPX
             window.ShowDialog();
         }
 
+
         public static void Editor(string sceneName)
         {
             Debug.BackgroundColor = ConsoleColor.Blue;
             Debug.Log("EDITOR");
             Debug.ResetColors();
 
-            EditorMainWindow window = new EditorMainWindow(); 
+            EditorMainWindow window = new EditorMainWindow(sceneName); 
             window.ShowDialog();
         }
 

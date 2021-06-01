@@ -38,7 +38,7 @@ namespace FPX
 
         public string sceneName { get; set; }
 
-        public static Scene Active { get { return GameCore.currentLevel; } }
+        public static Scene Active { get { return GameCore.currentScene; } }
 
         public Scene()
         {

@@ -258,12 +258,12 @@ namespace FPX
 
         public static GameObject Instanciate(GameObject @object)
         {
-            return GameCore.currentLevel.Spawn(@object);
+            return GameCore.currentScene.Spawn(@object);
         }
 
         public static GameObject Instantiate(Prefab prefab)
         {
-            return GameCore.currentLevel.Spawn(prefab);
+            return GameCore.currentScene.Spawn(prefab);
         }
 
         public override string ToString()

@@ -6,7 +6,5 @@
              xmlns:local="clr-namespace:FPX.Editor"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <Grid Background="White">
-        <TextBlock Text="Scene Window"/>
-    </Grid>
+    <Grid Background="White"/>
 </UserControl>

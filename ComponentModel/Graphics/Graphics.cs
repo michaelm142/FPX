@@ -70,7 +70,7 @@ namespace FPX
 
         public void Draw(GameTime gameTime)
         {
-            if (!GameCore.currentLevel.IsLoaded || Camera.Active == null)
+            if (!GameCore.currentScene.IsLoaded || Camera.Active == null)
             {
                 GameCore.graphicsDevice.Clear(Color.Magenta);
                 return;

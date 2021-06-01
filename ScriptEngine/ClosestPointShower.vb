@@ -10,7 +10,7 @@ Public Class ClosestPointShower
     Public target As GameObject
 
     Public Sub Start()
-        sphere = ObjectFactory.Create(PrimitiveType.Sphere, GameCore.currentLevel)
+        sphere = ObjectFactory.Create(PrimitiveType.Sphere, GameCore.currentScene)
         sphere.transform.localScale = Vector3.One * 0.25F
         sphere.GetComponent(Of Material).DiffuseColor = Color.Purple
     End Sub

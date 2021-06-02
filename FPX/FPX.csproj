@@ -140,6 +140,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>C:\Program Files (x86)\MonoGame\v3.0\Assemblies\Windows\MonoGame.Framework.dll</HintPath>
     </Reference>
+    <Reference Include="MonoGame.UI.Forms, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MonoGame.UI.Forms.1.0.1\lib\MonoGame.UI.Forms.dll</HintPath>
+    </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
@@ -209,6 +212,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <None Include="app.manifest" />
+    <None Include="packages.config" />
     <None Include="Prefabs\Ground.cluster">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

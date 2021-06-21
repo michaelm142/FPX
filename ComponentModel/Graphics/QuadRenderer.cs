@@ -53,7 +53,7 @@ namespace FPX
             device.DrawUserPrimitives(PrimitiveType.TriangleStrip, vertecies, 0, 2);
         }
 
-        public void RenderQuad(Texture2D texture, Vector2 position, Effect effect, bool useWVPPrams = true)
+        public void _renderQuad(Texture2D texture, Vector2 position, Effect effect, bool useWVPPrams = true)
         {
             GraphicsDevice device = GameCore.graphicsDevice;
 
@@ -70,7 +70,7 @@ namespace FPX
             device.DrawUserPrimitives(PrimitiveType.TriangleStrip, vertecies, 0, 2);
         }
 
-        public void RenderQuad(Texture2D texture, Rectangle rect, Effect effect, bool useWVPPrams = true)
+        public void _renderQuad(Texture2D texture, Rectangle rect, Effect effect, bool useWVPPrams = true)
         {
             GraphicsDevice device = GameCore.graphicsDevice;
 
@@ -88,7 +88,7 @@ namespace FPX
             device.DrawUserPrimitives(PrimitiveType.TriangleStrip, vertecies, 0, 2);
         }
 
-        public void RenderQuad(Texture2D texture, Rectangle rect, Color blendColor)
+        public void _renderQuad(Texture2D texture, Rectangle rect, Color blendColor)
         {
             GraphicsDevice device = GameCore.graphicsDevice;
 
@@ -101,6 +101,21 @@ namespace FPX
             basicEffect.CurrentTechnique.Passes[0].Apply();
 
             device.DrawUserPrimitives(PrimitiveType.TriangleStrip, vertecies, 0, 2);
+        }
+
+        public static void RenderQuad(Texture2D texture, Rectangle rect, Color blendColor)
+        {
+            Instance._renderQuad(texture, rect, blendColor);
+        }
+
+        public static void RenderQuad(Texture2D texture, Rectangle rect, Effect effect, bool useWFPPrams = true)
+        {
+            Instance._renderQuad(texture, rect, effect, useWFPPrams);
+        }
+
+        public static void RenderQuad(Texture2D texture, Vector2 position, Effect effect, bool useWVPPrams = true)
+        {
+            Instance._renderQuad(texture, position, effect, useWVPPrams);
         }
     }
 }

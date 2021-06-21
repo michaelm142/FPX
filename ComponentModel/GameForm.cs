@@ -12,9 +12,17 @@ namespace FPX
 {
     public partial class GameForm : Form
     {
+        public event EventHandler GameLoop;
+
         public GameForm()
         {
             InitializeComponent();
+        }
+
+        // pass the window handle to game events
+        private void GameForm_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (GameLoop != null) GameLoop.Invoke(sender, e);
         }
     }
 }

@@ -56,6 +56,8 @@ namespace FPX
                         continue;
 
                     string[] pragma = line.Split(new char[] { ' ', ',' }, StringSplitOptions.RemoveEmptyEntries);
+                    if (pragma.Length == 0)
+                        continue;
                     string command = pragma[0];
                     var arguments = new string[pragma.Length - 1];
                     for (int i = 0; i < arguments.Length; i++)
@@ -141,6 +143,7 @@ namespace FPX
 
         public static void Run()
         {
+            Application.SetCompatibleTextRenderingDefault(true);
             GameCore.Run();
         }
 
@@ -151,18 +154,8 @@ namespace FPX
 
         public static void Editor()
         {
-            Debug.BackgroundColor = ConsoleColor.Blue;
-            Debug.Log("EDITOR");
-            Debug.ResetColors();
-
-            Application.EnableVisualStyles();
-            try
-            {
-                Application.SetCompatibleTextRenderingDefault(true);
-            }
-            catch (InvalidOperationException) { }
-
-            Application.Run(new EditorWindow());
+            Run();
+            GameCore.Editor();
         }
 
         public static void Editor(string sceneName)

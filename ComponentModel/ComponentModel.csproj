@@ -122,6 +122,7 @@
     <Compile Include="Editors\ColorPicker.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Editors\Editor.cs" />
     <Compile Include="Editors\EditorAttribute.cs" />
     <Compile Include="Editors\ComponentEditor.cs">
       <SubType>UserControl</SubType>
@@ -196,6 +197,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Editors\TransformEditor.resx">
       <DependentUpon>TransformEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GameForm.resx">
+      <DependentUpon>GameForm.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

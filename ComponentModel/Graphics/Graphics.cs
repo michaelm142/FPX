@@ -11,7 +11,7 @@ namespace FPX
 {
     public class Graphics : IGameComponent, IDrawable, IDisposable
     {
-        public bool Visible { get { return true; } }
+        public bool Visible { get; set; } = true;
 
         public int DrawOrder { get { return 0; } }
 
@@ -30,11 +30,19 @@ namespace FPX
 
         public PrimitiveType fillMode = PrimitiveType.TriangleList;
 
+        public Graphics()
+        {
+            instance = this;
+        }
+
 
         public void Initialize()
         {
-            instance = this;
-            renderer = new DeferredRenderer();
+            Mode = Settings.GetSetting<string>("RenderMode");
+            Debug.Log("Current Render Mode: {0}", Mode);
+
+            if (Mode == "Deffered" || Mode == "DefferdDebug")
+                renderer = new DeferredRenderer();
             clearDepthShader = GameCore.content.Load<Effect>("Shaders\\ClearDepth");
             transparentTexture = new Texture2D(GameCore.graphicsDevice, 1, 1);
             transparentTexture.SetData(new Color[] { Color.Transparent });
@@ -43,9 +51,6 @@ namespace FPX
 
             GameCore.gameInstance.Components.Add(new QuadRenderer());
             GameCore.graphicsDevice.SamplerStates[0] = SamplerState.AnisotropicWrap;
-
-            Mode = Settings.GetSetting<string>("RenderMode");
-            Debug.Log("Current Render Mode: {0}", Mode);
         }
 
         public static void ClearDepth()
@@ -54,7 +59,7 @@ namespace FPX
             var blendState = device.BlendState;
 
             device.BlendState = BlendState.AlphaBlend;
-            QuadRenderer.Instance.RenderQuad(instance.transparentTexture, new Rectangle(0, 0, GameCore.viewport.Width, GameCore.viewport.Height), instance.clearDepthShader);
+            QuadRenderer.RenderQuad(instance.transparentTexture, new Rectangle(0, 0, GameCore.viewport.Width, GameCore.viewport.Height), instance.clearDepthShader);
             device.BlendState = blendState;
         }
 

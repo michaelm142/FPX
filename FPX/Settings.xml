@@ -11,7 +11,7 @@
   <ScreenHeight>800</ScreenHeight>
   <ControllerInput>One</ControllerInput>
   <FillMode Type="Microsoft.Xna.Framework.Graphics.PrimitiveType, Monogame.Framework">TriangleList</FillMode>
-  <RenderMode>Deferred</RenderMode>
+  <RenderMode>Default</RenderMode>
   
   <Input>
     <Axis Name="Horizontal" Platform="GamePad" Axis="LeftThumbStickX" DeadZone="0.1"/>

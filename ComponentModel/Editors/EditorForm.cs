@@ -23,40 +23,53 @@ namespace FPX.Editor
         public event EventHandler<EventArgs> EnabledChanged;
         public event EventHandler<EventArgs> UpdateOrderChanged;
 
-        public Rectangle bounds { get; set; }
-        private Rectangle movingBounds { get { return new Rectangle(bounds.Location, new Point(bounds.Width, Math.Min(25, bounds.Height))); } }
+        public Rect bounds
+        {
+            get { return transform.rect; }
 
-        protected bool pickedUp;
+            set
+            {
+                transform.anchorMin = value.Location.ToVector3();
+                transform.anchorMax = (value.Location + Vector2.UnitX * value.Width + Vector2.UnitY * value.Height).ToVector3();
+            }
+        }
+        private Rect movingBounds { get { return new Rect(bounds.X, bounds.Y, bounds.Width, Math.Min(25, bounds.Height)); } }
 
-        private Vector2 pickupOffset;
-        private Vector2 mousePrev;
+        private Vector2? pickupOffset;
 
         private ResizeHandler resizingFunction;
+
+        private GameObject transformObject;
+        public RectTransform transform
+        {
+            get { return transformObject.GetComponent<RectTransform>(); }
+        }
 
         public const float ResizeHandleDim = 5.0f;
 
         public virtual void Initialize()
         {
+            transformObject = new GameObject();
+            transformObject.AddComponent<RectTransform>();
         }
 
         public virtual void Update(GameTime gameTime)
         {
-            if (pickedUp)
+            if (pickupOffset != null)
             {
                 if (!Input.GetMouseButton(0))
-                    pickedUp = false;
-
-                Rectangle b = bounds;
-                b.Location = (Input.mousePosition + pickupOffset).ToPoint();
-                bounds = b;
+                    pickupOffset = null;
+                else
+                {
+                    Rect b = bounds;
+                    b.Location = Input.mousePosition + (Vector2)pickupOffset;
+                    bounds = b;
+                }
             }
             else if (resizingFunction == null)
             {
                 if (Input.GetMouseButton(0) && movingBounds.Contains(Input.mousePosition))
-                {
-                    pickedUp = true;
-                    pickupOffset = bounds.Location.ToVector2() - Input.mousePosition;
-                }
+                    pickupOffset = bounds.Location - Input.mousePosition;
 
                 if (MathHelper.Distance(Input.mousePosition.X, bounds.Left) < ResizeHandleDim && Input.mousePosition.Y > bounds.Top && Input.mousePosition.Y < bounds.Bottom)
                 {
@@ -92,15 +105,14 @@ namespace FPX.Editor
             }
 
             resizingFunction?.DynamicInvoke();
-            mousePrev = Input.mousePosition;
         }
 
         private void ResizeLeft()
         {
-            Rectangle r = bounds;
-            int newWidth = bounds.Right - (int)Input.mousePosition.X;
-            r.X = (int)Input.mousePosition.X;
-            r.Width = (int)newWidth;
+            Rect r = bounds;
+            float newWidth = bounds.Right - Input.mousePosition.X;
+            r.X = Input.mousePosition.X;
+            r.Width = newWidth;
             bounds = r;
             if (!Input.GetMouseButton(0))
                 resizingFunction = null;
@@ -108,9 +120,9 @@ namespace FPX.Editor
 
         private void ResizeRight()
         {
-            Rectangle r = bounds;
+            Rect r = bounds;
             float newWidth = Input.mousePosition.X - bounds.Left;
-            r.Width = (int)newWidth;
+            r.Width = newWidth;
             bounds = r;
             if (!Input.GetMouseButton(0))
                 resizingFunction = null;
@@ -118,11 +130,11 @@ namespace FPX.Editor
 
         private void ResizeBottomRight()
         {
-            Rectangle r = bounds;
-            int newWidth = (int)Input.mousePosition.X - bounds.Left;
+            Rect r = bounds;
+            float newWidth = Input.mousePosition.X - bounds.Left;
             float newHeight = Input.mousePosition.Y - bounds.Top;
-            r.Height = (int)newHeight;
-            r.Width = (int)newWidth;
+            r.Height = newHeight;
+            r.Width = newWidth;
             bounds = r;
             if (!Input.GetMouseButton(0))
                 resizingFunction = null;
@@ -130,9 +142,9 @@ namespace FPX.Editor
 
         private void ResizeBottom()
         {
-            Rectangle r = bounds;
+            Rect r = bounds;
             float newHeight = Input.mousePosition.Y - bounds.Top;
-            r.Height = (int)newHeight;
+            r.Height = newHeight;
             bounds = r;
             if (!Input.GetMouseButton(0))
                 resizingFunction = null;

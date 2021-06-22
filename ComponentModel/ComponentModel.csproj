@@ -176,6 +176,8 @@
     <Compile Include="Prefab.cs" />
     <Compile Include="Graphics\QuadRenderer.cs" />
     <Compile Include="Graphics\Graphics.cs" />
+    <Compile Include="Rect.cs" />
+    <Compile Include="RectTransform.cs" />
     <Compile Include="Scene.cs" />
     <Compile Include="Graphics\Material.cs" />
     <Compile Include="Graphics\MeshRenderer.cs" />

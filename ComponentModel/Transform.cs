@@ -41,12 +41,12 @@ namespace FPX
             get { return Matrix.CreateTranslation(-position) * Matrix.CreateFromQuaternion(rotation) * Matrix.CreateScale(-localScale); }
         }
 
-        public Matrix localToWorldMatrix
+        public virtual Matrix localToWorldMatrix
         {
             get { return Matrix.CreateScale(localScale) * Matrix.CreateFromQuaternion(localRotation) * Matrix.CreateTranslation(localPosition); }
         }
 
-        public Matrix worldPose
+        public virtual Matrix worldPose
         {
             get { return Matrix.CreateScale(localScale) * Matrix.CreateFromQuaternion(rotation) * Matrix.CreateTranslation(position); }
         }
@@ -67,7 +67,7 @@ namespace FPX
         }
 
         private Transform _parent;
-        public Transform parent
+        public virtual Transform parent
         {
             get { return _parent; }
             set
@@ -78,9 +78,8 @@ namespace FPX
                 _parent = value;
             }
         }
-        private List<Transform> leafNodes = new List<Transform>();
 
-        private Vector3 GetPosition(Transform parent, Vector3 position)
+        protected Vector3 GetPosition(Transform parent, Vector3 position)
         {
             if (parent == null)
                 return position;
@@ -88,7 +87,7 @@ namespace FPX
             return GetPosition(parent.parent, Vector3.Transform(position, parent.localToWorldMatrix));
         }
 
-        private Quaternion GetRotation(Transform parent, Quaternion rotation)
+        protected Quaternion GetRotation(Transform parent, Quaternion rotation)
         {
             if (parent == null)
                 return rotation;

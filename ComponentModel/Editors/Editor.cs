@@ -36,11 +36,12 @@ namespace FPX.Editor
             Graphics.instance.Visible = false;
 
             EditorForm test = new EditorForm();
-            test.bounds = new Rectangle(0, 0, 100, 100);
             components.Add(test);
 
             uiPannelTexture = GameCore.content.Load<Texture2D>("Textures/UIPanel");
             components.ForEach(c => c.Initialize());
+
+            test.bounds = new Rect(0, 0, 100, 100);
         }
         public void Draw(GameTime gameTime)
         {

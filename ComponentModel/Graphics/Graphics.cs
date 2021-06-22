@@ -41,7 +41,7 @@ namespace FPX
             Mode = Settings.GetSetting<string>("RenderMode");
             Debug.Log("Current Render Mode: {0}", Mode);
 
-            if (Mode == "Deffered" || Mode == "DefferdDebug")
+            if (Mode == "Deferred" || Mode == "DeferredDebug")
                 renderer = new DeferredRenderer();
             clearDepthShader = GameCore.content.Load<Effect>("Shaders\\ClearDepth");
             transparentTexture = new Texture2D(GameCore.graphicsDevice, 1, 1);

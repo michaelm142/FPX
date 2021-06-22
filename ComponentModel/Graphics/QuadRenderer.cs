@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace FPX
@@ -62,8 +58,13 @@ namespace FPX
             if (useWVPPrams)
             {
                 effect.Parameters["World"].SetValue(Matrix.CreateTranslation(position.ToVector3()));
-                effect.Parameters["View"].SetValue(Matrix.Identity);
-                effect.Parameters["Projection"].SetValue(Matrix.CreateOrthographic(device.Viewport.Width, device.Viewport.Height, 0.0f, 1.0f));
+                if (effect.Parameters["View"] != null)
+                {
+                    effect.Parameters["View"].SetValue(Matrix.Identity);
+                    effect.Parameters["Projection"].SetValue(Matrix.CreateOrthographic(Screen.Width, Screen.Height, 0.0f, 1.0f));
+                }
+                else if (effect.Parameters["WorldViewProj"] != null)
+                    effect.Parameters["WorldViewProj"].SetValue(Matrix.CreateOrthographic(Screen.Width, Screen.Height, 0.0f, 1.0f));
             }
             effect.CurrentTechnique.Passes[0].Apply();
 
@@ -80,8 +81,13 @@ namespace FPX
             if (useWVPPrams)
             {
                 effect.Parameters["World"].SetValue(Matrix.CreateScale(rect.Width, rect.Height, 1.0f) * Matrix.CreateTranslation(rect.Location.ToVector2().ToVector3()));
-                effect.Parameters["View"].SetValue(Matrix.Identity);
-                effect.Parameters["Projection"].SetValue(Matrix.CreateOrthographic(device.Viewport.Width, device.Viewport.Height, -1.0f, 1.0f));
+                if (effect.Parameters["View"] != null)
+                {
+                    effect.Parameters["View"].SetValue(Matrix.Identity);
+                    effect.Parameters["Projection"].SetValue(Matrix.CreateOrthographic(Screen.Width, Screen.Height, 0.0f, 1.0f));
+                }
+                else if (effect.Parameters["WorldViewProj"] != null)
+                    effect.Parameters["WorldViewProj"].SetValue(Matrix.CreateOrthographic(Screen.Width, Screen.Height, 0.0f, 1.0f));
             }
             effect.CurrentTechnique.Passes[0].Apply();
 
@@ -95,7 +101,7 @@ namespace FPX
             basicEffect.Texture = texture;
             basicEffect.DiffuseColor = blendColor.ToVector3();
             basicEffect.Alpha = blendColor.A / 255.0f;
-            basicEffect.World = Matrix.CreateScale(rect.Width / 2.0f, rect.Height / 2.0f, 1.0f) * Matrix.CreateTranslation(rect.Location.ToVector2().ToVector3());
+            basicEffect.World = Matrix.CreateScale(rect.Width, rect.Height, 1.0f) * Matrix.CreateTranslation(rect.Location.ToVector2().ToVector3());
             basicEffect.View = Matrix.Identity;
             basicEffect.Projection = Matrix.CreateOrthographic(device.Viewport.Width, device.Viewport.Height, 0.0f, 1.0f);
             basicEffect.CurrentTechnique.Passes[0].Apply();
@@ -110,12 +116,12 @@ namespace FPX
 
         public static void RenderQuad(Texture2D texture, Rectangle rect, Effect effect, bool useWFPPrams = true)
         {
-            Instance._renderQuad(texture, rect, effect, useWFPPrams);
+            Instance._renderQuad(texture, rect, effect != null ? effect : Instance.basicEffect, useWFPPrams);
         }
 
         public static void RenderQuad(Texture2D texture, Vector2 position, Effect effect, bool useWVPPrams = true)
         {
-            Instance._renderQuad(texture, position, effect, useWVPPrams);
+            Instance._renderQuad(texture, position, effect != null ? effect : Instance.basicEffect, useWVPPrams);
         }
     }
 }

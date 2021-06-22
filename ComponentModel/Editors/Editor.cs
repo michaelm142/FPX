@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System.Windows;
+using System.Windows.Forms;
 using MonoGame.UI.Forms;
 
 namespace FPX.Editor
@@ -20,7 +20,7 @@ namespace FPX.Editor
 
         public int UpdateOrder => 0;
 
-        public bool Enabled  { get; set; } = true;
+        public bool Enabled { get; set; } = true;
 
         public event EventHandler<EventArgs> DrawOrderChanged;
         public event EventHandler<EventArgs> VisibleChanged;
@@ -29,24 +29,35 @@ namespace FPX.Editor
 
         internal static Texture2D uiPannelTexture;
 
+        internal static Color BackgroundColor = new Color(0.1f, 0.1f, 0.1f);
+
         public void Initialize()
         {
             Graphics.instance.Visible = false;
+
+            EditorForm test = new EditorForm();
+            test.bounds = new Rectangle(0, 0, 100, 100);
+            components.Add(test);
 
             uiPannelTexture = GameCore.content.Load<Texture2D>("Textures/UIPanel");
             components.ForEach(c => c.Initialize());
         }
         public void Draw(GameTime gameTime)
         {
-            var drawables = components.FindAll(c => c is IDrawable).ConvertAll<IDrawable>(delegate (IGameComponent c) { return c as IDrawable; });
-            drawables.Sort(delegate (IDrawable a, IDrawable b)
+            GameCore.graphicsDevice.Clear(BackgroundColor);
+            GameCore.spriteBatch.Begin(SpriteSortMode.Immediate);
             {
-                if (a.DrawOrder > b.DrawOrder)
-                    return 1;
+                var drawables = components.FindAll(c => c is IDrawable).ConvertAll<IDrawable>(delegate (IGameComponent c) { return c as IDrawable; });
+                drawables.Sort(delegate (IDrawable a, IDrawable b)
+                {
+                    if (a.DrawOrder > b.DrawOrder)
+                        return 1;
 
-                return -1;
-            });
-            drawables.ForEach(d => d.Draw(gameTime));
+                    return -1;
+                });
+                drawables.ForEach(d => d.Draw(gameTime));
+            }
+            GameCore.spriteBatch.End();
         }
 
         public void Update(GameTime gameTime)

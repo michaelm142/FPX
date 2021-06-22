@@ -18,11 +18,16 @@ namespace FPX
             get { return Environment.CurrentDirectory + "//" + GameCore.content.RootDirectory; }
         }
 
-        public static void Inilitize()
+        public static void Initialize()
         {
             Debug.Log("Asset manager initializing...");
 
             AnalyzeDirectory(new DirectoryInfo(ContentRootDirectory));
+        }
+
+        public static void Close()
+        {
+
         }
 
         private static void AnalyzeDirectory(DirectoryInfo directory)

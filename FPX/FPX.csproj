@@ -71,7 +71,6 @@
     <Compile Include="AnalizerWindow.Designer.cs">
       <DependentUpon>AnalizerWindow.cs</DependentUpon>
     </Compile>
-    <Compile Include="AssetManager.cs" />
     <Compile Include="AssetWindow.cs">
       <SubType>Form</SubType>
     </Compile>

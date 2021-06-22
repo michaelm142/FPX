@@ -77,8 +77,6 @@ namespace FPX
             if (isInilitized)
                 return;
 
-            AssetManager.Inilitize();
-
             base.Initialize();
 
             isInilitized = true;

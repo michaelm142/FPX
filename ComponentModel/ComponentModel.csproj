@@ -105,6 +105,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AssetManager.cs" />
     <Compile Include="Audio\AudioListener.cs" />
     <Compile Include="Audio\AudioSource.cs" />
     <Compile Include="Editors\AmbientLightEditor.cs">
@@ -127,6 +128,7 @@
     <Compile Include="Editors\ComponentEditor.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="Editors\EditorForm.cs" />
     <Compile Include="Editors\MeshRendererEditor.cs">
       <SubType>UserControl</SubType>
     </Compile>

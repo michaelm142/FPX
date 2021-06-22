@@ -73,6 +73,7 @@ namespace FPX
             gameInstance.Components.Add(new Physics());
             gameInstance.Components.Add(new Graphics());
             gameInstance.Components.Add(new Input());
+            AssetManager.Initialize();
 
             gameInstance.Activated += Outval_Activated;
 
@@ -100,18 +101,21 @@ namespace FPX
             Debug.Log("ENGINE LAUNCH");
             Debug.ResetColors();
 
-            Window = new GameForm();
-            Window.Width = Settings.GetSetting<int>("ScreenWidth");
-            Window.Height = Settings.GetSetting<int>("ScreenHeight");
-            Window.AutoValidate = AutoValidate.Disable;
-            var windowHandle = Window.Handle;
 
+            IsRunning = true;
+            using (Game gameInstance = CreateGameInstance())
+            {
+                gameInstance.Run();
+            }
 
-            // Thread t = new Thread(new ParameterizedThreadStart(GameLoop));
-            // t.Start(windowHandle);
-            WaitCallback callback = new WaitCallback(GameLoop);
-            ThreadPool.QueueUserWorkItem(callback, windowHandle);
-            Window.Show();
+            Camera.Active = null;
+            Settings.ShutDown();
+            Debug.DumpLog();
+
+            Debug.BackgroundColor = ConsoleColor.DarkGray;
+            Debug.ForegroundColor = ConsoleColor.Black;
+            Debug.Log("Engine Shutdown");
+            Debug.ResetColors();
         }
 
 
@@ -132,40 +136,17 @@ namespace FPX
 
         public static void Editor()
         {
-            while (!IsRunning || gameInstance == null)
-                Thread.Sleep(1);
-
-            Editor.Editor editor = new Editor.Editor();
-
-            gameInstance.Components.Add(editor);
-        }
-
-        private static void GameLoop(object param)
-        {
-            IntPtr windowHandle = (param == null && param.GetType() != typeof(object[])) ? IntPtr.Zero : (IntPtr)param;
-            List<IGameComponent> Components = null;
-            if (windowHandle.GetType() == typeof(object[]))
-            {
-                var prams = param as object[];
-                windowHandle = (IntPtr)prams[0];
-                Components = (prams[1] as IGameComponent[]).ToList();
-            }
+            Debug.BackgroundColor = ConsoleColor.Red;
+            Debug.Log("ENGINE LAUNCH");
+            Debug.ResetColors();
 
 
             IsRunning = true;
-            using (Game gameInstance = CreateGameInstance(windowHandle))
+            using (Game gameInstance = CreateGameInstance())
             {
-                if (Components != null)
-                {
-                    Components.ForEach(c => gameInstance.Components.Add(c));
-                    Components = null;
-                }
-
-                while (IsRunning)
-                {
-                    gameInstance.RunOneFrame();
-                    // Window.Invoke(new UpdateGameForm(delegate() { Window.Validate(); Thread.Sleep(1); }));
-                }
+                gameInstance.Components.Add(new Editor.Editor());
+                gameInstance.IsMouseVisible = true;
+                gameInstance.Run();
             }
 
             Camera.Active = null;
@@ -176,6 +157,11 @@ namespace FPX
             Debug.ForegroundColor = ConsoleColor.Black;
             Debug.Log("Engine Shutdown");
             Debug.ResetColors();
+        }
+
+        private static void GameLoop(object param)
+        {
+
         }
         delegate void UpdateGameForm();
     }

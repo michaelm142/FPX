@@ -154,7 +154,6 @@ namespace FPX
 
         public static void Editor()
         {
-            Run();
             GameCore.Editor();
         }
 

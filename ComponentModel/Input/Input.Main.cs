@@ -35,6 +35,7 @@ namespace FPX
         #endregion
 
         private Vector2 mousePos;
+        private Vector2 mouseOffset = new Vector2 { X = -5.0f, Y = -30.0f };
         public static Vector2 mousePosition { get { return Instance.mousePos; } }
 
         private int mouseWheelDelta;
@@ -72,6 +73,17 @@ namespace FPX
             }
 
             return axis.Value;
+        }
+
+        public static bool GetMouseButton(int button)
+        {
+            if (button < 0 || button >= 4)
+                throw new InvalidOperationException("Invalid button index");
+
+            unsafe
+            {
+                return Instance.mousestate.rgbButtons[button] != 0;
+            }
         }
 
         public void Initialize()
@@ -136,7 +148,9 @@ namespace FPX
             Debug.Log("Input Axis List:");
             InputAxisList.ForEach(a => Debug.Log("\tName:{0}\tPlatform:{1}\tType:{2}", a.Name, a.Platform, a.Axis));
 
-            mousePos = new Vector2(Screen.Width / 2.0f, Screen.Height / 2.0f);
+            Point p = Point.Zero;
+            GetMousePosition((IntPtr)GCHandle.Alloc(p));
+            mousePos = p.ToVector2();
 
             for (int i = 0; i < MaxGamePads; i++)
                 gamepads.Add(new GamepadState());
@@ -148,20 +162,17 @@ namespace FPX
         {
             InputUpdate();
 
-            unsafe
+            GetMouseState(ref mousestate);
+            for (int i = 0; i < MaxGamePads; i++)
             {
-                GetMouseState(ref mousestate);
-                for (int i = 0; i < MaxGamePads; i++)
-                {
-                    if (!IsDeviceConnected((uint)InputPlatform.GamePad, i))
-                        continue;
+                if (!IsDeviceConnected((uint)InputPlatform.GamePad, i))
+                    continue;
 
-                    GamepadState gamepad = gamepads[i];
-                    GetGamepadState(ref gamepad, (uint)i);
-                    gamepads[i] = gamepad;
-                }
-                mouseWheelDelta += mousestate.lZ;
+                GamepadState gamepad = gamepads[i];
+                GetGamepadState(ref gamepad, (uint)i);
+                gamepads[i] = gamepad;
             }
+            mouseWheelDelta += mousestate.lZ;
 
             for (int i = 0; i < InputAxisList.Count; i++)
             {
@@ -187,9 +198,10 @@ namespace FPX
             }
 #endif
 
-            mousePos.X += mousestate.lX;
-            mousePos.Y += mousestate.lY;
-            mousePos = Vector2.Clamp(mousePos, Vector2.Zero, new Vector2(Screen.Width, Screen.Height));
+            Point p = Point.Zero;
+            GetPhysicalCursorPos(ref p);
+            mousePos = p.ToVector2();
+            mousePos += mouseOffset;
         }
 
         private void UpdateInputAxis(InputAxis axis)
@@ -292,6 +304,7 @@ namespace FPX
             Close();
             Instance = null;
         }
+
 
         public void Draw(GameTime gameTime)
         {

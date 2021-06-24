@@ -15,9 +15,16 @@ namespace FPX
     {
         public GameObject gameObject;
 
-        public Transform transform
+        public virtual Transform transform
         {
-            get { return GetComponent<Transform>(); }
+            get
+            {
+                var rect = GetComponent<RectTransform>();
+                if (rect != null)
+                    return rect;
+
+                return GetComponent<Transform>();
+            }
         }
 
         [IgnoreInGUI]
@@ -264,6 +271,12 @@ namespace FPX
         public static GameObject Instantiate(Prefab prefab)
         {
             return GameCore.currentLevel.Spawn(prefab);
+        }
+
+        public static void Destroy(Component component)
+        {
+            g_collection.Remove(component);
+            component.gameObject.Components.Remove(component);
         }
 
         public override string ToString()

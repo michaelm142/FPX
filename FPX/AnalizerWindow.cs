@@ -39,7 +39,7 @@ namespace FPX
 
             EditorGUI.Begin(Selection.selectedObject);
 
-            foreach (Component c in Selection.selectedObject.Components)
+            foreach (Component c in Selection.selectedObject.GetComponents())
             {
                 var componentType = c.GetType();
 

@@ -12,7 +12,7 @@ namespace FPX.Editor
 {
     public class Editor : IGameComponent, IUpdateable, IDrawable
     {
-        public List<IGameComponent> components { get; private set; } = new List<IGameComponent>();
+        public List<UIElement> components { get; private set; } = new List<UIElement>();
 
         public int DrawOrder => 0;
 
@@ -40,23 +40,21 @@ namespace FPX.Editor
 
             uiPannelTexture = GameCore.content.Load<Texture2D>("Textures/UIPanel");
             components.ForEach(c => c.Initialize());
-
-            test.bounds = new Rect(0, 0, 100, 100);
         }
+
         public void Draw(GameTime gameTime)
         {
             GameCore.graphicsDevice.Clear(BackgroundColor);
             GameCore.spriteBatch.Begin(SpriteSortMode.Immediate);
             {
-                var drawables = components.FindAll(c => c is IDrawable).ConvertAll<IDrawable>(delegate (IGameComponent c) { return c as IDrawable; });
-                drawables.Sort(delegate (IDrawable a, IDrawable b)
+                components.Sort(delegate (UIElement a, UIElement b)
                 {
                     if (a.DrawOrder > b.DrawOrder)
                         return 1;
 
                     return -1;
                 });
-                drawables.ForEach(d => d.Draw(gameTime));
+                components.ForEach(d => d.Draw(gameTime));
             }
             GameCore.spriteBatch.End();
         }

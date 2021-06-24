@@ -18,10 +18,10 @@ namespace FPX
         public event EventHandler<EventArgs> UpdateOrderChanged;
         public event EventHandler<EventArgs> VisibleChanged;
 
-        private List<Component> components = new List<Component>();
-        public IEnumerable<Component> Components
+        internal List<Component> Components = new List<Component>();
+        public IEnumerable<Component> GetComponents()
         {
-            get { return components.AsEnumerable(); }
+            return Components.AsEnumerable();
         }
 
         public GraphicsDevice graphics;
@@ -93,19 +93,19 @@ namespace FPX
 
         public bool KnowsMessage(string message)
         {
-            return components.Find(c => c.KnowsMessage(message)) != null;
+            return Components.Find(c => c.KnowsMessage(message)) != null;
         }
 
         public void BroadcastMessage(string Name, params object[] parameters)
         {
-            foreach (var comp in components.FindAll(c =>c.KnowsMessage(Name)))
+            foreach (var comp in Components.FindAll(c =>c.KnowsMessage(Name)))
                 comp.SendMessage(Name, parameters);
         }
 
         public void Run(GameTime gameTime)
         {
-            for (int i = 0; i < components.Count; i++)
-                components[i].Run();
+            for (int i = 0; i < Components.Count; i++)
+                Components[i].Run();
         }
 
         public void Draw(GameTime gameTime)
@@ -118,7 +118,7 @@ namespace FPX
         {
             Component comp = Activator.CreateInstance<T>();
             comp.gameObject = this;
-            components.Add(comp);
+            Components.Add(comp);
 
             return comp as T;
         }
@@ -126,14 +126,14 @@ namespace FPX
         public void AddComponent(Component c)
         {
             c.gameObject = this;
-            components.Add(c);
+            Components.Add(c);
         }
 
         public object AddComponent(Type t)
         {
             Component comp = Activator.CreateInstance(t) as Component;
             comp.gameObject = this;
-            components.Add(comp);
+            Components.Add(comp);
 
             return comp;
         }
@@ -141,12 +141,12 @@ namespace FPX
         public T GetComponent<T>()
              where T : Component
         {
-            return components.Find(c => c is T) as T;
+            return Components.Find(c => c is T) as T;
         }
         public List<T> GetComponents<T>()
             where T : Component
         {
-            return components.FindAll(c => c is T) as List<T>;
+            return Components.FindAll(c => c is T) as List<T>;
         }
 
         public override string ToString()

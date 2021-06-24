@@ -78,4 +78,6 @@ namespace FPX
             texture2D.SetData(data);
         }
     }
+
+    public delegate void Handler();
 }

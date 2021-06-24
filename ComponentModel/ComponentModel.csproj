@@ -123,12 +123,14 @@
     <Compile Include="Editors\ColorPicker.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Editors\Dockable.cs" />
     <Compile Include="Editors\Editor.cs" />
     <Compile Include="Editors\EditorAttribute.cs" />
     <Compile Include="Editors\ComponentEditor.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Editors\EditorForm.cs" />
+    <Compile Include="Editors\Image.cs" />
     <Compile Include="Editors\MeshRendererEditor.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -141,6 +143,7 @@
     <Compile Include="Editors\TransformEditor.Designer.cs">
       <DependentUpon>TransformEditor.cs</DependentUpon>
     </Compile>
+    <Compile Include="Editors\UIElement.cs" />
     <Compile Include="GameForm.cs">
       <SubType>Form</SubType>
     </Compile>

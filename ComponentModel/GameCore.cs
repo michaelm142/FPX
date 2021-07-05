@@ -121,17 +121,30 @@ namespace FPX
 
         public static void LoadScene(string sceneName)
         {
-            if (!IsRunning || gameInstance == null)
+            Debug.BackgroundColor = ConsoleColor.Red;
+            Debug.Log("ENGINE LAUNCH");
+            Debug.ResetColors();
+
+
+            IsRunning = true;
+            using (Game gameInstance = CreateGameInstance())
             {
-                Debug.LogError("Engine is not currently running");
-                return;
+                Scene scene = new Scene();
+                scene.sceneName = sceneName;
+                scene.Load();
+
+                gameInstance.Components.Add(scene);
+                gameInstance.Run();
             }
 
-            Scene scene = new Scene();
-            scene.sceneName = sceneName;
-            scene.Load();
+            Camera.Active = null;
+            Settings.ShutDown();
+            Debug.DumpLog();
 
-            gameInstance.Components.Add(scene);
+            Debug.BackgroundColor = ConsoleColor.DarkGray;
+            Debug.ForegroundColor = ConsoleColor.Black;
+            Debug.Log("Engine Shutdown");
+            Debug.ResetColors();
         }
 
         public static void Editor()

@@ -11,7 +11,7 @@ namespace FPX
 {
     public sealed class GameObject
     {
-        private bool firstFrame = true;
+        internal bool destroyed;
 
         public event EventHandler<EventArgs> DrawOrderChanged;
         public event EventHandler<EventArgs> EnabledChanged;
@@ -84,6 +84,26 @@ namespace FPX
             _instances.Add(this);
             AddComponent<Transform>();
             Id = (uint)GetHashCode();
+        }
+
+        public GameObject(string Name)
+        {
+            _instances.Add(this);
+            AddComponent<Transform>();
+            Id = (uint)GetHashCode();
+
+            this.Name = Name;
+        }
+
+        public GameObject(string Name, params Type[] ComponentTypes)
+        {
+            _instances.Add(this);
+            AddComponent<Transform>();
+            Id = (uint)GetHashCode();
+
+            this.Name = Name;
+            foreach (var t in ComponentTypes)
+                AddComponent(t);
         }
 
         ~GameObject()
@@ -204,14 +224,16 @@ namespace FPX
             return obj;
         }
 
+        public static void Destroy(GameObject @object)
+        {
+            while (@object.Components.Count > 0)
+                Component.Destroy(@object.Components[0]);
+            @object.destroyed = true;
+        }
+
         public static void GlobalBroadcastMessage(string message, params object[] prams)
         {
             GameCore.currentLevel.BroadcastMessage(message, prams);
-        }
-        public static T FindObjectOfType<T>()
-            where T : Component
-        {
-            return Component.g_collection.Find(c => c is T) as T;
         }
 
         public static List<T> FindObjectsOfType<T>()

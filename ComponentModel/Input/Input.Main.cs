@@ -57,6 +57,8 @@ namespace FPX
         private List<GamepadState> gamepads = new List<GamepadState>();
         private MouseState mousestate;
 
+        private System.Windows.Forms.Form gameWindow;
+
         internal static Input Instance { get; set; }
 
         public int DrawOrder { get { return 1000; } }
@@ -92,8 +94,9 @@ namespace FPX
                 throw new InvalidOperationException("More than one instance of Input Manager!");
             Instance = this;
             var window = GameCore.gameInstance.Window;
-            int windowHandle = (int)window.Handle;
-            int hresult = InitializeInputModule(windowHandle);
+            IntPtr windowHandle = window.Handle;
+            int hresult = InitializeInputModule((int)windowHandle);
+            gameWindow = (System.Windows.Forms.Form)System.Windows.Forms.Control.FromHandle(windowHandle);
             if (hresult != 0)
                 Debug.LogError("Failed to inilitize input module");
 
@@ -202,6 +205,8 @@ namespace FPX
             GetPhysicalCursorPos(ref p);
             mousePos = p.ToVector2();
             mousePos += mouseOffset;
+            mousePos.X -= gameWindow.Location.X;
+            mousePos.Y -= gameWindow.Location.Y;
         }
 
         private void UpdateInputAxis(InputAxis axis)

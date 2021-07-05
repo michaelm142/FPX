@@ -9,13 +9,36 @@ namespace FPX.Editor
 {
     public abstract class Dockable : UIElement
     {
+
         public virtual DockStyle DockStyle { get; private set; }
+
+        public Dockable parent
+        {
+            get
+            {
+                if (transform.parent == null)
+                    return null;
+                return transform.parent.GetComponent<Dockable>();
+            }
+
+            set
+            {
+                if (value == null)
+                    transform.parent = null;
+                else
+                    transform.parent = value.transform;
+            }
+        }
 
         private Rect? undockedBounds;
 
-        public void Dock(DockStyle dockStyle)
+        public void Dock(Dockable parent, DockStyle DockStyle)
         {
-            DockStyle = dockStyle;
+            this.DockStyle = DockStyle;
+
+            var anchorMin = (transform as RectTransform).anchorMin;
+            var anchorMax = (transform as RectTransform).anchorMax;
+
             switch (DockStyle)
             {
                 case DockStyle.None:
@@ -30,47 +53,78 @@ namespace FPX.Editor
                     }
                     break;
                 case DockStyle.Bottom:
-                    var anchorMin = (transform as RectTransform).anchorMin;
-                    anchorMin.Y = Screen.Height * 0.8f;
-                    (transform as RectTransform).anchorMin = anchorMin;
-                    goto case DockStyle.Right;
+                    anchorMin = new Vector3(0.0f, 0.8f, 0.0f);
+                    anchorMax = Vector2.One.ToVector3();
+                    break;
                 case DockStyle.Top:
+                    anchorMin = Vector3.Zero;
+                    anchorMax.Y = 0.2f;
+                    anchorMax.X = 1.0f;
+                    break;
                 case DockStyle.Left:
+                    anchorMin = Vector3.Zero;
+                    anchorMax.Y = 1.0f;
+                    anchorMax.X = 0.2f;
+                    break;
                 case DockStyle.Right:
-                    undockedBounds = (transform as RectTransform).rect;
+                    anchorMin.X = 0.8f;
+                    anchorMin.Y = 0.0f;
+                    anchorMax = Vector2.One.ToVector3();
                     break;
             }
+            this.parent = parent;
+
+            if (DockStyle != DockStyle.None)
+                undockedBounds = (transform as RectTransform).rect;
+            (transform as RectTransform).anchorMin = anchorMin;
+            (transform as RectTransform).anchorMax = anchorMax;
         }
 
         protected void UpdateDocking()
         {
+            return;
+
             var anchorMin = (transform as RectTransform).anchorMin;
             var anchorMax = (transform as RectTransform).anchorMax;
+
+            Vector3 parentMin = (parent.transform as RectTransform).anchorMin;
+            Vector3 parentMax = (parent.transform as RectTransform).anchorMax;
 
             switch (DockStyle)
             {
                 case DockStyle.Top:
-                    anchorMin = Vector3.Zero;
-                    anchorMax.X = Screen.Width;
+                    anchorMin = parentMin;
+                    anchorMax.X = parentMax.X;
                     break;
                 case DockStyle.Left:
-                    anchorMin = Vector3.Zero;
-                    anchorMax.Y = Screen.Height;
+                    anchorMin = (parent.transform as RectTransform).anchorMin;
+                    anchorMax.Y = (parent.transform as RectTransform).anchorMax.Y;
                     break;
                 case DockStyle.Bottom:
-                    anchorMin.X = 0.0f;
-                    anchorMax.X = Screen.Width;
-                    anchorMax.Y = Screen.Height;
+                    anchorMin.X = parentMin.X;
+                    anchorMax = parentMax;
                     break;
                 case DockStyle.Right:
-                    anchorMin.Y = 0.0f;
-                    anchorMax.X = Screen.Width;
-                    anchorMax.Y = Screen.Height;
+                    anchorMin.Y = parentMin.Y;
+                    anchorMax = parentMax;
                     break;
             }
 
             (transform as RectTransform).anchorMin = anchorMin;
             (transform as RectTransform).anchorMax = anchorMax;
+        }
+    }
+
+    internal class BaseDockable : Dockable
+    {
+        public override void Draw(GameTime gameTime) { }
+
+        public override void Initialize() { }
+
+        public void Update(GameTime gameTime)
+        {
+            (transform as RectTransform).anchorMin = Vector3.Zero;
+            (transform as RectTransform).anchorMax = new Vector3(Screen.Width, Screen.Height, 0.0f);
         }
     }
 

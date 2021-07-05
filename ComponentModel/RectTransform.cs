@@ -37,6 +37,27 @@ namespace FPX
             }
             set { _anchorMax = parent == null ? value : Vector3.Clamp(value, Vector3.Zero, Vector3.One); }
         }
+        public float BorderLeft
+        {
+            get { return transform.parent == null ? (transform as RectTransform).anchorMin.X : MathHelper.Lerp(parentRect.BorderLeft, parentRect.BorderRight, _anchorMin.X); }
+        }
+        public float BorderRight
+        {
+            get { return transform.parent == null ? (transform as RectTransform).anchorMax.X : MathHelper.Lerp(parentRect.BorderLeft, parentRect.BorderRight, _anchorMax.X); }
+        }
+        public float BorderTop
+        {
+            get { return transform.parent == null ? (transform as RectTransform).anchorMin.Y : MathHelper.Lerp(parentRect.BorderTop, parentRect.BorderBottom, _anchorMin.Y); }
+        }
+        public float BorderBottom
+        {
+            get { return transform.parent == null ? (transform as RectTransform).anchorMax.Y : MathHelper.Lerp(parentRect.BorderTop, parentRect.BorderBottom, _anchorMax.Y); }
+        }
+
+        internal RectTransform parentRect
+        {
+            get { return transform.parent as RectTransform; }
+        }
 
         public Rect rect
         {

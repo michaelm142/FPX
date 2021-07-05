@@ -123,6 +123,7 @@
     <Compile Include="Editors\ColorPicker.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Editors\ContextMenu.cs" />
     <Compile Include="Editors\Dockable.cs" />
     <Compile Include="Editors\Editor.cs" />
     <Compile Include="Editors\EditorAttribute.cs" />
@@ -160,9 +161,11 @@
     <Compile Include="Graphics\ModelReader.cs" />
     <Compile Include="Graphics\PostProcessor.cs" />
     <Compile Include="Graphics\DeferredRenderer.cs" />
+    <Compile Include="Graphics\Raycaster.cs" />
     <Compile Include="Graphics\Screen.cs" />
     <Compile Include="Graphics\SkyboxRenderer.cs" />
     <Compile Include="Graphics\Terrain.cs" />
+    <Compile Include="Graphics\UIRaycaster.cs" />
     <Compile Include="IgnoreInGUIAttribute.cs" />
     <Compile Include="Input\GamePadButton.cs" />
     <Compile Include="Input\Input.Main.cs" />

@@ -12,7 +12,9 @@ namespace FPX.Editor
 {
     public class Editor : IGameComponent, IUpdateable, IDrawable
     {
-        public List<UIElement> components { get; private set; } = new List<UIElement>();
+        static Editor instance;
+        public List<GameObject> components { get; private set; } = new List<GameObject>();
+        public static List<GameObject> Components { get { return instance.components; } }
 
         public int DrawOrder => 0;
 
@@ -31,15 +33,27 @@ namespace FPX.Editor
 
         internal static Color BackgroundColor = new Color(0.1f, 0.1f, 0.1f);
 
+        public Editor()
+        {
+            if (instance != null)
+                throw new InvalidOperationException("More than one instance of editor");
+            instance = this;
+        }
+
+        ~Editor()
+        {
+            instance = null;
+        }
+
         public void Initialize()
         {
+            uiPannelTexture = GameCore.content.Load<Texture2D>("Textures/UIPanel");
             Graphics.instance.Visible = false;
 
-            EditorForm test = new EditorForm();
-            components.Add(test);
+            GameObject baseDockable = new GameObject("Base Dockable", typeof(RectTransform), typeof(BaseDockable));
+            Component.Destroy(baseDockable.GetComponent<Transform>());
 
-            uiPannelTexture = GameCore.content.Load<Texture2D>("Textures/UIPanel");
-            components.ForEach(c => c.Initialize());
+            components.Add(baseDockable);
         }
 
         public void Draw(GameTime gameTime)
@@ -47,25 +61,27 @@ namespace FPX.Editor
             GameCore.graphicsDevice.Clear(BackgroundColor);
             GameCore.spriteBatch.Begin(SpriteSortMode.Immediate);
             {
-                components.Sort(delegate (UIElement a, UIElement b)
-                {
-                    if (a.DrawOrder > b.DrawOrder)
-                        return 1;
-
-                    return -1;
-                });
                 components.ForEach(d => d.Draw(gameTime));
             }
             GameCore.spriteBatch.End();
         }
 
+        bool mousePrev;
         public void Update(GameTime gameTime)
         {
-            foreach (var comp in components.FindAll(c => c is IUpdateable))
+            if (Input.GetMouseButton(1) && !mousePrev)
             {
-                IUpdateable updateable = comp as IUpdateable;
-                updateable.Update(gameTime);
+                GameObject test = new GameObject("Test Form 1", typeof(RectTransform), typeof(EditorForm));
+                Component.Destroy(test.transform);
+                var testForm = test.GetComponent<EditorForm>();
+                testForm.Initialize();
+                testForm.bounds = new Rect(Input.mousePosition.X, Input.mousePosition.Y, 100.0f, 100.0f);
+                components.Add(test);
             }
+            components.ForEach(c => c.BroadcastMessage("Update", gameTime));
+            components.RemoveAll(c => c.destroyed);
+
+            mousePrev = Input.GetMouseButton(1);
         }
     }
 }

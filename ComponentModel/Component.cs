@@ -278,6 +278,10 @@ namespace FPX
             g_collection.Remove(component);
             component.gameObject.Components.Remove(component);
         }
+        public static void Destroy(GameObject gameObject)
+        {
+            GameObject.Destroy(gameObject);
+        }
 
         public override string ToString()
         {

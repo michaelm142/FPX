@@ -12,6 +12,7 @@ namespace FPX.Editor
     {
         public bool isCollapsed { get; set; }
         public bool Enabled { get; set; } = true;
+        private static bool Resizing;
 
         public int UpdateOrder { get; set; }
 
@@ -19,7 +20,7 @@ namespace FPX.Editor
         public const float ResizeHandleDim = 5.0f;
         // width of docking area
         const float DockingDim = 3.0f;
-        const float BorderTop = 0.0f;
+        const float TitleBarDim = 25.0f;
 
         public event EventHandler<EventArgs> DrawOrderChanged;
         public event EventHandler<EventArgs> VisibleChanged;
@@ -32,7 +33,7 @@ namespace FPX.Editor
 
             set { (transform as RectTransform).rect = value; }
         }
-        private Rect movingBounds { get { return new Rect(bounds.X, bounds.Y, bounds.Width, 25.0f); } }
+        private Rect movingBounds { get { return new Rect(bounds.X + TitleBarDim, bounds.Y, bounds.Width - TitleBarDim, TitleBarDim); } }
 
         private Rect? dockingBounds;
 
@@ -47,19 +48,9 @@ namespace FPX.Editor
 
         public List<GameObject> Content = new List<GameObject>();
 
-        private GameObject transformObject;
-        public override Transform transform
-        {
-            get { return transformObject.GetComponent<RectTransform>() as Transform; }
-        }
 
         public override void Initialize()
         {
-            transformObject = new GameObject();
-            transformObject.AddComponent<RectTransform>();
-            Destroy(transformObject.transform);
-            Content.Add(transformObject);
-
             bounds = new Rect(0, 0, 100.0f, 100.0f);
 
             nubDownTexture = GameCore.content.Load<Texture2D>("Textures/UINubDown");
@@ -70,7 +61,7 @@ namespace FPX.Editor
             Destroy(backPanelObject.transform);
             backPanelObject.AddComponent<RectTransform>();
             backPanelObject.transform.parent = transform;
-            
+
 
             Image backPanelImage = backPanelObject.AddComponent<Image>();
             backPanelImage.image = Editor.uiPannelTexture;
@@ -88,32 +79,37 @@ namespace FPX.Editor
                 if (!Input.GetMouseButton(0))
                 {
                     pickupOffset = null;
+                    Resizing = false;
                     #region Docking
-                    if (MathHelper.Distance(Input.mousePosition.Y, BorderTop) < DockingDim)
+
+                    var targetObject = Editor.Components.Find(c => c != gameObject && (c.transform as RectTransform).rect.Contains(Input.mousePosition) && c.GetComponent<Dockable>() != null);
+                    Dockable dockTarget = null;
+                    if (targetObject != null)
+                        dockTarget = targetObject.GetComponent<Dockable>();
+
+                    if (dockTarget != null)
                     {
-                        Dock(DockStyle.Top);
-                        dockingBounds = null;
+                        if (MathHelper.Distance(Input.mousePosition.Y, (dockTarget.transform as RectTransform).BorderTop) < DockingDim)
+                        {
+                            Dock(dockTarget, DockStyle.Top);
+                            dockingBounds = null;
+                        }
+                        if (MathHelper.Distance(Input.mousePosition.X, (dockTarget.transform as RectTransform).BorderLeft) < DockingDim)
+                        {
+                            Dock(dockTarget, DockStyle.Left);
+                            dockingBounds = null;
+                        }
+                        if (MathHelper.Distance(Input.mousePosition.Y, (dockTarget.transform as RectTransform).BorderBottom) < DockingDim)
+                        {
+                            Dock(dockTarget, DockStyle.Bottom);
+                            dockingBounds = null;
+                        }
+                        if (MathHelper.Distance(Input.mousePosition.X, (dockTarget.transform as RectTransform).BorderRight) < DockingDim)
+                        {
+                            Dock(dockTarget, DockStyle.Right);
+                            dockingBounds = null;
+                        }
                     }
-                    if (MathHelper.Distance(Input.mousePosition.X, 0.0f) < DockingDim)
-                    {
-                        Dock(DockStyle.Left);
-                        dockingBounds = null;
-                    }
-                    if (MathHelper.Distance(Input.mousePosition.Y, Screen.Height) < DockingDim)
-                    {
-                        Dock(DockStyle.Bottom);
-                        dockingBounds = null;
-                    }
-                    if (MathHelper.Distance(Input.mousePosition.X, Screen.Width) < DockingDim)
-                    {
-                        Dock(DockStyle.Right);
-                        dockingBounds = null;
-                    }
-                    #endregion
-                    #region Expand/Collapse
-                    var nubLocation = movingBounds.Location;
-                    if (new Rect(nubLocation.X, nubLocation.Y, 25.0f, 25.0f).Contains(Input.mousePosition))
-                        isCollapsed = !isCollapsed;
                     #endregion
                 }
                 else
@@ -121,71 +117,112 @@ namespace FPX.Editor
                     Rect b = bounds;
                     b.Location = Input.mousePosition + (Vector2)pickupOffset;
                     bounds = b;
-                    if (dockingBounds == null)
+
+                    var targetObject = Editor.Components.Find(c => c != gameObject && (c.transform as RectTransform).rect.Contains(Input.mousePosition) && c.GetComponent<Dockable>() != null);
+                    Dockable dockTarget = null;
+                    if (targetObject != null)
+                        dockTarget = targetObject.GetComponent<Dockable>();
+
+                    if (dockTarget != null)
                     {
-                        if (MathHelper.Distance(Input.mousePosition.Y, BorderTop) < DockingDim) // begin dock top
-                            dockingBounds = new Rect(0, 0, Screen.Width, Screen.Height * 0.2f);
-                        if (MathHelper.Distance(Input.mousePosition.X, 0.0f) < DockingDim) // begin dock left
-                            dockingBounds = new Rect(0, 0, Screen.Width * 0.2f, Screen.Height);
-                        if (MathHelper.Distance(Input.mousePosition.Y, Screen.Height) < DockingDim)// begin dock bottom
-                            dockingBounds = new Rect(0, Screen.Height - Screen.Height * 0.2f, Screen.Width, Screen.Height * 0.2f);
-                        if (MathHelper.Distance(Input.mousePosition.X, Screen.Width) < DockingDim) // begin dock right
-                            dockingBounds = new Rect(Screen.Width * 0.8f, 0.0f, Screen.Width * 0.2f, Screen.Height);
-                    }
-                    else
-                    {
-                        if (MathHelper.Distance(Input.mousePosition.Y, BorderTop) > DockingDim &&
-                         MathHelper.Distance(Input.mousePosition.X, 0.0f) > DockingDim && // begin dock left
-                             MathHelper.Distance(Input.mousePosition.Y, Screen.Height) > DockingDim &&// begin dock bottom
-                                 MathHelper.Distance(Input.mousePosition.X, Screen.Width) > DockingDim) // begin dock right
-                            dockingBounds = null;
+                        if (dockingBounds == null)
+                        {
+                            if (MathHelper.Distance(Input.mousePosition.Y, (dockTarget.transform as RectTransform).BorderTop) < DockingDim) // begin dock top
+                                dockingBounds = new Rect(0, 0, Screen.Width, Screen.Height * 0.2f);
+                            if (MathHelper.Distance(Input.mousePosition.X, (dockTarget.transform as RectTransform).BorderLeft) < DockingDim) // begin dock left
+                                dockingBounds = new Rect(0, 0, Screen.Width * 0.2f, Screen.Height);
+                            if (MathHelper.Distance(Input.mousePosition.Y, (dockTarget.transform as RectTransform).BorderBottom) < DockingDim)// begin dock bottom
+                                dockingBounds = new Rect(0, Screen.Height - Screen.Height * 0.2f, Screen.Width, Screen.Height * 0.2f);
+                            if (MathHelper.Distance(Input.mousePosition.X, (dockTarget.transform as RectTransform).BorderRight) < DockingDim) // begin dock right
+                                dockingBounds = new Rect(Screen.Width * 0.8f, 0.0f, Screen.Width * 0.2f, Screen.Height);
+                        }
+                        else
+                        {
+                            if (MathHelper.Distance(Input.mousePosition.Y, (dockTarget.transform as RectTransform).BorderTop) > DockingDim &&
+                             MathHelper.Distance(Input.mousePosition.X, (dockTarget.transform as RectTransform).BorderLeft) > DockingDim && // begin dock left
+                                 MathHelper.Distance(Input.mousePosition.Y, (dockTarget.transform as RectTransform).BorderBottom) > DockingDim &&// begin dock bottom
+                                     MathHelper.Distance(Input.mousePosition.X, (dockTarget.transform as RectTransform).BorderRight) > DockingDim) // begin dock right
+                                dockingBounds = null;
+                        }
                     }
                 }
 
             }
-            else if (resizingFunction == null)
+            else if (resizingFunction == null && !Resizing)
             {
                 if (Input.GetMouseButton(0) && movingBounds.Contains(Input.mousePosition))
                 {
-                    Dock(DockStyle.None);
+                    Dock(null, DockStyle.None);
                     pickupOffset = bounds.Location - Input.mousePosition;
+                    Resizing = true;
                 }
+
+                #region Title Bar Controls
+                if (Input.GetMouseButton(0))
+                {
+                    // minimize/maximize
+                    var nubLocation = movingBounds.Location;
+                    if (new Rect(nubLocation.X - TitleBarDim, nubLocation.Y, TitleBarDim, TitleBarDim).Contains(Input.mousePosition))
+                        isCollapsed = !isCollapsed;
+                    // close button
+                    if (new Rect(movingBounds.Right - 25.0f, movingBounds.Y, TitleBarDim, TitleBarDim).Contains(Input.mousePosition))
+                    {
+                        Resizing = false;
+                        Destroy(gameObject);
+                        return;
+                    }
+                }
+                #endregion
 
                 #region Resizing
-                // Resize Left Side
-                if (MathHelper.Distance(Input.mousePosition.X, bounds.Left) < ResizeHandleDim && Input.mousePosition.Y > bounds.Top && Input.mousePosition.Y < bounds.Bottom)
+                if (!Resizing)
                 {
-                    System.Windows.Forms.Cursor.Current = System.Windows.Forms.Cursors.SizeWE;
-                    if (Input.GetMouseButton(0))
-                        resizingFunction = ResizeLeft;
+                    // Resize Left Side
+                    if (MathHelper.Distance(Input.mousePosition.X, bounds.Left) < ResizeHandleDim && Input.mousePosition.Y > bounds.Top && Input.mousePosition.Y < bounds.Bottom)
+                    {
+                        System.Windows.Forms.Cursor.Current = System.Windows.Forms.Cursors.SizeWE;
+                        if (Input.GetMouseButton(0))
+                        {
+                            resizingFunction = ResizeLeft;
+                            Resizing = true;
+                        }
+                    }
 
-                }
+                    // Resize Right Side
+                    if (MathHelper.Distance(Input.mousePosition.X, bounds.Right) < ResizeHandleDim && Input.mousePosition.Y > bounds.Top && Input.mousePosition.Y < bounds.Bottom)
+                    {
+                        System.Windows.Forms.Cursor.Current = System.Windows.Forms.Cursors.SizeWE;
+                        if (Input.GetMouseButton(0))
+                        {
+                            Resizing = true;
+                            resizingFunction = ResizeRight;
+                        }
 
-                // Resize Right Side
-                if (MathHelper.Distance(Input.mousePosition.X, bounds.Right) < ResizeHandleDim && Input.mousePosition.Y > bounds.Top && Input.mousePosition.Y < bounds.Bottom)
-                {
-                    System.Windows.Forms.Cursor.Current = System.Windows.Forms.Cursors.SizeWE;
-                    if (Input.GetMouseButton(0))
-                        resizingFunction = ResizeRight;
+                    }
 
-                }
+                    // Resize right and bottom side
+                    if (MathHelper.Distance(Input.mousePosition.Y, bounds.Bottom) < ResizeHandleDim && MathHelper.Distance(Input.mousePosition.X, bounds.Right) < ResizeHandleDim)
+                    {
+                        System.Windows.Forms.Cursor.Current = System.Windows.Forms.Cursors.SizeNWSE;
+                        if (Input.GetMouseButton(0))
+                        {
+                            Resizing = true;
+                            resizingFunction = ResizeBottomRight;
+                        }
 
-                // Resize right and bottom side
-                if (MathHelper.Distance(Input.mousePosition.Y, bounds.Bottom) < ResizeHandleDim && MathHelper.Distance(Input.mousePosition.X, bounds.Right) < ResizeHandleDim)
-                {
-                    System.Windows.Forms.Cursor.Current = System.Windows.Forms.Cursors.SizeNWSE;
-                    if (Input.GetMouseButton(0))
-                        resizingFunction = ResizeBottomRight;
+                    }
 
-                }
+                    // Resize bottom side
+                    if (MathHelper.Distance(Input.mousePosition.Y, bounds.Bottom) < ResizeHandleDim && Input.mousePosition.X > bounds.Left && Input.mousePosition.X < bounds.Right)
+                    {
+                        System.Windows.Forms.Cursor.Current = System.Windows.Forms.Cursors.SizeNS;
+                        if (Input.GetMouseButton(0))
+                        {
+                            Resizing = true;
+                            resizingFunction = ResizeBottom;
+                        }
 
-                // Resize bottom side
-                if (MathHelper.Distance(Input.mousePosition.Y, bounds.Bottom) < ResizeHandleDim && Input.mousePosition.X > bounds.Left && Input.mousePosition.X < bounds.Right)
-                {
-                    System.Windows.Forms.Cursor.Current = System.Windows.Forms.Cursors.SizeNS;
-                    if (Input.GetMouseButton(0))
-                        resizingFunction = ResizeBottom;
-
+                    }
                 }
                 #endregion
             }
@@ -193,8 +230,6 @@ namespace FPX.Editor
             Content.FindAll(c => c.Enabled).ForEach(c => c.BroadcastMessage("Update", gameTime));
 
             UpdateDocking();
-
-            Debug.Log("Bounds:{0}", bounds);
 
             resizingFunction?.DynamicInvoke();
         }
@@ -208,7 +243,10 @@ namespace FPX.Editor
             r.Width = newWidth;
             bounds = r;
             if (!Input.GetMouseButton(0))
+            {
+                Resizing = false;
                 resizingFunction = null;
+            }
         }
 
         private void ResizeRight()
@@ -218,7 +256,10 @@ namespace FPX.Editor
             r.Width = newWidth;
             bounds = r;
             if (!Input.GetMouseButton(0))
+            {
+                Resizing = false;
                 resizingFunction = null;
+            }
         }
 
         private void ResizeBottomRight()
@@ -230,7 +271,10 @@ namespace FPX.Editor
             r.Width = newWidth;
             bounds = r;
             if (!Input.GetMouseButton(0))
+            {
+                Resizing = false;
                 resizingFunction = null;
+            }
         }
 
         private void ResizeBottom()
@@ -240,7 +284,10 @@ namespace FPX.Editor
             r.Height = newHeight;
             bounds = r;
             if (!Input.GetMouseButton(0))
+            {
+                Resizing = false;
                 resizingFunction = null;
+            }
         }
         #endregion
 
@@ -249,16 +296,20 @@ namespace FPX.Editor
             if (!isCollapsed && Content != null)
             {
                 Content.Sort((a, b) => a.DrawOrder < b.DrawOrder ? -1 : 1);
-                Content.FindAll(c => c.Visible).ForEach(c => c.Draw(gameTime));
+                Content.ForEach(delegate (GameObject obj)
+                {
+                    if (obj.Visible)
+                        obj.Draw(gameTime);
+                });
             }
 
             Color barColor = Color.DarkGray;
             GameCore.spriteBatch.Draw(Material.DefaultTexture, movingBounds, barColor);
 
-            Vector2 nubLocation = movingBounds.Location;
+            Vector2 nubLocation = movingBounds.Location - Vector2.UnitX * TitleBarDim;
             var nubTexture = isCollapsed ? nubUpTexture : nubDownTexture;
             GameCore.spriteBatch.Draw(nubTexture, new Rect(nubLocation.X, nubLocation.Y, 25.0f, 25.0f), barColor);
-            GameCore.spriteBatch.Draw(closeButtonTexture, bounds.Location + Vector2.UnitX * (bounds.Width - 25.0f), barColor);
+            GameCore.spriteBatch.Draw(closeButtonTexture, new Rect(movingBounds.Right - 25.0f, movingBounds.Y, TitleBarDim, TitleBarDim), barColor);
 
             if (dockingBounds != null)
                 GameCore.spriteBatch.Draw(Material.DefaultTexture, dockingBounds.Value, Color.CornflowerBlue * 0.2f);

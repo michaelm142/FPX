@@ -111,6 +111,7 @@ namespace FPX
 
             objects.AddRange(spawnedObjects);
             spawnedObjects.Clear();
+            objects.RemoveAll(o => o.destroyed);
         }
 
 

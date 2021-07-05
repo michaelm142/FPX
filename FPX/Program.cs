@@ -37,7 +37,7 @@ namespace FPX
                 Console.BackgroundColor = ConsoleColor.Black;
                 Console.ForegroundColor = ConsoleColor.White;
                 Console.Write(">");
-                if (args.Length >= 2 && frame == 0)
+                if (args.Length >= 1 && frame == 0)
                 {
                     args.ToList().ForEach(a => Console.Write(a + " "));
                     Console.WriteLine();

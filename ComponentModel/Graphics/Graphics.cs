@@ -93,7 +93,10 @@ namespace FPX
                 GameCore.graphicsDevice.Clear(Camera.Active.ClearColor);
 
                 foreach (var drawable in drawables)
-                    drawable.Draw(gameTime);
+                {
+                    if (drawable.Visible)
+                        drawable.Draw(gameTime);
+                }
 
                 if (postProcessor != null)
                     postProcessor.End();

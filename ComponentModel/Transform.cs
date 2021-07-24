@@ -5,11 +5,12 @@ using System.Text;
 using System.Xml;
 using Microsoft.Xna.Framework;
 using FPX.Editor;
+using System.Collections;
 
 namespace FPX
 {
     [Editor(typeof(TransformEditor))]
-    public class Transform : Component
+    public class Transform : Component, IEnumerable<Transform>
     {
         public new Transform transform
         {
@@ -74,6 +75,11 @@ namespace FPX
             {
                 if (value == this)
                     return;
+
+                if (_parent != null && value == null)
+                    _parent.childTransforms.Remove(this);
+                else if (value != null)
+                    value.childTransforms.Add(this);
 
                 _parent = value;
             }
@@ -149,6 +155,18 @@ namespace FPX
                 parent = GameObject.Find(parentName).transform;
                 parentName = null;
             }
+        }
+
+        private List<Transform> childTransforms = new List<Transform>();
+
+        public IEnumerator<Transform> GetEnumerator()
+        {
+            return childTransforms.GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return childTransforms.GetEnumerator();
         }
     }
 }

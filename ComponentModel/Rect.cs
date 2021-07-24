@@ -362,5 +362,10 @@ namespace FPX
         {
             return new Rectangle(r.Location.ToPoint(), new Point((int)r.Width, (int)r.Height));
         }
+
+        public static implicit operator Rect(Rectangle r)
+        {
+            return new Rect(r.X, r.Y, r.Width, r.Height);
+        }
     }
 }

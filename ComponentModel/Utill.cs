@@ -45,7 +45,7 @@ namespace FPX
             return null;
         }
 
-        public static Rectangle RectFromXml(XmlElement node)
+        public static Rectangle RectangleFromXml(XmlElement node)
         {
             var xVal = node.Attributes["X"];
             var yVal = node.Attributes["Y"];
@@ -58,6 +58,21 @@ namespace FPX
             int height = int.Parse(heightVal.InnerText);
 
             return new Rectangle(x, y, width, height);
+        }
+
+        public static Rect RectFromXml(XmlElement node)
+        {
+            var xVal = node.Attributes["X"];
+            var yVal = node.Attributes["Y"];
+            var widthVal = node.Attributes["Width"];
+            var heightVal = node.Attributes["Height"];
+
+            float x = int.Parse(xVal.InnerText);
+            float y = int.Parse(yVal.InnerText);
+            float width = int.Parse(widthVal.InnerText);
+            float height = int.Parse(heightVal.InnerText);
+
+            return new Rect(x, y, width, height);
         }
 
         public static void LoadXml(this Rectangle r, XmlElement node)

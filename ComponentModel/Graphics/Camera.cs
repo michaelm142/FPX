@@ -12,6 +12,25 @@ namespace FPX
     {
         public static Camera Active { get; set; }
 
+        public Mode cameraMode;
+
+        /// <summary>
+        /// Width of the camera viewport in Orthographic mode
+        /// </summary>
+        public float W = 1.0f;
+        private float Width
+        {
+            get { return Screen.Width * W; }
+        }
+        /// <summary>
+        /// Height of the camera in Orthographic mode
+        /// </summary>
+        public float H = 1.0f;
+        private float Height
+        {
+            get { return Screen.Height * H; }
+        }
+
         public float fieldOfView = 60.0f;
         public float nearPlaneDistance = 0.01f;
         public float farPlaneDistance = 1000.0f;
@@ -24,12 +43,14 @@ namespace FPX
 
         public Matrix ViewMatrix
         {
-            get { return Matrix.CreateLookAt(transform.position, transform.position + transform.worldPose.Forward, transform.worldPose.Up); }
+            get { return cameraMode == Mode.Perspective ? Matrix.CreateLookAt(transform.position, transform.position + transform.worldPose.Forward, transform.worldPose.Up) :
+                    Matrix.Identity; }
         }
 
         public Matrix ProjectionMatrix
         {
-            get { return Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(fieldOfView), aspectRatio, nearPlaneDistance, farPlaneDistance); }
+            get { return cameraMode == Mode.Perspective ? Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(fieldOfView), aspectRatio, nearPlaneDistance, farPlaneDistance)
+                    : Matrix.CreateOrthographicOffCenter(position.X, position.X + Width, position.Y + Height, position.Y, nearPlaneDistance, farPlaneDistance); }
         }
 
         Vector3 startPosition;
@@ -55,6 +76,9 @@ namespace FPX
             var nearPlaneDistanceNode = node.SelectSingleNode("NearPlaneDistance");
             var farPlaneDistanceNode = node.SelectSingleNode("FarPlaneDistance");
             var clearColorNode = node.SelectSingleNode("ClearColor") as XmlElement;
+            var modeNode = node.SelectSingleNode("Mode");
+            var wNode = node.SelectSingleNode("W");
+            var hNode = node.SelectSingleNode("H");
 
             if (fieldOfViewNode != null)
                 fieldOfView = float.Parse(fieldOfViewNode.InnerText);
@@ -64,6 +88,12 @@ namespace FPX
                 farPlaneDistance = float.Parse(farPlaneDistanceNode.InnerText);
             if (clearColorNode != null)
                 ClearColor = LinearAlgebraUtil.ColorFromXml(clearColorNode);
+            if (modeNode != null)
+                cameraMode = (Mode)Enum.Parse(typeof(Mode), modeNode.InnerText);
+            if (wNode != null)
+                W = float.Parse(wNode.InnerText);
+            if (hNode != null)
+                H = float.Parse(hNode.InnerText);
         }
 
         public void SaveXml(XmlElement node)
@@ -94,6 +124,12 @@ namespace FPX
             camDir.Normalize();
 
             return new Ray(near, camDir);
+        }
+
+        public enum Mode
+        {
+            Perspective,
+            Orthographic
         }
     }
 }

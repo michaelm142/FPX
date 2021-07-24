@@ -138,6 +138,7 @@ namespace FPX
         {
             Component comp = Activator.CreateInstance<T>();
             comp.gameObject = this;
+            comp.Run();
             Components.Add(comp);
 
             return comp as T;

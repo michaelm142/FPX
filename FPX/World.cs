@@ -30,6 +30,7 @@ namespace FPX
             Content.RootDirectory = "Content";
             var gdm = Services.GetService(typeof(IGraphicsDeviceManager)) as IGraphicsDeviceManager;
             gdm.CreateDevice();
+            IsMouseVisible = Settings.GetSetting<bool>("CursorVisible");
         }
 
         public World(IntPtr windowHandle)
@@ -42,6 +43,7 @@ namespace FPX
             this.IsMouseVisible = true;
             var gdm = Services.GetService(typeof(IGraphicsDeviceManager)) as IGraphicsDeviceManager;
             gdm.CreateDevice();
+            IsMouseVisible = Settings.GetSetting<bool>("CursorVisible");
         }
 
         private void Graphics_PreparingDeviceSettings(object sender, PreparingDeviceSettingsEventArgs e)

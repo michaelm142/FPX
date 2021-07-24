@@ -9,6 +9,6 @@ namespace FPX
 {
     public abstract class Raycaster : Component
     {
-        public abstract void Raycast(Vector3 point);
+        public abstract bool Raycast(Vector3 point, out RectTransform hit);
     }
 }

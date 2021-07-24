@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<Scene>
+  <Objects>
+    <Object Name="Camera">
+      <Camera>
+        <FieldOfView>60</FieldOfView>
+        <NearPlaneDistance>-1</NearPlaneDistance>
+        <FarPlaneDistance>1</FarPlaneDistance>
+        <ClearColor Name="Black"/>
+        <Mode>Orthographic</Mode>
+      </Camera>
+    </Object>
+    
+    <Object Name="TestSprite">
+      <Transform/>
+
+      <BoxTester>
+        <Rect X="0" Y="0" Width="100" Height ="100"/>
+      </BoxTester>
+
+      <TestSpriteController>
+        <MoveSpeed>0.5</MoveSpeed>
+      </TestSpriteController>
+
+    </Object>
+  </Objects>
+</Scene>

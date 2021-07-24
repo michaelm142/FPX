@@ -25,7 +25,7 @@ public class LineRenderer : Component, IDrawable
 
     public int DrawOrder { get; set; }
 
-    public bool Visible { get; set; }
+    public bool Visible { get; set; } = true;
 
 
     public void Start()
@@ -44,11 +44,17 @@ public class LineRenderer : Component, IDrawable
         updateTimer -= Time.deltaTime;
         if (updateTimer < 0.0f)
         {
-            for (int i = 0; i < vertecies.Count; i++)
+            for (int i = 0; i < positions.Count; i++)
             {
-                var vertex = vertecies[i];
-                vertex.Position = positions[i];
-                vertecies[i] = vertex;
+                if (i < vertecies.Count)
+                {
+                    var vertex = vertecies[i];
+                    vertex.Position = positions[i];
+                    vertex.Color = material.DiffuseColor;
+                    vertecies[i] = vertex;
+                }
+                else
+                    vertecies.Add(new VertexPositionColor(positions[i], material.DiffuseColor));
             }
 
             updateTimer = UpdateInterval;
@@ -73,7 +79,7 @@ public class LineRenderer : Component, IDrawable
         GameCore.graphicsDevice.BlendState = bs;
     }
 
-    public void LoadXml(XmlElement element)
+    public override void LoadXml(XmlElement element)
     {
         var positionsNode = element.SelectSingleNode("Positions");
         var useWorldSpaceNode = element.SelectSingleNode("UseWorldSpace");

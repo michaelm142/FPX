@@ -5,7 +5,8 @@
     <TimeScale>1.0</TimeScale>
     <MaxPhysIterations>8</MaxPhysIterations>
   </Physics>
-  
+
+  <CursorVisible>true</CursorVisible>
   <FullScreen>false</FullScreen>
   <ScreenWidth>1500</ScreenWidth>
   <ScreenHeight>800</ScreenHeight>

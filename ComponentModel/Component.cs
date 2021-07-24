@@ -262,7 +262,6 @@ namespace FPX
         {
             return g_collection.Find(o => o is T) as T;
         }
-
         public static GameObject Instanciate(GameObject @object)
         {
             return GameCore.currentLevel.Spawn(@object);

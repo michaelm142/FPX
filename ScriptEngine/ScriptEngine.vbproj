@@ -117,6 +117,7 @@
     <Compile Include="AudioTester.vb" />
     <Compile Include="AxisAlignedTester.vb" />
     <Compile Include="BoxRenderer.vb" />
+    <Compile Include="BoxTester.vb" />
     <Compile Include="CameraController.vb" />
     <Compile Include="CameraSwitcher.vb" />
     <Compile Include="ClosestPointShower.vb" />

@@ -5,8 +5,9 @@
     <Object Name="TestSprite">
       <Camera>
         <FieldOfView>60</FieldOfView>
-        <NearPlaneDistance>0.01</NearPlaneDistance>
-        <FarPlaneDistance>1000.0</FarPlaneDistance>
+        <NearPlaneDistance>-1.0</NearPlaneDistance>
+        <FarPlaneDistance>1.0</FarPlaneDistance>
+        <Mode>Orthographic</Mode>
       </Camera>
       <Transform>
         <Position X="250" Y="250" Z="0"/>
@@ -18,9 +19,7 @@
 
       <Sprite/>
 
-      <TestSpriteController>
-        <MoveSpeed>5.0</MoveSpeed>
-      </TestSpriteController>
+      <MousePositionTester/>
 
     </Object>
   </Objects>

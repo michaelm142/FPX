@@ -8,11 +8,11 @@
 
   <CursorVisible>true</CursorVisible>
   <FullScreen>false</FullScreen>
-  <ScreenWidth>1500</ScreenWidth>
-  <ScreenHeight>800</ScreenHeight>
+  <ScreenWidth>800</ScreenWidth>
+  <ScreenHeight>480</ScreenHeight>
   <ControllerInput>One</ControllerInput>
   <FillMode Type="Microsoft.Xna.Framework.Graphics.PrimitiveType, Monogame.Framework">TriangleList</FillMode>
-  <RenderMode>Default</RenderMode>
+  <RenderMode>Deferred</RenderMode>
   
   <Input>
     <Axis Name="Horizontal" Platform="GamePad" Axis="LeftThumbStickX" DeadZone="0.1"/>
@@ -23,6 +23,7 @@
     <Axis Name="2D Vertical" Platform="Keyboard" PositiveButton="Down" NegitiveButton="Up" Sensitivity="0.2" Gravity="0.2"/>
     <Axis Name="Yaw" Platform="GamePad" Axis="RightThumbStickX" DeadZone="0.1" Invert="true"/>
     <Axis Name="Pitch" Platform="GamePad" Axis="RightThumbStickY" DeadZone="0.1"/>
+    <Axis Name="Fire" Platform="GamePad" PositiveButton="A" Gravity="0.5" DeadZone="0.1"/>
   </Input>
   
 </Settings>

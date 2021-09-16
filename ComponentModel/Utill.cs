@@ -85,12 +85,20 @@ namespace FPX
             return game.Components.ToList().Find(c => c is Scene) as Scene;
         }
 
-        public static void MakeDefault(this Texture2D texture2D)
+        public static void MakeDefaultDiffuse(this Texture2D texture2D)
         {
             Color[] data = new Color[texture2D.Width * texture2D.Height];
             for (int i = 0; i < data.Length; i++)
                 data[i] = Color.White;
             texture2D.SetData(data);
+        }
+
+        public static void MakeDefaultNormal(this Texture2D normalMap)
+        {
+            Color[] data = new Color[normalMap.Width * normalMap.Height];
+            for (int i = 0; i < data.Length; i++)
+                data[i] = new Color(0.5f, 0.5f, 0.5f, 1.0f);
+            normalMap.SetData(data);
         }
     }
 

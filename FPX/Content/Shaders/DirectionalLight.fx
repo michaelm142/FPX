@@ -25,7 +25,7 @@ LightPsOut PixelShaderFunction(GB_VS_OUT input) : COLOR0
 	float SpecularMod = SpecularIntensity * pow(specular_nDotL, SpecularPower);
 
 	float4 finalDiffuse = saturate(nDotL) * diffuse * DiffuseColor;
-	float4 finalSpecular = specular * saturate(SpecularMod) * specular_nDotL *  (specular_nDotL > 0.0f ? float4(SpecularColor.xyz, 1.f) : (float4)0);
+	float4 finalSpecular = specular * saturate(SpecularMod) * saturate(specular_nDotL * nDotL) * float4(SpecularColor.xyz, 1.f);
 
 	LightPsOut output = (LightPsOut)0;
 	float3 cVal = (finalDiffuse + finalSpecular).xyz;

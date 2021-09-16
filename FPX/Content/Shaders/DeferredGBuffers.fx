@@ -12,11 +12,11 @@ GBufferPSOutput PixelShaderFunction(GBufferVSOutput input)
 
 	float3x3 tangentSpace = (float3x3)0;
 	tangentSpace[2] = input.normal;
-	tangentSpace[1] = input.binormal;
-	tangentSpace[0] = cross(tangentSpace[1], tangentSpace[2]);
+	tangentSpace[1] = input.tangent;
+	tangentSpace[0] = input.bitangent;
 
 	float3 normal = NormalMap.Sample(Sampler, input.uv) * Roughness;
-	normal = mul(normal, tangentSpace);
+	normal = normalize(mul(normal, tangentSpace));
 
 	output.normal = float4((normal + 1.f) / 2.f * Roughness, 1.f);
 	output.specular = float4(SpecularMap.Sample(Sampler, input.uv).rgb * SpecularColor.rgb, 1.0f);

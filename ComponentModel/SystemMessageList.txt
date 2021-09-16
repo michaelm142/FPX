@@ -1,0 +1,25 @@
+////////////////////////////////////////////////////////////////////
+//																  //
+//			List of all standard FPX component messages			  //
+//																  //
+////////////////////////////////////////////////////////////////////
+
+/////<Initialize>///////////////////////////////
+Start - Called on the first frame the component is updated.
+Awake - Called when the components gameObject is instanciated in the Scene or, if the object is already instanciated, when the component is added to the object.
+
+/////<Update>//////////////////////////////////
+Update(gameTime) - Called each frame the component is updated and enabled after Start
+	- gameTime[depricated] the active gameTime for the simulation
+
+/////<Collisions>//////////////////////////
+OnCollisionEnter(Collider) - Called on the first frame that a collision occours. 
+	- Collider - the other collider the collider is colliding with. Colliding.
+OnCollision(Collider) - Called each frame the colliders are in contact with each other.
+	- Collider - the other collider the collider is colliding with. Colliding.
+OnCollisionExit(Collider) - Called on the frame the colliders are no longer touching afer a collision.
+	- Collider - the other collider the collider is colliding with. Colliding.
+
+/////<Render>//////////////////////////////////
+Draw(gameTime) - Called when the component should be rendered to the screen. Only works in default rendering mode.
+DrawUI(SpriteBatch) - called when the component should render UI elements.

@@ -52,7 +52,11 @@ namespace FPX
         private void Scene_ObjectInstanciated(object sender, EventArgs e)
         {
             GameObject obj = sender as GameObject;
-            obj.BroadcastMessage("Awake");
+
+            obj.instanciated = true;
+            if (IsLoaded)
+                obj.BroadcastMessage("Awake");
+
             Debug.Log("Spawned object {0} in scene.", obj);
         }
 
@@ -84,10 +88,17 @@ namespace FPX
             return obj;
         }
 
+        private bool _firstFrame = true;
         public void Update(GameTime gameTime)
         {
             if (!IsLoaded)
                 return;
+            if (_firstFrame)
+            {
+                for (int i = 0; i < Component.g_collection.Count; i++)
+                    Component.g_collection[i].SendMessage("Awake");
+                _firstFrame = false;
+            }
             if (Camera.Active == null)
             {
                 var camObj = objects.Find(o => o.GetComponent<Camera>() != null);

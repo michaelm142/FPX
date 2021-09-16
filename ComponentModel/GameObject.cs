@@ -12,6 +12,7 @@ namespace FPX
     public sealed class GameObject
     {
         internal bool destroyed;
+        internal bool instanciated;
 
         public event EventHandler<EventArgs> DrawOrderChanged;
         public event EventHandler<EventArgs> EnabledChanged;
@@ -138,7 +139,8 @@ namespace FPX
         {
             Component comp = Activator.CreateInstance<T>();
             comp.gameObject = this;
-            comp.Run();
+            if (instanciated)
+                comp.SendMessage("Awake");
             Components.Add(comp);
 
             return comp as T;

@@ -188,7 +188,7 @@ namespace LodeObj
             for (int i = 0; i < vBuffer.Length; i++)
             {
                 vBuffer[i] = new VertexPositionNormalTextureBinormal(model.vertecies[i].Position,
-                    model.vertecies[i].Normal, model.vertecies[i].TextureCoordinate, model.binormals[i]);
+                    model.vertecies[i].Normal, model.vertecies[i].TextureCoordinate, Vector3.Zero, Vector3.Zero);
             }
         }
     }

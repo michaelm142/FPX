@@ -259,10 +259,23 @@ namespace FPX
                             }
                         }
                         float axisValue = val / (float)maxVal;
-                        if (Math.Abs(axisValue) < axis.DeadZone)
-                            axisValue = 0.0f;
                         axis.Value = axis.Invert ? -axisValue : axisValue;
                         break;
+                    }
+                    else if (!string.IsNullOrEmpty(axis.PositiveButton))
+                    {
+                        var positiveGamePadButton = axis.PositiveButtonAs<GamePadButton>();
+                        GamePadButton negitiveGamePadButton = string.IsNullOrEmpty(axis.NegitiveButton) ? GamePadButton.None : axis.NegitiveButtonAs<GamePadButton>();
+                        if (axis.DeviceIndex == AnyControler)
+                        {
+                            foreach (var gamePadState in gamepads)
+                            {
+                                if ((gamePadState.wButtons & (ushort)positiveGamePadButton) != 0)
+                                    axis.Value += axis.Invert ? -axis.Sensitivity : axis.Sensitivity;
+                                if ((gamePadState.wButtons & (ushort)negitiveGamePadButton) != 0)
+                                    axis.Value -= axis.Invert ? -axis.Sensitivity : axis.Sensitivity;
+                            }
+                        }
                     }
 
                     bool hasNegitiveButton = !string.IsNullOrEmpty(axis.NegitiveButton);
@@ -297,6 +310,8 @@ namespace FPX
 
             axis.Value = MathHelper.Lerp(axis.Value, 0.0f, axis.Gravity);
             axis.Value = MathHelper.Clamp(axis.Value, -1.0f, 1.0f);
+            if (MathHelper.Distance(axis.Value, 0) < axis.DeadZone)
+                axis.Value = 0.0f;
         }
 
         private InputAxis FindAxis(string name)

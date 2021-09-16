@@ -8,14 +8,16 @@ struct GBufferVSInput
 	float4 Position : POSITION0;
 	float3 Normal : NORMAL0;
 	float2 uv : TEXCOORD0;
-	float3 binormal : BINORMAL0;
+	float3 tangent : BINORMAL0;
+	float3 bitangent : BINORMAL1;
 };
 
 struct GBufferVSOutput
 {
 	float4 position : SV_Position;
 	float4 depth : NORMAL1;
-	float3 binormal : BINORMAL0;
+	float3 tangent : BINORMAL0;
+	float3 bitangent : BINORMAL1;
 	float3 normal : NORMAL0;
 	float2 uv : TEXCOORD0;
 };
@@ -35,7 +37,8 @@ GBufferVSOutput GBufferVS(GBufferVSInput input)
 	float4 worldPosition = mul(input.Position, World);
 	output.position = mul(worldPosition, ViewProjection);
 
-	output.binormal = mul(input.binormal, (float3x3)World);
+	output.tangent = mul(input.tangent, (float3x3)World);
+	output.bitangent = mul(input.tangent, (float3x3)World);
 	output.normal = mul(input.Normal, (float3x3)World);
 	output.uv = input.uv;
 	output.depth = float4(output.position.z, output.position.w, 0, 0);

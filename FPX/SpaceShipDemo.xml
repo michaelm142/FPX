@@ -1,0 +1,66 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<Scene>
+  <Objects>
+
+    <Object Name="Camera">
+      <Camera>
+        <FieldOfView>60</FieldOfView>
+        <NearPlaneDistance>0.01</NearPlaneDistance>
+        <FarPlaneDistance>1000</FarPlaneDistance>
+        <ClearColor Name="Black"/>
+      </Camera>
+      <GameControlTest>
+        <MoveSpeed>5.0</MoveSpeed>
+        <RotationSpeed>50.0</RotationSpeed>
+      </GameControlTest>
+      <SkyboxRenderer>
+        <Texture Name="Textures//PlanetSkybox"/>
+      </SkyboxRenderer>
+    </Object>
+
+    <Object Name="Ship">
+      <Transform>
+        <Position Z="-5" Y="-1"/>
+        <Rotation Y="180"/>
+        <Scale X="0.01" Y="0.01" Z="0.01"/>
+      </Transform>
+      <MeshRenderer>
+        <Model Name="Models//Spaceship"/>
+      </MeshRenderer>
+      <Material>
+        <DiffuseColor Name="Blue"/>
+        <SpecularColor Name="White"/>
+      </Material>
+      <Spin>
+        <Speed>1</Speed>
+        <Axis Y="1"/>
+      </Spin>
+      <FireLaser/>
+    </Object>
+    
+    <Object Name="The Sun">
+      <Transform>
+        <Rotation X="45"/>
+        <Position Y="1.0"/>
+      </Transform>
+      <Light>
+        <LightType>Directional</LightType>
+        <DiffuseColor Name="White" B="0.75" G="0.8"/>
+        <SpecularColor Name="White"/>
+        <Intensity>0.9</Intensity>
+      </Light>
+    </Object>
+
+    <Prefab Filename="Prefabs\\Box.xml">
+      <Transform>
+        <Position Z="-20"/>
+      </Transform>
+      <Spin>
+        <Speed>1</Speed>
+        <Axis Y="1"/>
+      </Spin>
+    </Prefab>
+    
+  </Objects>
+</Scene>

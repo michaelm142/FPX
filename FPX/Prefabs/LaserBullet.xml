@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<Object Name="Laser Bullet">
+  <Transform>
+    <Scale XYZ="0.1"/>
+  </Transform>
+  <MeshRenderer>
+    <Model Name="Models//Sphere"/>
+  </MeshRenderer>
+  <Material>
+    <DiffuseColor Name="Blue"/>
+    <SpecularColor Name="White"/>
+  </Material>
+  <Rigidbody/>
+  <Light>
+    <LightType>Point</LightType>
+    <DiffuseColor Name="Blue"/>
+    <SpecularColor Name="White"/>
+    <Intensity>1.0</Intensity>
+    <Range>8</Range>
+  </Light>
+</Object>

@@ -15,7 +15,8 @@ GBufferVSOutput TerrainVS(in GBufferVSInput input)
 	worldPosition.y += height;
 	output.position = mul(worldPosition, ViewProjection);
 
-	output.binormal = mul(input.binormal, (float3x3)World);
+	output.tangent = mul(input.tangent, (float3x3)World);
+	output.bitangent = mul(input.Normal, (float3x3)World);
 	output.normal = mul(input.Normal, (float3x3)World);
 	output.uv = input.uv;
 	output.depth = float4(output.position.z, output.position.w, 0, 0);
@@ -31,8 +32,8 @@ GBufferPSOutput MainPS(GBufferVSOutput input)
 
 	float3x3 tangentSpace = (float3x3)0;
 	tangentSpace[2] = input.normal;
-	tangentSpace[1] = input.binormal;
-	tangentSpace[0] = cross(tangentSpace[1], tangentSpace[2]);
+	tangentSpace[1] = input.tangent;
+	tangentSpace[0] = input.bitangent;
 
 	float3 normal = NormalMap.Sample(Sampler, input.uv);
 	normal = mul(normal, tangentSpace);

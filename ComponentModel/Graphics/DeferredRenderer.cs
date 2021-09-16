@@ -225,7 +225,7 @@ namespace FPX
 
         public void RenderObject(MeshRenderer renderer)
         {
-            if (!renderer.Visible || !renderer.gameObject.Visible)
+            if (!renderer.Visible || !renderer.gameObject.Visible || renderer.Vertecies == null || renderer.Vertecies.Length == 0)
                 return;
 
             Material material = renderer.GetComponent<Material>();
@@ -237,8 +237,8 @@ namespace FPX
             GBufferShader.Parameters["DiffuseColor"].SetValue(renderer.GetComponent<Material>().DiffuseColor.ToVector4());
             GBufferShader.Parameters["SpecularColor"].SetValue(renderer.GetComponent<Material>().SpecularColor.ToVector4());
             GBufferShader.Parameters["Roughness"].SetValue(material.Roughness);
-            GBufferShader.Parameters["SpecularPower"].SetValue(material.SpecularPower / 10.0f);
-            GBufferShader.Parameters["SpecularIntensity"].SetValue(material.SpecularIntensity / 10.0f);
+            GBufferShader.Parameters["SpecularPower"].SetValue(material.SpecularPower);
+            GBufferShader.Parameters["SpecularIntensity"].SetValue(material.SpecularIntensity);
             //Device.Textures[0] = renderer.GetComponent<Material>().DiffuseMap;
             //Device.Textures[1] = renderer.GetComponent<Material>().NormalMap;
             //Device.Textures[2] = renderer.GetComponent<Material>().SpecularMap;
@@ -356,20 +356,25 @@ namespace FPX
 
         public void SetVBufferXml(XmlElement geometryNode)
         {
-            var positionNode = geometryNode.ChildNodes.Cast<XmlNode>().ToList().Find(n => n.Name == "Positions");
-            var normalNode = geometryNode.ChildNodes.Cast<XmlNode>().ToList().Find(n => n.Name == "Normals");
-            var uvsNode = geometryNode.ChildNodes.Cast<XmlNode>().ToList().Find(n => n.Name == "Uvs");
-            var binormalsNode = geometryNode.ChildNodes.Cast<XmlNode>().ToList().Find(n => n.Name == "Binormals");
+            var nodeList = geometryNode.ChildNodes.Cast<XmlNode>().ToList();
+
+            var positionNode = nodeList.Find(n => n.Name == "Positions");
+            var normalNode = nodeList.Find(n => n.Name == "Normals");
+            var uvsNode = nodeList.Find(n => n.Name == "Uvs");
+            var tangentNode = nodeList.Find(n => n.Name == "Tangents");
+            var bitangentNode = nodeList.Find(n => n.Name == "BiTangents");
 
             string positionString = positionNode.InnerText;
             string normalString = normalNode.InnerText;
             string uvsString = uvsNode.InnerText;
-            string binormalsString = binormalsNode.InnerText;
+            string tangentString = tangentNode.InnerText;
+            string bitangentString = bitangentNode.InnerText;
 
             string[] positionStringData = positionString.Split(new char[] { ' ', ',' }, StringSplitOptions.RemoveEmptyEntries);
             string[] normalStringData = normalString.Split(new char[] { ' ', ',' }, StringSplitOptions.RemoveEmptyEntries);
             string[] uvsStringData = uvsString.Split(new char[] { ' ', ',' }, StringSplitOptions.RemoveEmptyEntries);
-            string[] binormalsStringData = binormalsString.Split(new char[] { ' ', ',' }, StringSplitOptions.RemoveEmptyEntries);
+            string[] tangentStringData = tangentString.Split(new char[] { ' ', ',' }, StringSplitOptions.RemoveEmptyEntries);
+            string[] bitangentStringData = bitangentString.Split(new char[] { ' ', ',' }, StringSplitOptions.RemoveEmptyEntries);
 
             VertexPositionNormalTextureBinormal[] gpu_vertecies = new VertexPositionNormalTextureBinormal[positionStringData.Length / 3];
             for (int i = 0; i < gpu_vertecies.Length; i++)
@@ -379,8 +384,9 @@ namespace FPX
 
                 gpu_vertecies[i].Position = new Vector4(float.Parse(positionStringData[float3Index]), float.Parse(positionStringData[float3Index + 1]), float.Parse(positionStringData[float3Index + 2]), 0.0f);
                 gpu_vertecies[i].Normal = new Vector3(float.Parse(normalStringData[float3Index]), float.Parse(normalStringData[float3Index + 1]), float.Parse(normalStringData[float3Index + 2]));
-                gpu_vertecies[i].Binormal = new Vector3(float.Parse(binormalsStringData[float3Index]), float.Parse(binormalsStringData[float3Index + 1]), float.Parse(binormalsStringData[float3Index + 2]));
-                gpu_vertecies[i].TextureCoordinate = new Vector2(float.Parse(binormalsStringData[float2Index]), float.Parse(binormalsStringData[float2Index + 1]));
+                gpu_vertecies[i].BiTangent = new Vector3(float.Parse(bitangentStringData[float3Index]), float.Parse(bitangentStringData[float3Index + 1]), float.Parse(bitangentStringData[float3Index + 2]));
+                gpu_vertecies[i].Tangent = new Vector3(float.Parse(tangentStringData[float3Index]), float.Parse(tangentStringData[float3Index + 1]), float.Parse(tangentStringData[float3Index + 2]));
+                gpu_vertecies[i].TextureCoordinate = new Vector2(float.Parse(uvsStringData[float2Index]), float.Parse(uvsStringData[float2Index + 1]));
 
             }
 
@@ -396,26 +402,30 @@ namespace FPX
             string positionString = "",
                 uvString = "",
                 normalString = "",
-                binormalString = "";
+                tangentString = "",
+                bitangentString = "";
 
             for (int i = 0; i < gpu_vertecies.Length; i++)
             {
                 positionString += string.Format("{0}, {1}, {2},", gpu_vertecies[i].Position.X, gpu_vertecies[i].Position.Y, gpu_vertecies[i].Position.Z);
                 uvString += string.Format("{0}, {1},", gpu_vertecies[i].TextureCoordinate.X, gpu_vertecies[i].TextureCoordinate.Y);
                 normalString += string.Format("{0}, {1}, {2},", gpu_vertecies[i].Normal.X, gpu_vertecies[i].Normal.Y, gpu_vertecies[i].Normal.Z);
-                binormalString += string.Format("{0}, {1}, {2},", gpu_vertecies[i].Binormal.X, gpu_vertecies[i].Binormal.Y, gpu_vertecies[i].Binormal.Z);
+                tangentString += string.Format("{0}, {1}, {2},", gpu_vertecies[i].Tangent.X, gpu_vertecies[i].Tangent.Y, gpu_vertecies[i].Tangent.Z);
+                bitangentString += string.Format("{0}, {1}, {2},", gpu_vertecies[i].BiTangent.X, gpu_vertecies[i].BiTangent.Y, gpu_vertecies[i].BiTangent.Z);
             }
 
             var geometryNode = parent.AppendChild(parent.OwnerDocument.CreateElement("Geometry"));
             var positionsNode = geometryNode.AppendChild(parent.OwnerDocument.CreateElement("Positions"));
             var normalsNode = geometryNode.AppendChild(parent.OwnerDocument.CreateElement("Normals"));
             var uvsNode = geometryNode.AppendChild(parent.OwnerDocument.CreateElement("Uvs"));
-            var binormalsNode = geometryNode.AppendChild(parent.OwnerDocument.CreateElement("Binormals"));
+            var tangentNode = geometryNode.AppendChild(parent.OwnerDocument.CreateElement("Tangents"));
+            var bitangentNode = geometryNode.AppendChild(parent.OwnerDocument.CreateElement("BiTangents"));
 
             positionsNode.InnerText = positionString;
             normalsNode.InnerText = normalString;
             uvsNode.InnerText = uvString;
-            binormalsNode.InnerText = binormalString;
+            tangentNode.InnerText = tangentString;
+            bitangentNode.InnerText = bitangentString;
         }
 
         public void _debug_renderGBufferResults()

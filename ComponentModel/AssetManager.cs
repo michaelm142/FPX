@@ -44,7 +44,7 @@ namespace FPX
                     string line = reader.ReadLine();
                     while (line != null && !reader.EndOfStream)
                     {   
-                        if (line.IndexOf("SpriteFontReade") != -1)
+                        if (line.IndexOf("SpriteFontReader") != -1)
                         {
                             if (Assets.Keys.Contains(file.Name))
                                 break;

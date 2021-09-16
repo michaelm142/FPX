@@ -21,8 +21,8 @@ namespace FPX
         public Texture2D SpecularMap;
 
         public float Roughness = 1.0f;
-        public float SpecularPower = 1.0f;
-        public float SpecularIntensity = 0.02f;
+        public float SpecularPower = 20.0f;
+        public float SpecularIntensity = 0.002f;
 
         public Effect shader;
 
@@ -76,7 +76,7 @@ namespace FPX
             }
             else
             {
-                NormalMap = DefaultTexture;
+                NormalMap = DefaultNormalMap;
                 NormalMap.Tag = "Default";
             }
             if (specularMapNode != null && !(specularMapNode.Attributes["FileName"] == null || specularMapNode.Attributes["FileName"].Value == "Default"))
@@ -132,18 +132,51 @@ namespace FPX
                 node.AppendChild(specularNode);
         }
 
+        public Material Clone()
+        {
+            Material clone = new Material();
+
+            clone.blendState = blendState;
+            clone.AmbientColor = AmbientColor;
+            clone.SpecularColor = SpecularColor;
+            clone.DiffuseColor = DiffuseColor;
+            clone.DiffuseMap = DiffuseMap;
+            clone.NormalMap = NormalMap;
+            clone.SpecularMap = SpecularMap;
+            clone.Roughness = Roughness;
+            clone.SpecularPower = SpecularPower;
+            clone.shader = shader;
+
+            return clone;
+        }
+
         private static Texture2D g_defaultTexture;
-        public static Texture2D DefaultTexture
+        private static Texture2D g_defaultNormalTexture;
+        internal static Texture2D DefaultTexture
         {
             get
             {
                 if (g_defaultTexture == null)
                 {
                     g_defaultTexture = new Texture2D(GameCore.graphicsDevice, 256, 256);
-                    g_defaultTexture.MakeDefault();
+                    g_defaultTexture.MakeDefaultDiffuse();
                 }
 
                 return g_defaultTexture;
+            }
+        }
+
+        internal static Texture2D DefaultNormalMap
+        {
+            get
+            {
+                if (g_defaultNormalTexture == null)
+                {
+                    g_defaultNormalTexture = new Texture2D(GameCore.graphicsDevice, 256, 256);
+                    g_defaultNormalTexture.MakeDefaultDiffuse();
+                }
+
+                return g_defaultNormalTexture;
             }
         }
     }

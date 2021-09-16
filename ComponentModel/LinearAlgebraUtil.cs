@@ -176,6 +176,7 @@ namespace FPX
             var xAttr = element.Attributes["X"];
             var yAttr = element.Attributes["Y"];
             var zAttr = element.Attributes["Z"];
+            var xyzAttr = element.Attributes["XYZ"];
 
             if (xAttr != null)
                 outval.X = float.Parse(xAttr.Value);
@@ -183,6 +184,11 @@ namespace FPX
                 outval.Y = float.Parse(yAttr.Value);
             if (zAttr != null)
                 outval.Z = float.Parse(zAttr.Value);
+            if (xyzAttr != null)
+            {
+                float value = float.Parse(xyzAttr.Value);
+                outval.X = outval.Y = outval.Z = value;
+            }
 
             return outval;
         }
@@ -191,19 +197,29 @@ namespace FPX
         {
             if (element == null)
                 return Vector4.Zero;
+            Vector4 outval = Vector4.Zero;
 
+            var xAttr = element.Attributes["X"];
+            var yAttr = element.Attributes["Y"];
+            var zAttr = element.Attributes["Z"];
+            var wAttr = element.Attributes["W"];
+            var xyzAttr = element.Attributes["XYZW"];
 
-            if (element.Attributes["X"] != null)
-                return new Vector4(float.Parse(element.Attributes["X"].Value),
-                    float.Parse(element.Attributes["Y"].Value),
-                    float.Parse(element.Attributes["Z"].Value),
-                    float.Parse(element.Attributes["W"].Value));
-            
-            else
-                return new Vector4(float.Parse(element.Attributes["R"].Value),
-                                   float.Parse(element.Attributes["G"].Value),
-                                   float.Parse(element.Attributes["B"].Value),
-                                   float.Parse(element.Attributes["A"].Value));
+            if (xAttr != null)
+                outval.X = float.Parse(xAttr.Value);
+            if (yAttr != null)
+                outval.Y = float.Parse(yAttr.Value);
+            if (zAttr != null)
+                outval.Z = float.Parse(zAttr.Value);
+            if (wAttr != null)
+                outval.W = float.Parse(wAttr.Value);
+            if (xyzAttr != null)
+            {
+                float value = float.Parse(xyzAttr.Value);
+                outval.X = outval.Y = outval.Z = outval.W =  value;
+            }
+
+            return outval;
 
         }
 

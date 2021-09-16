@@ -20,10 +20,9 @@
     </Object>
 
     <Object Name="Ship">
-      <Transform>
-        <Position Z="-5" Y="-1"/>
+      <Transform Parent="Camera">
+        <Position Z="-5" Y="-2.5"/>
         <Rotation Y="180"/>
-        <Scale X="0.01" Y="0.01" Z="0.01"/>
       </Transform>
       <MeshRenderer>
         <Model Name="Models//Spaceship"/>
@@ -32,11 +31,24 @@
         <DiffuseColor Name="Blue"/>
         <SpecularColor Name="White"/>
       </Material>
+      <FireLaser/>
+      <SpaceshipEffects/>
+    </Object>
+
+    <Object Name="Asteroid 1">
+      <Transform>
+        <Position X="5" Y="0.5" Z="5"/>
+      </Transform>
+      <MeshRenderer>
+        <Model Name="Models//asteroid1"/>
+      </MeshRenderer>
       <Spin>
         <Speed>1</Speed>
-        <Axis Y="1"/>
+        <Axis X="0.1" Y="0.5" Z="0.2"/>
       </Spin>
-      <FireLaser/>
+      <Material>
+        <DiffuseColor Name="Gray"/>
+      </Material>
     </Object>
     
     <Object Name="The Sun">
@@ -46,8 +58,7 @@
       </Transform>
       <Light>
         <LightType>Directional</LightType>
-        <DiffuseColor Name="White" B="0.75" G="0.8"/>
-        <SpecularColor Name="White"/>
+        <DiffuseColor Name="White"/>
         <Intensity>0.9</Intensity>
       </Light>
     </Object>

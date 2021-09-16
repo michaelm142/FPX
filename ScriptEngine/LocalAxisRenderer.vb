@@ -9,6 +9,10 @@ Public Class LocalAxisRenderer
     Private frontLine As LineRenderer
 
     Public Sub Start()
+        If Not Graphics.Mode = "Default" Then
+            Debug.LogError("Local Axis Renderer is not designed to work outside of Default rendering mode")
+        End If
+
         upLine = gameObject.AddComponent(Of LineRenderer)
         rightLine = gameObject.AddComponent(Of LineRenderer)
         frontLine = gameObject.AddComponent(Of LineRenderer)

@@ -115,6 +115,7 @@
     <Import Include="System.Threading.Tasks" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Asteroid.vb" />
     <Compile Include="AudioTester.vb" />
     <Compile Include="AxisAlignedTester.vb" />
     <Compile Include="BoxRenderer.vb" />
@@ -150,6 +151,7 @@
     <Compile Include="PsudodistanceTester.vb" />
     <Compile Include="RayTester.vb" />
     <Compile Include="RigidbodyController.vb" />
+    <Compile Include="SpaceshipEffects.vb" />
     <Compile Include="Spin.vb" />
     <Compile Include="StartringForce.vb" />
     <Compile Include="TestScript.vb" />

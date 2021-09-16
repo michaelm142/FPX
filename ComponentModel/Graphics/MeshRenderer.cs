@@ -57,6 +57,8 @@ namespace FPX
 
         public void Draw(GameTime gametime)
         {
+            if (model == null)
+                return;
             foreach (var mesh in model.Meshes)
             {
                 foreach (BasicEffect effect in mesh.Effects)
@@ -113,6 +115,8 @@ namespace FPX
             try
             {
                 model = GameCore.content.Load<Model>(modelName);
+                if (Graphics.Mode == "Default")
+                    CreateFromMeshPart(model.Meshes[0].MeshParts[0]);
                 model.Tag = modelName;
             }
             catch (ContentLoadException)
@@ -155,6 +159,7 @@ namespace FPX
             else
             {
                 var obj = Instanciate(new GameObject(leaf.Name));
+                obj.transform.position = leaf.Transform.Translation;
                 obj.transform.parent = input as Transform;
                 if (leaf.Meshes.Count == 1)
                 {

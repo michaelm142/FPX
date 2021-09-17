@@ -1,4 +1,5 @@
-﻿using System.Xml;
+﻿using System;
+using System.Xml;
 using Microsoft.Xna.Framework;
 
 namespace FPX
@@ -36,22 +37,22 @@ namespace FPX
                 transform.position = startPosition;
                 transform.rotation.SetEulerAngles(startRotation);
             }
-        //    if (isKinematic || (acceleration.Length() == 0.0f && velocity.Length() == 0.0f))
-        //        return;
+            //    if (isKinematic || (acceleration.Length() == 0.0f && velocity.Length() == 0.0f))
+            //        return;
 
-        //    acceleration -= velocity * drag * (float)gameTime.ElapsedGameTime.TotalSeconds;
-        //    torque -= angularVelocity * angularDrag * (float)gameTime.ElapsedGameTime.TotalSeconds;
+            //    acceleration -= velocity * drag * (float)gameTime.ElapsedGameTime.TotalSeconds;
+            //    torque -= angularVelocity * angularDrag * (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-        //    velocity += acceleration * (float)gameTime.ElapsedGameTime.TotalSeconds;
-        //    transform.position += velocity * (float)gameTime.ElapsedGameTime.TotalSeconds;
-        //    angularVelocity += torque * (float)gameTime.ElapsedGameTime.TotalSeconds;
-        //    transform.rotation *= Quaternion.CreateFromYawPitchRoll(angularVelocity.Y, angularVelocity.X, angularVelocity.Z);
+            //    velocity += acceleration * (float)gameTime.ElapsedGameTime.TotalSeconds;
+            //    transform.position += velocity * (float)gameTime.ElapsedGameTime.TotalSeconds;
+            //    angularVelocity += torque * (float)gameTime.ElapsedGameTime.TotalSeconds;
+            //    transform.rotation *= Quaternion.CreateFromYawPitchRoll(angularVelocity.Y, angularVelocity.X, angularVelocity.Z);
 
-        //    if (LinearAlgebraUtil.isEpsilon(acceleration))
-        //        acceleration = Vector3.Zero;
-        //    if (LinearAlgebraUtil.isEpsilon(velocity))
-        //        velocity = Vector3.Zero;
-       }
+            //    if (LinearAlgebraUtil.isEpsilon(acceleration))
+            //        acceleration = Vector3.Zero;
+            //    if (LinearAlgebraUtil.isEpsilon(velocity))
+            //        velocity = Vector3.Zero;
+        }
 
         public void OnCollisionEnter(Collider other)
         {
@@ -65,7 +66,20 @@ namespace FPX
 
         public void AddTorque(Vector3 torque)
         {
-            torque += torque / mass;
+            this.torque += torque / mass;
+        }
+
+        public void AddRelitiveTorque(Vector3 torque)
+        {
+            Vector3 N = Vector3.Cross(transform.forward, Vector3.Forward).Normalized();
+
+            float phi = MathHelper.ToRadians(LinearAlgebraUtil.AngleBetween(transform.up * torque.Y, Vector3.Up));
+            float psi = MathHelper.ToRadians(LinearAlgebraUtil.AngleBetween(transform.right, N));
+            float theta = MathHelper.ToRadians(LinearAlgebraUtil.AngleBetween(Vector3.Right, N));
+
+            this.torque += (float)(phi * Math.Cos(psi) + theta * Math.Sin(psi) * Math.Sin(phi)) * transform.right * torque.X;
+            this.torque += (float)(-phi * Math.Sin(psi) + theta * Math.Cos(psi) * Math.Sin(phi)) * transform.up * torque.Y;
+            this.torque += (float)(phi + theta * Math.Cos(phi)) * transform.forward * torque.Z;
         }
 
         public void Reset()

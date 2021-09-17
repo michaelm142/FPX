@@ -548,3 +548,9 @@
 /processorParam:TextureFormat=Compressed
 /build:Models/asteroid3.fbx
 
+#begin Audio/laser.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/laser.wav
+

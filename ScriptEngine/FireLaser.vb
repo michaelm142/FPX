@@ -12,6 +12,7 @@ Public Class FireLaser
             bullet.position = position
             Dim rigidbody = bullet.GetComponent(Of Rigidbody)
             rigidbody.velocity = -transform.forward * 500
+            GetComponent(Of AudioSource).Play()
         End If
 
 

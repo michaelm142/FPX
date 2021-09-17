@@ -158,6 +158,17 @@ namespace FPX
         }
 
         private List<Transform> childTransforms = new List<Transform>();
+        public Transform this[int index]
+        {
+            get { return childTransforms[index]; }
+
+            set { childTransforms[index] = value; }
+        }
+
+        public Transform GetChild(int index)
+        {
+            return this[index];
+        }
 
         public IEnumerator<Transform> GetEnumerator()
         {

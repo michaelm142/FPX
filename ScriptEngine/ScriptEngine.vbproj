@@ -121,6 +121,7 @@
     <Compile Include="BoxRenderer.vb" />
     <Compile Include="BoxTester.vb" />
     <Compile Include="CameraController.vb" />
+    <Compile Include="CameraFollow.vb" />
     <Compile Include="CameraSwitcher.vb" />
     <Compile Include="ClosestPointShower.vb" />
     <Compile Include="ClosetPointFinder.vb" />
@@ -151,6 +152,7 @@
     <Compile Include="PsudodistanceTester.vb" />
     <Compile Include="RayTester.vb" />
     <Compile Include="RigidbodyController.vb" />
+    <Compile Include="SpaceshipControls.vb" />
     <Compile Include="SpaceshipEffects.vb" />
     <Compile Include="Spin.vb" />
     <Compile Include="StartringForce.vb" />

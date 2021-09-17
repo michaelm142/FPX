@@ -152,6 +152,17 @@ namespace FPX
             }
         }
 
+        public static float AngleBetween(Vector3 a, Vector3 b)
+        {
+            if (isEpsilon(a) || isEpsilon(b))
+                return 0.0f;
+
+            float dot = Vector3.Dot(a, b);
+            float len = a.Length() * b.Length();
+
+            return MathHelper.ToDegrees((float)Math.Acos(dot / len));
+        }
+
         public static Vector3 Normalized(this Vector3 v)
         {
             Vector3 _v = v;

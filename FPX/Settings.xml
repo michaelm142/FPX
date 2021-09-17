@@ -15,8 +15,8 @@
   <RenderMode>Deferred</RenderMode>
   
   <Input>
-    <Axis Name="Horizontal" Platform="GamePad" Axis="LeftThumbStickX" DeadZone="0.1"/>
-    <Axis Name="Vertical" Platform="GamePad" Axis="LeftThumbStickY" DeadZone="0.1"/>
+    <Axis Name="Horizontal" Platform="GamePad" Axis="LeftThumbStickX" DeadZone="0.1" Invert="true"/>
+    <Axis Name="Vertical" Platform="GamePad" Axis="LeftThumbStickY" DeadZone="0.1" Invert="true"/>
     <Axis Name="Up" Platform="GamePad" Axis="RightTrigger"/>
     <Axis Name="Down" Platform="GamePad" Axis="LeftTrigger" Invert="true"/>
     <Axis Name="2D Horizontal" Platform="Keyboard" PositiveButton="Right" NegitiveButton="Left" Sensitivity="0.2" Gravity="0.9"/>

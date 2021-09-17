@@ -91,7 +91,7 @@ namespace FPX
 
         private void UpdateRigidbody(Rigidbody rBody)
         {
-            if (rBody.isKinematic || (rBody.acceleration.Length() == 0.0f && rBody.velocity.Length() == 0.0f))
+            if (rBody.isKinematic /*|| (rBody.acceleration.Length() == 0.0f && rBody.velocity.Length() == 0.0f)*/)
                 return;
 
 
@@ -102,6 +102,7 @@ namespace FPX
             rBody.velocity -= rBody.velocity * rBody.drag * Time.deltaTime;
             rBody.transform.position += rBody.velocity * Time.deltaTime;
             rBody.angularVelocity += rBody.torque * Time.deltaTime;
+            rBody.angularVelocity -= rBody.angularVelocity * rBody.angularDrag * Time.deltaTime;
             rBody.transform.rotation *= Quaternion.CreateFromYawPitchRoll(
                 rBody.angularVelocity.Y * Time.deltaTime,
                 rBody.angularVelocity.Z * Time.deltaTime,

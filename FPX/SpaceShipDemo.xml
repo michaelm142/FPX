@@ -10,17 +10,19 @@
         <FarPlaneDistance>1000</FarPlaneDistance>
         <ClearColor Name="Black"/>
       </Camera>
-      <GameControlTest>
+      <CameraFollow>
+        <Offset Z="-5" Y="2.5"/>
+        <Target>Ship</Target>
         <MoveSpeed>5.0</MoveSpeed>
-        <RotationSpeed>50.0</RotationSpeed>
-      </GameControlTest>
+      </CameraFollow>
       <SkyboxRenderer>
         <Texture Name="Textures//PlanetSkybox"/>
       </SkyboxRenderer>
+      <AudioListener/>
     </Object>
 
     <Object Name="Ship">
-      <Transform Parent="Camera">
+      <Transform>
         <Position Z="-5" Y="-2.5"/>
         <Rotation Y="180"/>
       </Transform>
@@ -32,12 +34,24 @@
         <SpecularColor Name="White"/>
       </Material>
       <FireLaser/>
+      <AudioSource>
+        <Filename>Audio//laser</Filename>
+      </AudioSource>
       <SpaceshipEffects/>
+      <SpaceshipControls>
+        <MoveSpeed>20</MoveSpeed>
+        <TurnSpeed>2</TurnSpeed>
+      </SpaceshipControls>
+      <Rigidbody>
+        <Mass>75</Mass>
+        <Drag>2.5</Drag>
+        <AngularDrag>5</AngularDrag>
+      </Rigidbody>
     </Object>
 
     <Object Name="Asteroid 1">
       <Transform>
-        <Position X="5" Y="0.5" Z="5"/>
+        <Position X="-5" Y="0.5" Z="-5"/>
       </Transform>
       <MeshRenderer>
         <Model Name="Models//asteroid1"/>
@@ -45,6 +59,102 @@
       <Spin>
         <Speed>1</Speed>
         <Axis X="0.1" Y="0.5" Z="0.2"/>
+      </Spin>
+      <Material>
+        <DiffuseColor Name="Gray"/>
+      </Material>
+    </Object>
+
+    <Object Name="Asteroid 2">
+      <Transform>
+        <Position X="5" Y="0.5" Z="-5"/>
+      </Transform>
+      <MeshRenderer>
+        <Model Name="Models//asteroid2"/>
+      </MeshRenderer>
+      <Spin>
+        <Speed>1</Speed>
+        <Axis X="0.1" Y="0.5" Z="-0.2"/>
+      </Spin>
+      <Material>
+        <DiffuseColor Name="Gray"/>
+      </Material>
+    </Object>
+
+    <Object Name="Asteroid 3">
+      <Transform>
+        <Position X="5" Y="0.5" Z="-13"/>
+      </Transform>
+      <MeshRenderer>
+        <Model Name="Models//asteroid3"/>
+      </MeshRenderer>
+      <Spin>
+        <Speed>0.1</Speed>
+        <Axis X="0.1" Y="-0.5" Z="-0.2"/>
+      </Spin>
+      <Material>
+        <DiffuseColor Name="Gray"/>
+      </Material>
+    </Object>
+
+    <Object Name="Asteroid 4">
+      <Transform>
+        <Position X="5" Y="0.5" Z="20"/>
+      </Transform>
+      <MeshRenderer>
+        <Model Name="Models//asteroid1"/>
+      </MeshRenderer>
+      <Spin>
+        <Speed>2</Speed>
+        <Axis X="0.1" Y="-0.5" Z="-0.2"/>
+      </Spin>
+      <Material>
+        <DiffuseColor Name="Gray"/>
+      </Material>
+    </Object>
+
+    <Object Name="Asteroid 5">
+      <Transform>
+        <Position X="20" Y="0.5" Z="2"/>
+      </Transform>
+      <MeshRenderer>
+        <Model Name="Models//asteroid2"/>
+      </MeshRenderer>
+      <Spin>
+        <Speed>2</Speed>
+        <Axis X="0.1"/>
+      </Spin>
+      <Material>
+        <DiffuseColor Name="Gray"/>
+      </Material>
+    </Object>
+
+    <Object Name="Asteroid 5">
+      <Transform>
+        <Position X="20" Y="0.5" Z="20"/>
+      </Transform>
+      <MeshRenderer>
+        <Model Name="Models//asteroid3"/>
+      </MeshRenderer>
+      <Spin>
+        <Speed>0.6</Speed>
+        <Axis X="-0.1" Y="-0.5" Z="-0.2"/>
+      </Spin>
+      <Material>
+        <DiffuseColor Name="Gray"/>
+      </Material>
+    </Object>
+
+    <Object Name="Asteroid 6">
+      <Transform>
+        <Position X="-20" Y="0.5" Z="20"/>
+      </Transform>
+      <MeshRenderer>
+        <Model Name="Models//asteroid3"/>
+      </MeshRenderer>
+      <Spin>
+        <Speed>0.6</Speed>
+        <Axis X="-0.1" Y="-0.5" Z="-0.2"/>
       </Spin>
       <Material>
         <DiffuseColor Name="Gray"/>

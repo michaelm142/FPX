@@ -13,7 +13,7 @@
       <CameraFollow>
         <Offset Z="-5" Y="2.5"/>
         <Target>Ship</Target>
-        <MoveSpeed>5.0</MoveSpeed>
+        <MoveSpeed>1.0</MoveSpeed>
       </CameraFollow>
       <SkyboxRenderer>
         <Texture Name="Textures//PlanetSkybox"/>
@@ -30,16 +30,24 @@
         <Model Name="Models//Spaceship"/>
       </MeshRenderer>
       <Material>
-        <DiffuseColor Name="Blue"/>
-        <SpecularColor Name="White"/>
+        <DiffuseMap FileName="Textures//spaceshipDiffuse"/>
+        <NormalMap FileName="Textures//spaceshipNormals"/>
       </Material>
-      <FireLaser/>
+      <FireLaser>
+        <LaserEnergyCost>10</LaserEnergyCost>
+      </FireLaser>
       <AudioSource>
         <Filename>Audio//laser</Filename>
       </AudioSource>
       <SpaceshipEffects/>
+      <SpaceShipResources>
+        <MaxEnergy>100</MaxEnergy>
+        <MaxHealth>100</MaxHealth>
+        <Health>100</Health>
+        <EnergyRechargeRate>30</EnergyRechargeRate>
+      </SpaceShipResources>
       <SpaceshipControls>
-        <MoveSpeed>20</MoveSpeed>
+        <MoveSpeed>75</MoveSpeed>
         <TurnSpeed>2</TurnSpeed>
       </SpaceshipControls>
       <Rigidbody>

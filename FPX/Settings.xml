@@ -22,8 +22,8 @@
     <Axis Name="2D Horizontal" Platform="Keyboard" PositiveButton="Right" NegitiveButton="Left" Sensitivity="0.2" Gravity="0.9"/>
     <Axis Name="2D Vertical" Platform="Keyboard" PositiveButton="Down" NegitiveButton="Up" Sensitivity="0.2" Gravity="0.2"/>
     <Axis Name="Yaw" Platform="GamePad" Axis="RightThumbStickX" DeadZone="0.1" Invert="true"/>
-    <Axis Name="Pitch" Platform="GamePad" Axis="RightThumbStickY" DeadZone="0.1"/>
-    <Axis Name="Fire" Platform="GamePad" PositiveButton="A" Gravity="0.5" DeadZone="0.1"/>
+    <Axis Name="Pitch" Platform="GamePad" Axis="RightThumbStickY" DeadZone="0.1" Invert="true"/>
+    <Axis Name="Fire" Platform="GamePad" PositiveButton="RightShoulder" Gravity="0.5" DeadZone="0.1"/>
   </Input>
   
 </Settings>

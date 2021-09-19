@@ -152,7 +152,7 @@ namespace FPX
 
         private static Texture2D g_defaultTexture;
         private static Texture2D g_defaultNormalTexture;
-        internal static Texture2D DefaultTexture
+        public static Texture2D DefaultTexture
         {
             get
             {
@@ -166,7 +166,7 @@ namespace FPX
             }
         }
 
-        internal static Texture2D DefaultNormalMap
+        public static Texture2D DefaultNormalMap
         {
             get
             {

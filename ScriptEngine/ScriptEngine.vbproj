@@ -154,6 +154,7 @@
     <Compile Include="RigidbodyController.vb" />
     <Compile Include="SpaceshipControls.vb" />
     <Compile Include="SpaceshipEffects.vb" />
+    <Compile Include="SpaceShipResources.vb" />
     <Compile Include="Spin.vb" />
     <Compile Include="StartringForce.vb" />
     <Compile Include="TestScript.vb" />

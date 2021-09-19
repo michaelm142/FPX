@@ -8,6 +8,9 @@ Public Class SpaceshipControls
     Public moveSpeed As Single
     Public turnSpeed As Single
 
+    Private rotX As Single
+    Private rotY As Single
+
     Public Sub Update(gameTime As GameTime)
         Dim horizontal = Input.GetAxis("Horizontal")
         Dim vertical = Input.GetAxis("Vertical")
@@ -15,10 +18,13 @@ Public Class SpaceshipControls
         Dim yaw = Input.GetAxis("Yaw")
 
         Dim force = transform.right * horizontal * moveSpeed + transform.forward * vertical * moveSpeed
-        Dim torque = Vector3.Up * yaw * turnSpeed + Vector3.Forward * pitch * turnSpeed
 
+        rotX += pitch * turnSpeed * Time.deltaTime
+        rotY += yaw * turnSpeed * Time.deltaTime
+        rotX = MathHelper.Clamp(rotX, CType(-Math.PI, Single) / 2.0F, CType(Math.PI, Single) / 2.0F)
         Dim rigidbody = GetComponent(Of Rigidbody)()
-        rigidbody.angularVelocity = torque
+        'rigidbody.angularVelocity = torque
+        transform.rotation = Quaternion.CreateFromYawPitchRoll(rotY, rotX, 0.0F)
         rigidbody.AddForce(force)
     End Sub
 

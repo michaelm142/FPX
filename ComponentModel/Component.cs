@@ -69,6 +69,8 @@ namespace FPX
 
         internal static List<Component> g_collection = new List<Component>();
 
+        private List<MethodInfo> methods;
+
         public uint Id { get; protected set; }
 
         public string Name
@@ -80,6 +82,7 @@ namespace FPX
         {
             g_collection.Add(this);
             Id = (uint)GetHashCode();
+            methods = GetType().GetMethods().ToList();
         }
 
         public T GetComponent<T>()
@@ -97,7 +100,7 @@ namespace FPX
 
         public bool KnowsMessage(string message)
         {
-            return GetType().GetMethods().ToList().Find(x => x.Name == message) != null;
+            return methods.Find(m => m.Name == message) != null;
         }
 
         public void SendMessage(string message, params object[] parameters)
@@ -105,7 +108,7 @@ namespace FPX
             if (message == "SendMessage")
                 return;
 
-            var method = GetType().GetMethods().ToList().Find(x => x.Name == message);
+            var method = methods.Find(x => x.Name == message);
             if (method != null)
             {
                 try
@@ -289,7 +292,7 @@ namespace FPX
 
         private bool _firstFrame = true;
 
-        internal  void Run()
+        internal void Run()
         {
             if (_firstFrame && KnowsMessage("Start"))
             {
@@ -297,8 +300,7 @@ namespace FPX
                 _firstFrame = false;
             }
 
-            if (KnowsMessage("Update"))
-                SendMessage("Update", Time.GameTime);
+            SendMessage("Update", Time.GameTime);
         }
     }
 }

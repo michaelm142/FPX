@@ -83,7 +83,7 @@ namespace FPX
             }
             if (Mode == "Default")
             {
-                var drawables = Component.g_collection.ToList().FindAll(c => c is IDrawable && c.gameObject.Visible).Cast<IDrawable>().ToList();
+                var drawables = Component.g_collection.FindAll(c => c is IDrawable && c.gameObject.Visible).Cast<IDrawable>().ToList();
                 drawables.Sort(SortRenderables);
 
                 var postProcessor = Camera.Active.GetComponent<PostProcessor>();

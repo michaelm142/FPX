@@ -21,8 +21,9 @@ Public Class CameraFollow
     Public Sub Update(gameTime As GameTime)
         Dim targetPosition = Vector3.Transform(offset, target.worldPose)
         Dim L = targetPosition - transform.position
+        Dim maxDistance = L.Length()
 
-        transform.position += L * Time.deltaTime
+        transform.position += L.Normalized() * MathHelper.Clamp(moveSpeed, 0.0F, maxDistance)
 
         Dim dotRight = Vector3.Dot(transform.right, target.forward)
         Dim dotUp = Vector3.Dot(transform.up, target.forward)

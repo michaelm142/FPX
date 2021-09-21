@@ -12,6 +12,10 @@
     <SpecularColor Name="White"/>
   </Material>
   <Rigidbody/>
+  <SphereCollider>
+    <Radius>0.1</Radius>
+    <IsTrigger>true</IsTrigger>
+  </SphereCollider>
   <Light>
     <LightType>Point</LightType>
     <DiffuseColor Name="Blue"/>
@@ -19,4 +23,5 @@
     <Intensity>1.0</Intensity>
     <Range>8</Range>
   </Light>
+  <DestroyBullets/>
 </Object>

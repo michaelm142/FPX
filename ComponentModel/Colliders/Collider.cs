@@ -10,6 +10,8 @@ namespace FPX
     {
         public Vector3 center;
 
+        public bool isTrigger { get; set; }
+
         public Vector3 Location
         {
             get { return transform.position + center; }

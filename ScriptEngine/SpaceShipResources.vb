@@ -17,6 +17,9 @@ Public Class SpaceShipResources
     Private energyBarWidth As Integer = 225
 
     Public recharging As Boolean
+    Public Visible As Boolean = True
+
+    Private uiOffset As Vector2
 
     Public Sub Update(gameTime As GameTime)
         If energy < maxEnergy Then
@@ -29,16 +32,20 @@ Public Class SpaceShipResources
         End If
     End Sub
     Public Sub DrawUI(spriteBatch As SpriteBatch)
+        If Not Visible Then
+            Return
+        End If
+
         Dim energyVal = (energy / maxEnergy) * energyBarWidth
         Dim healthVal = (health / maxHealth) * healthBarWidth
 
         'Draw Health Bar
-        spriteBatch.Draw(Material.DefaultTexture, New Rectangle(50, 50, healthBarWidth, 50), Color.Black)
-        spriteBatch.Draw(Material.DefaultTexture, New Rectangle(50, 50, healthVal, 50), Color.Red)
+        spriteBatch.Draw(Material.DefaultTexture, New Rectangle(50 + uiOffset.X, 50 + uiOffset.Y, healthBarWidth, 50), Color.Black)
+        spriteBatch.Draw(Material.DefaultTexture, New Rectangle(50 + uiOffset.X, 50 + uiOffset.Y, healthVal, 50), Color.Red)
 
         'Draw Energy Bar
-        spriteBatch.Draw(Material.DefaultTexture, New Rectangle(50, 100, energyBarWidth, 5), Color.Black)
-        spriteBatch.Draw(Material.DefaultTexture, New Rectangle(50, 100, energyVal, 5), If(recharging, Color.Red, Color.Turquoise))
+        spriteBatch.Draw(Material.DefaultTexture, New Rectangle(50 + uiOffset.X, 100 + uiOffset.Y, energyBarWidth, 5), Color.Black)
+        spriteBatch.Draw(Material.DefaultTexture, New Rectangle(50 + uiOffset.X, 100 + uiOffset.Y, energyVal, 5), If(recharging, Color.Red, Color.Turquoise))
     End Sub
 
     Public Overrides Sub LoadXml(element As XmlElement)
@@ -47,9 +54,12 @@ Public Class SpaceShipResources
         Dim energyNode = element.SelectSingleNode("Energy")
         Dim maxEnergyNode = element.SelectSingleNode("MaxEnergy")
         Dim energyRechargeRateNode = element.SelectSingleNode("EnergyRechargeRate")
+        Dim visibleNode = element.SelectSingleNode("Visible")
 
         Dim healthNode = element.SelectSingleNode("Health")
         Dim maxHealthNode = element.SelectSingleNode("MaxHealth")
+
+        Dim uiOffsetNode = element.SelectSingleNode("UIOffset")
 
         If Not energyNode Is Nothing Then
             energy = Single.Parse(energyNode.InnerText)
@@ -66,5 +76,12 @@ Public Class SpaceShipResources
         If Not maxHealthNode Is Nothing Then
             maxHealth = Single.Parse(maxHealthNode.InnerText)
         End If
+        If Not visibleNode Is Nothing Then
+            Visible = Boolean.Parse(visibleNode.InnerText)
+        End If
+        If Not uiOffsetNode Is Nothing Then
+            uiOffset = LinearAlgebraUtil.Vector3FromXml(uiOffsetNode).ToVector2()
+        End If
     End Sub
+
 End Class

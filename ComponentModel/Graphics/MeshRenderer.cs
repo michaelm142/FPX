@@ -55,6 +55,12 @@ namespace FPX
                 CreateFromMeshPart(content as ModelMeshPart);
         }
 
+        public void Start()
+        {
+            if (GetComponent<Material>() == null)
+                Debug.LogError("Mesh Renderer does not have a material assosiated with it");
+        }
+
         public void Draw(GameTime gametime)
         {
             if (model == null)
@@ -159,7 +165,8 @@ namespace FPX
             else
             {
                 var obj = Instanciate(new GameObject(leaf.Name));
-                obj.transform.position = leaf.Transform.Translation;
+                obj.position = leaf.Transform.Translation;
+                obj.rotation = leaf.Transform.Rotation;
                 obj.transform.parent = input as Transform;
                 if (leaf.Meshes.Count == 1)
                 {

@@ -37,6 +37,8 @@ namespace FPX
 
         public string Name { get; set; } = "GameObject";
 
+        public string Tag { get; set; } = string.Empty;
+
         public Transform transform
         {
             get { return GetComponent<Transform>(); }
@@ -198,6 +200,9 @@ namespace FPX
             var nameAttr = node.Attributes["Name"];
             if (nameAttr != null)
                 obj.Name = nameAttr.Value;
+            var tagAttr = node.Attributes["Tag"];
+            if (tagAttr != null)
+                obj.Tag = tagAttr.Value;
 
             var enabledAttribute = node.Attributes["Enabled"];
             if (enabledAttribute != null)
@@ -209,6 +214,11 @@ namespace FPX
             foreach (XmlElement componentNode in node.ChildNodes)
             {
                 var createType = Utill.FindTypeFromAssemblies(componentNode.Name);
+                if (createType == null)
+                {
+                    Debug.LogError("Could not find type {0} in assembly", componentNode.Name);
+                    continue;
+                }
                 Component c = Activator.CreateInstance(createType) as Component;
                 if (c == null)
                 {
@@ -229,9 +239,17 @@ namespace FPX
 
         public static void Destroy(GameObject @object)
         {
-            while (@object.Components.Count > 0)
-                Component.Destroy(@object.Components[0]);
-            @object.destroyed = true;
+            destroy_recur(@object);
+        }
+
+        private static void destroy_recur(GameObject obj)
+        {
+            foreach (var t in obj.transform)
+                destroy_recur(t.gameObject);
+
+            while (obj.Components.Count > 0)
+                Component.Destroy(obj.Components[0]);
+            obj.destroyed = true;
         }
 
         public static void GlobalBroadcastMessage(string message, params object[] prams)

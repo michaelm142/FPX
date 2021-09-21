@@ -3,7 +3,7 @@
 <Scene>
   <Objects>
 
-    <Object Name="Camera">
+    <Object Name="Camera 1" Tag="Camera">
       <Camera>
         <FieldOfView>60</FieldOfView>
         <NearPlaneDistance>0.01</NearPlaneDistance>
@@ -19,13 +19,29 @@
         <Texture Name="Textures//PlanetSkybox"/>
       </SkyboxRenderer>
       <AudioListener/>
+      <CameraSwitch/>
     </Object>
 
-    <Object Name="Ship">
+    <Object Name="Camera 2" Tag="Camera">
+      <Camera>
+        <FieldOfView>60</FieldOfView>
+        <NearPlaneDistance>0.01</NearPlaneDistance>
+        <FarPlaneDistance>1000</FarPlaneDistance>
+        <ClearColor Name="Black"/>
+      </Camera>
+      <CameraController>
+        <MoveSpeed>30.0</MoveSpeed>
+        <RotationSpeed>10.0</RotationSpeed>
+      </CameraController>
+    </Object>
+
+    <Object Name="Ship" Tag="Player">
       <Transform>
         <Position Z="-5" Y="-2.5"/>
-        <Rotation Y="180"/>
       </Transform>
+      <BoxCollider>
+        <Size X="2" Y="1" Z="4"/>
+      </BoxCollider>
       <MeshRenderer>
         <Model Name="Models//Spaceship"/>
       </MeshRenderer>
@@ -35,6 +51,8 @@
       </Material>
       <FireLaser>
         <LaserEnergyCost>10</LaserEnergyCost>
+        <Damage>33</Damage>
+        <DestroyTag>Enemy</DestroyTag>
       </FireLaser>
       <AudioSource>
         <Filename>Audio//laser</Filename>
@@ -55,6 +73,45 @@
         <Drag>2.5</Drag>
         <AngularDrag>5</AngularDrag>
       </Rigidbody>
+    </Object>
+
+    <Object Name="Enemy Ship" Tag="Enemy">
+      <Transform>
+        <Position X="40" Z="40"/>
+      </Transform>
+      <BoxCollider>
+        <Size X="2" Y="1" Z="4"/>
+      </BoxCollider>
+      <MeshRenderer>
+        <Model Name="Models//Spaceship"/>
+      </MeshRenderer>
+      <SpaceShipResources>
+        <MaxEnergy>100</MaxEnergy>
+        <MaxHealth>100</MaxHealth>
+        <Health>100</Health>
+        <EnergyRechargeRate>30</EnergyRechargeRate>
+        <UIOffset Y="100"/>
+      </SpaceShipResources>
+      <Material>
+        <DiffuseMap FileName="Textures//spaceshipDiffuse"/>
+        <NormalMap FileName="Textures//spaceshipNormals"/>
+        <SpecularColor Name="LightGray"/>
+      </Material>
+      <EnemyAI>
+        <Target>Ship</Target>
+        <MoveSpeed>4</MoveSpeed>
+        <AggroRadius>30</AggroRadius>
+        <ShootRadius>10</ShootRadius>
+        <TurnSpeed>5</TurnSpeed>
+        <ShootInterval>1</ShootInterval>
+      </EnemyAI>
+      <AudioSource>
+        <Filename>Audio//laser</Filename>
+      </AudioSource>
+      <FireLaser>
+        <DestroyTag>Player</DestroyTag>
+        <Damage>10</Damage>
+      </FireLaser>
     </Object>
 
     <Object Name="Asteroid 1">
@@ -183,7 +240,7 @@
 
     <Prefab Filename="Prefabs\\Box.xml">
       <Transform>
-        <Position Z="-20"/>
+        <Position Z="20"/>
       </Transform>
       <Spin>
         <Speed>1</Speed>

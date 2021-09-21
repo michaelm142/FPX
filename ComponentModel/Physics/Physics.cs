@@ -121,19 +121,40 @@ namespace FPX
                 if (activeCollisions.Find(activeCollision => activeCollision.colliders.Contains(a) && activeCollision.colliders.Contains(b)) == null)
                 {
                     activeCollisions.Add(new Collision(a, b));
-                    a.gameObject.BroadcastMessage("OnCollisionEnter", b);
-                    b.gameObject.BroadcastMessage("OnCollisionEnter", a);
+                    if (a.isTrigger)
+                        a.gameObject.BroadcastMessage("OnTriggerEnter", b);
+                    else
+                        a.gameObject.BroadcastMessage("OnCollisionEnter", b);
+
+                    if (b.isTrigger)
+                        b.gameObject.BroadcastMessage("OnTriggerEnter", a);
+                    else
+                        b.gameObject.BroadcastMessage("OnCollisionEnter", a);
                 }
                 else
                 {
-                    a.gameObject.BroadcastMessage("OnCollision", b);
-                    b.gameObject.BroadcastMessage("OnCollision", a);
+                    if (a.isTrigger)
+                        a.gameObject.BroadcastMessage("OnTrigger", b);
+                    else
+                        a.gameObject.BroadcastMessage("OnCollision", b);
+
+                    if (b.isTrigger)
+                        b.gameObject.BroadcastMessage("OnTrigger", a);
+                    else
+                        b.gameObject.BroadcastMessage("OnCollision", a);
                 }
             }
             else if (activeCollisions.Find(activeCollision => activeCollision.colliders.Contains(a) && activeCollision.colliders.Contains(b)) != null)
             {
-                a.gameObject.BroadcastMessage("OnCollisionExit", b);
-                b.gameObject.BroadcastMessage("OnCollisionExit", a);
+                if (a.isTrigger)
+                    a.gameObject.BroadcastMessage("OnTriggerExit", b);
+                else
+                    a.gameObject.BroadcastMessage("OnCollisionExit", b);
+                if (b.isTrigger)
+                    b.gameObject.BroadcastMessage("OnTriggerExit", a);
+                else
+                    b.gameObject.BroadcastMessage("OnCollisionExit", a);
+
                 activeCollisions.Remove(activeCollisions.Find(activeCollision => activeCollision.colliders.Contains(a) || activeCollision.colliders.Contains(b)));
             }
         }

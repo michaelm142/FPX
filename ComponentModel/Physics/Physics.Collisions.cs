@@ -62,7 +62,7 @@ namespace FPX
         private void ResolveCollision(Collision collision)
         {
             foreach (var c in collision.colliders)
-                if (c.GetComponent<Rigidbody>() == null)
+                if (c.GetComponent<Rigidbody>() == null || c.isTrigger)
                     return;
 
             Collider a = collision[0];
@@ -174,28 +174,9 @@ namespace FPX
 
         private float Psudodistance(Collider colliderA, Collider colliderB)
         {
-            if (colliderA is BoxCollider && colliderB is BoxCollider)
-                return Psudodistance(colliderA as BoxCollider, colliderB as BoxCollider);
-            else
-                return Psudodistance(colliderA as SphereCollider, colliderB as SphereCollider);
-        }
-
-        private float Psudodistance(SphereCollider a, SphereCollider b)
-        {
-            Vector3 L = b.position - a.position;
-            float lengthSquared = L.LengthSquared();
-            float sumRadi = a.radius + b.radius;
-            return lengthSquared / (sumRadi * sumRadi) - 1.0f;
-        }
-
-        private float Psudodistance(BoxCollider a, BoxCollider b)
-        {
-            Vector3 L = b.Location - a.Location;
-            float lengthSquared = L.LengthSquared();
-            float rSum = a.size.Length() + b.size.Length();
-
-            return lengthSquared / (rSum * rSum) - 1.0f;
-
+            float lenghtSquared = (colliderB.position - colliderA.position).LengthSquared();
+            float sumRadi = colliderA.Psudosize.Length() + colliderB.Psudosize.Length();
+            return lenghtSquared / (sumRadi * sumRadi) - 1.0f;
         }
 
         private float Psudodistance(float p0, float p1, float q0, float q1, float u, float v, float t, out float asub2, out float asub1, out float asub0)

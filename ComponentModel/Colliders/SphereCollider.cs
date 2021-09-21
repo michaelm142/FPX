@@ -19,8 +19,11 @@ namespace FPX
 
         public override void LoadXml(XmlElement node)
         {
+            var radiusNode = node.SelectSingleNode("Radius");
+            var triggerNode = node.SelectSingleNode("IsTrigger");
 
-            radius = Single.Parse(node.SelectSingleNode("Radius").InnerText);
+            isTrigger = triggerNode != null ? bool.Parse(triggerNode.InnerText) : false;
+            radius = radiusNode != null ? Single.Parse(radiusNode.InnerText) : 1.0f;
         }
 
         public void SaveXml(XmlElement node)

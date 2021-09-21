@@ -39,9 +39,11 @@ namespace FPX
         {
             var sizeNode = node.SelectSingleNode("Size") as XmlElement;
             var centerNode = node.SelectSingleNode("Center") as XmlElement;
+            var triggerNode = node.SelectSingleNode("IsTrigger");
 
-            size = LinearAlgebraUtil.Vector3FromXml(sizeNode);
-            center = LinearAlgebraUtil.Vector3FromXml(centerNode);
+            isTrigger = triggerNode != null ? bool.Parse(triggerNode.InnerText) : false;
+            size = sizeNode != null ? LinearAlgebraUtil.Vector3FromXml(sizeNode) : Vector3.One;
+            center = centerNode != null ? LinearAlgebraUtil.Vector3FromXml(centerNode) : Vector3.Zero;
         }
 
         public void SaveXml(XmlElement node)

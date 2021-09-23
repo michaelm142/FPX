@@ -597,3 +597,21 @@
 /processorParam:TextureFormat=Compressed
 /build:Models/EnemyShip.fbx
 
+#begin Audio/shipAccelerate.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/shipAccelerate.wav
+
+#begin Audio/shipAmbient.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/shipAmbient.wav
+
+#begin Audio/shipDecelerate.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/shipDecelerate.wav
+

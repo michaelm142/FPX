@@ -4,6 +4,9 @@
   <Objects>
 
     <Object Name="Camera 1" Tag="Camera">
+      <Transform>
+        <Rotation Y="180"/>
+      </Transform>
       <Camera>
         <FieldOfView>60</FieldOfView>
         <NearPlaneDistance>0.01</NearPlaneDistance>
@@ -19,20 +22,6 @@
         <Texture Name="Textures//PlanetSkybox"/>
       </SkyboxRenderer>
       <AudioListener/>
-      <CameraSwitch/>
-    </Object>
-
-    <Object Name="Camera 2" Tag="Camera">
-      <Camera>
-        <FieldOfView>60</FieldOfView>
-        <NearPlaneDistance>0.01</NearPlaneDistance>
-        <FarPlaneDistance>1000</FarPlaneDistance>
-        <ClearColor Name="Black"/>
-      </Camera>
-      <CameraController>
-        <MoveSpeed>30.0</MoveSpeed>
-        <RotationSpeed>10.0</RotationSpeed>
-      </CameraController>
     </Object>
 
     <Object Name="Ship" Tag="Player">
@@ -73,11 +62,17 @@
         <Drag>2.5</Drag>
         <AngularDrag>5</AngularDrag>
       </Rigidbody>
+      <SpaceShipAudio>
+        <AccelerateClip Filename="Audio\\shipAccelerate"/>
+        <DecelerateClip Filename="Audio\\shipDecelerate"/>
+        <AmbientClip Filename="Audio\\shipAmbient"/>
+        <Threshold>0.01</Threshold>
+      </SpaceShipAudio>
     </Object>
 
     <Object Name="Enemy Ship" Tag="Enemy">
       <Transform>
-        <Position X="40" Z="40"/>
+        <Position Z="40"/>
       </Transform>
       <BoxCollider>
         <Size X="2" Y="1" Z="4"/>
@@ -91,6 +86,7 @@
         <Health>100</Health>
         <EnergyRechargeRate>30</EnergyRechargeRate>
         <UIOffset Y="100"/>
+        <Visible>false</Visible>
       </SpaceShipResources>
       <Material>
         <DiffuseMap FileName="Textures//spaceshipDiffuse"/>
@@ -237,16 +233,6 @@
         <Intensity>0.9</Intensity>
       </Light>
     </Object>
-
-    <Prefab Filename="Prefabs\\Box.xml">
-      <Transform>
-        <Position Z="20"/>
-      </Transform>
-      <Spin>
-        <Speed>1</Speed>
-        <Axis Y="1"/>
-      </Spin>
-    </Prefab>
     
   </Objects>
 </Scene>

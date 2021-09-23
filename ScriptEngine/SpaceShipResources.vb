@@ -6,12 +6,12 @@ Imports System.Xml
 Public Class SpaceShipResources
     Inherits Component
 
-    Public energy As Single
-    Public maxEnergy As Single
-    Public energyRechargeRate As Single
+    Public Energy As Single
+    Public MaxEnergy As Single
+    Public EnergyRechargeRate As Single
 
-    Public health As Single
-    Public maxHealth As Single
+    Public Health As Single
+    Public MaxHealth As Single
 
     Private healthBarWidth As Integer = 250
     Private energyBarWidth As Integer = 225
@@ -46,42 +46,6 @@ Public Class SpaceShipResources
         'Draw Energy Bar
         spriteBatch.Draw(Material.DefaultTexture, New Rectangle(50 + uiOffset.X, 100 + uiOffset.Y, energyBarWidth, 5), Color.Black)
         spriteBatch.Draw(Material.DefaultTexture, New Rectangle(50 + uiOffset.X, 100 + uiOffset.Y, energyVal, 5), If(recharging, Color.Red, Color.Turquoise))
-    End Sub
-
-    Public Overrides Sub LoadXml(element As XmlElement)
-        MyBase.LoadXml(element)
-
-        Dim energyNode = element.SelectSingleNode("Energy")
-        Dim maxEnergyNode = element.SelectSingleNode("MaxEnergy")
-        Dim energyRechargeRateNode = element.SelectSingleNode("EnergyRechargeRate")
-        Dim visibleNode = element.SelectSingleNode("Visible")
-
-        Dim healthNode = element.SelectSingleNode("Health")
-        Dim maxHealthNode = element.SelectSingleNode("MaxHealth")
-
-        Dim uiOffsetNode = element.SelectSingleNode("UIOffset")
-
-        If Not energyNode Is Nothing Then
-            energy = Single.Parse(energyNode.InnerText)
-        End If
-        If Not maxEnergyNode Is Nothing Then
-            maxEnergy = Single.Parse(maxEnergyNode.InnerText)
-        End If
-        If Not energyRechargeRateNode Is Nothing Then
-            energyRechargeRate = Single.Parse(energyRechargeRateNode.InnerText)
-        End If
-        If Not healthNode Is Nothing Then
-            health = Single.Parse(healthNode.InnerText)
-        End If
-        If Not maxHealthNode Is Nothing Then
-            maxHealth = Single.Parse(maxHealthNode.InnerText)
-        End If
-        If Not visibleNode Is Nothing Then
-            Visible = Boolean.Parse(visibleNode.InnerText)
-        End If
-        If Not uiOffsetNode Is Nothing Then
-            uiOffset = LinearAlgebraUtil.Vector3FromXml(uiOffsetNode).ToVector2()
-        End If
     End Sub
 
 End Class

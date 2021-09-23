@@ -6,7 +6,7 @@ using System.Reflection;
 using System.Xml;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Audio;
 using FPX.Editor;
 
 namespace FPX
@@ -141,9 +141,20 @@ namespace FPX
                 string memberData = memberXmlElement.InnerText;
                 object fieldData = null;
 
-                if (field.DeclaringType == typeof(string))
+                if (field.FieldType == typeof(string))
                     fieldData = memberData;
-                else if (field.DeclaringType == typeof(int))
+                else if (field.FieldType == typeof(bool))
+                {
+                    bool bVal = false;
+                    if (!bool.TryParse(memberData, out bVal))
+                    {
+                        Debug.LogError("Failed to parse data for {0} of {1}", field.Name, type);
+                        continue;
+                    }
+
+                    fieldData = bVal;
+                }
+                else if (field.FieldType == typeof(int))
                 {
                     int intVal = 0;
                     if (!int.TryParse(memberData, out intVal))
@@ -154,7 +165,7 @@ namespace FPX
 
                     fieldData = intVal;
                 }
-                else if (field.DeclaringType == typeof(float))
+                else if (field.FieldType == typeof(float) || field.FieldType == typeof(Single))
                 {
                     float floatVal = 0.0f;
                     if (!float.TryParse(memberData, out floatVal))
@@ -162,27 +173,34 @@ namespace FPX
                         Debug.LogError("Failed to parse data for {0} of {1}", field.Name, type);
                         continue;
                     }
+                    fieldData = floatVal;
                 }
-                else if (field.DeclaringType == typeof(Vector3))
+                else if (field.FieldType == typeof(Vector3))
                 {
                     Vector3 vector3Value = LinearAlgebraUtil.Vector3FromXml(memberXmlElement);
                     fieldData = vector3Value;
                 }
-                else if (field.DeclaringType == typeof(Quaternion))
+                else if (field.FieldType == typeof(Quaternion))
                 {
                     Quaternion quaternionValue = LinearAlgebraUtil.EulerFromXml(memberXmlElement);
                     fieldData = quaternionValue;
                 }
-                else if (field.DeclaringType == typeof(Color))
+                else if (field.FieldType == typeof(Color))
                 {
                     Color colorValue = LinearAlgebraUtil.ColorFromXml(memberXmlElement);
                     fieldData = colorValue;
                 }
-                else if (field.DeclaringType == typeof(Texture2D))
+                else if (field.FieldType == typeof(Texture2D))
                 {
                     var filenameAttr = memberXmlElement.Attributes["FileName"];
                     Texture2D texVal = GameCore.content.Load<Texture2D>(filenameAttr.InnerText);
                     fieldData = texVal;
+                }
+                else if (field.FieldType == typeof(SoundEffect))
+                {
+                    var filenameAttr = memberXmlElement.Attributes["FileName"];
+                    SoundEffect sndVal = GameCore.content.Load<SoundEffect>(filenameAttr.InnerText);
+                    fieldData = sndVal;
                 }
 
                 field.SetValue(this, fieldData);
@@ -282,7 +300,10 @@ namespace FPX
         }
         public static void Destroy(GameObject gameObject)
         {
-            GameObject.Destroy(gameObject);
+            gameObject.destroyed = true;
+
+            foreach (var t in gameObject.transform)
+                Destroy(t.gameObject);
         }
 
         public override string ToString()

@@ -5,8 +5,8 @@ Imports FPX
 Public Class SpaceshipControls
     Inherits Component
 
-    Public moveSpeed As Single
-    Public turnSpeed As Single
+    Public MoveSpeed As Single
+    Public TurnSpeed As Single
 
     Private rotX As Single
     Private rotY As Single
@@ -19,10 +19,10 @@ Public Class SpaceshipControls
         Dim yaw = Input.GetAxis("Yaw")
         Dim fireAxis = Input.GetAxis("Fire")
 
-        Dim force = transform.right * horizontal * moveSpeed + transform.forward * vertical * moveSpeed
+        Dim force = transform.right * horizontal * MoveSpeed + transform.forward * vertical * MoveSpeed
 
-        rotX += pitch * turnSpeed * Time.deltaTime
-        rotY += yaw * turnSpeed * Time.deltaTime
+        rotX += pitch * TurnSpeed * Time.deltaTime
+        rotY += yaw * TurnSpeed * Time.deltaTime
         rotX = MathHelper.Clamp(rotX, CType(-Math.PI, Single) / 2.0F, CType(Math.PI, Single) / 2.0F)
         Dim rigidbody = GetComponent(Of Rigidbody)()
         'rigidbody.angularVelocity = torque
@@ -38,22 +38,9 @@ Public Class SpaceshipControls
         End If
 
         fireAxisPrevious = fireAxis
+
+        transform.Find("Box001").localRotation = Quaternion.CreateFromAxisAngle(Vector3.Up, MathHelper.ToRadians(180.0F))
     End Sub
 
-    Public Overrides Sub LoadXml(element As XmlElement)
-        MyBase.LoadXml(element)
-
-        Dim moveSpeedNode = element.SelectSingleNode("MoveSpeed")
-        Dim turnSpeedNode = element.SelectSingleNode("TurnSpeed")
-
-        If Not moveSpeedNode Is Nothing Then
-            moveSpeed = Single.Parse(moveSpeedNode.InnerText)
-        End If
-
-        If Not turnSpeedNode Is Nothing Then
-            turnSpeed = Single.Parse(turnSpeedNode.InnerText)
-        End If
-
-    End Sub
 
 End Class

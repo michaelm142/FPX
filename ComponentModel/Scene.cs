@@ -122,7 +122,15 @@ namespace FPX
 
             objects.AddRange(spawnedObjects);
             spawnedObjects.Clear();
-            objects.RemoveAll(o => o.destroyed);
+            for (int i = 0; i < objects.Count; i++)
+            {
+                if (objects[i].destroyed)
+                {
+                    GameObject.Destroy(objects[i]);
+                    objects.RemoveAt(i);
+                    i--;
+                }
+            }
         }
 
 

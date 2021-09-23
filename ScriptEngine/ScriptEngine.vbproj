@@ -154,6 +154,7 @@
     <Compile Include="PsudodistanceTester.vb" />
     <Compile Include="RayTester.vb" />
     <Compile Include="RigidbodyController.vb" />
+    <Compile Include="SpaceShipAudio.vb" />
     <Compile Include="SpaceshipControls.vb" />
     <Compile Include="SpaceshipEffects.vb" />
     <Compile Include="SpaceShipResources.vb" />

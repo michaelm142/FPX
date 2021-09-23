@@ -170,6 +170,16 @@ namespace FPX
             return this[index];
         }
 
+        public Transform Find(string name)
+        {
+            return childTransforms.Find(t => t.Name == name);
+        }
+
+        public List<Transform> FindAll(string name)
+        {
+            return childTransforms.FindAll(t => t.Name == name);
+        }
+
         public IEnumerator<Transform> GetEnumerator()
         {
             return childTransforms.GetEnumerator();

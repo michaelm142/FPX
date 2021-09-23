@@ -49,7 +49,10 @@ namespace FPX
                 if (model.Bones.Count == 1)
                     CreateFromMeshPart(model.Meshes[0].MeshParts[0]);
                 else
+                {
                     AnylizeHeirarchy(model);
+                    Destroy(this);
+                }
             }
             else if (content is ModelMeshPart)
                 CreateFromMeshPart(content as ModelMeshPart);
@@ -63,7 +66,7 @@ namespace FPX
 
         public void Draw(GameTime gametime)
         {
-            if (model == null)
+            if (model == null || model.Tag != null)
                 return;
             foreach (var mesh in model.Meshes)
             {

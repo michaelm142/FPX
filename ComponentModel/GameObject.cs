@@ -239,17 +239,9 @@ namespace FPX
 
         public static void Destroy(GameObject @object)
         {
-            destroy_recur(@object);
-        }
-
-        private static void destroy_recur(GameObject obj)
-        {
-            foreach (var t in obj.transform)
-                destroy_recur(t.gameObject);
-
-            while (obj.Components.Count > 0)
-                Component.Destroy(obj.Components[0]);
-            obj.destroyed = true;
+            while (@object.Components.Count > 0)
+                Component.Destroy(@object.Components[0]);
+            @object.destroyed = true;
         }
 
         public static void GlobalBroadcastMessage(string message, params object[] prams)

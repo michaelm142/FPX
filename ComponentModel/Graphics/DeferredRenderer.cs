@@ -194,10 +194,10 @@ namespace FPX
             if (postProcessor != null) postProcessor.Begin();
             {
                 var lights = Component.g_collection.FindAll(c => c is Light).Cast<Light>().ToList();
-                lights.ForEach(l => l.RenderShadows());
+                //lights.ForEach(l => l.RenderShadows());
                 RenderLights(lights);
 
-                var skyboxes = Component.g_collection.FindAll(c => c is SkyboxRenderer);
+                var skyboxes = Component.g_collection.FindAll(c => c is SkyboxRenderer && c.gameObject.Visible);
                 foreach (SkyboxRenderer skybox in skyboxes)
                     skybox.Draw(gameTime);
             }

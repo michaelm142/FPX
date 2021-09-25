@@ -11,13 +11,259 @@ namespace FPX
 {
     public sealed class GameObject
     {
-        internal bool destroyed;
-        internal bool instanciated;
+        private int index;
+        private _gameObject value { get { return _instances[index]; } }
 
-        public event EventHandler<EventArgs> DrawOrderChanged;
-        public event EventHandler<EventArgs> EnabledChanged;
-        public event EventHandler<EventArgs> UpdateOrderChanged;
-        public event EventHandler<EventArgs> VisibleChanged;
+        // ==<Wrapper Functions>==
+        internal List<Component> Components
+        {
+            get { return value.Components; }
+        }
+        public IEnumerable<Component> GetComponents()
+        {
+            return value.GetComponents();
+        }
+        internal bool instanciated
+        {
+            get { return value.instanciated; }
+            set { this.value.instanciated = value; }
+        }
+
+        internal bool destroyed
+        {
+            get { return value.destroyed; }
+            set { this.value.destroyed = value; }
+        }
+
+        public int DrawOrder
+        {
+            get { return value.DrawOrder; }
+            set { this.value.DrawOrder = value; }
+        }
+
+        public bool Enabled
+        {
+            get { return value.Enabled; }
+            set { this.value.Enabled = value; }
+        }
+
+        public int UpdateOrder
+        {
+            get { return value.UpdateOrder; }
+            set { this.value.UpdateOrder = value; }
+        }
+
+        public bool Visible
+        {
+            get { return value.Visible; }
+            set { this.value.Visible = value; }
+        }
+
+        public string Name
+        {
+            get { return value.Name; }
+            set { this.value.Name = value; }
+        }
+
+        public string Tag
+        {
+            get { return value.Tag; }
+            set { this.value.Tag = value; }
+        }
+        public Transform transform
+        {
+            get { return value.transform; }
+        }
+        public Vector3 localPosition
+        {
+            get { return value.localPosition; }
+            set { this.value.localPosition = value; }
+        }
+        public Vector3 position
+        {
+            get { return value.position; }
+            set { this.value.position = value; }
+        }
+        public Quaternion localRotation
+        {
+            get { return value.localRotation; }
+            set { this.value.localRotation = value; }
+        }
+        public Quaternion rotation
+        {
+            get { return value.rotation; }
+            set { this.value.rotation = value; }
+        }
+        internal uint Id
+        {
+            get { return value.Id; }
+            set { this.value.Id = value; }
+        }
+
+        private GameObject(_gameObject value)
+        {
+            index = _instances.IndexOf(value);
+        }
+
+        private GameObject(bool isEmpty)
+        {
+            _instances.Add(new _gameObject(isEmpty));
+            index = _instances.Count - 1;
+        }
+
+        public GameObject()
+        {
+            var instance = new _gameObject();
+            _instances.Add(instance);
+            instance.transform.gameObject = this;
+
+            index = _instances.Count - 1;
+        }
+        public GameObject(string Name)
+        {
+            var instance = new _gameObject(Name);
+            _instances.Add(instance);
+            instance.transform.gameObject = this;
+
+            index = _instances.Count - 1;
+        }
+        public GameObject(string Name, params Type[] Components)
+        {
+            var instance = new _gameObject(Name, Components);
+            _instances.Add(instance);
+            instance.transform.gameObject = this;
+
+            index = _instances.Count - 1;
+        }
+
+        public T AddComponent<T>()
+            where T : Component
+        {
+            T component = value.AddComponent<T>();
+            component.gameObject = this;
+
+            return component;
+        }
+
+        public void AddComponent(Component c)
+        {
+            value.AddComponent(c);
+            c.gameObject = this;
+        }
+
+        public Component AddComponent(Type t)
+        {
+            Component c = value.AddComponent(t) as Component;
+            c.gameObject = this;
+
+            return c;
+        }
+
+        public T GetComponent<T>()
+            where T : Component
+        {
+            return value.GetComponent<T>();
+        }
+
+        public List<T> GetComponents<T>()
+            where T : Component
+        {
+            return value.GetComponents<T>();
+        }
+
+        public override string ToString()
+        {
+            return value != null ? value.ToString() : "null";
+        }
+
+        public void Draw(GameTime gameTime)
+        {
+            value.Draw(gameTime);
+        }
+
+        public void BroadcastMessage(string Name, params object[] parameters)
+        {
+            value.BroadcastMessage(Name, parameters);
+        }
+
+        public void Run(GameTime gameTime)
+        {
+            value.Run(gameTime);
+        }
+
+        public bool KnowsMessage(string Name)
+        {
+            return value.KnowsMessage(Name);
+        }
+
+        // ==<Static Functions>==
+
+        public static void Destroy(GameObject gameObject)
+        {
+            _gameObject.Destroy(gameObject.value);
+
+            int index = _instances.IndexOf(gameObject);
+            _instances[index] = null;
+        }
+
+        public static GameObject Empty
+        {
+            get { return new GameObject(true); }
+        }
+
+        public static GameObject Find(string name)
+        {
+            return _instances.Find(g => g.Name == name);
+        }
+
+        public static GameObject Find(uint Id)
+        {
+            return _instances.Find(g => g.Id == Id);
+        }
+
+        public static GameObject Load(XmlElement node)
+        {
+            return _gameObject.Load(node);
+        }
+
+        public static List<Component> FindObjectsOfType<T>()
+            where T : Component
+        {
+            return Component.g_collection.FindAll(c => c is T);
+        }
+
+        public bool Destroyed
+        {
+            get { return value is null; }
+        }
+
+        internal bool CompareTo(GameObject obj)
+        {
+            if (obj is null)
+            {
+                if (value is null)
+                    return true;
+
+                return false;
+            }
+
+            return value.GetHashCode() == obj.value.GetHashCode();
+        }
+
+        private static List<_gameObject> _instances = new List<_gameObject>();
+        public static implicit operator _gameObject(GameObject obj) => obj.value;
+        public static implicit operator GameObject(_gameObject obj) => new GameObject(obj);
+
+        public static GameObject FindByTag(string Tag)
+        {
+            return _instances.Find(o => o.Tag == Tag);
+        }
+
+    }
+    public sealed class _gameObject
+    {
+        internal bool instanciated;
+        internal bool destroyed;
 
         internal List<Component> Components = new List<Component>();
         public IEnumerable<Component> GetComponents()
@@ -72,46 +318,36 @@ namespace FPX
             set { transform.rotation = value; }
         }
 
-        internal uint Id { get; private set; }
+        internal uint Id { get; set; }
 
-        private static List<GameObject> _instances = new List<GameObject>();
 
-        private GameObject(bool isEmpty)
+        internal _gameObject(bool isEmpty)
         {
-            _instances.Add(this);
             Id = (uint)GetHashCode();
         }
 
-        public GameObject()
+        public _gameObject()
         {
-            _instances.Add(this);
             AddComponent<Transform>();
             Id = (uint)GetHashCode();
         }
 
-        public GameObject(string Name)
+        public _gameObject(string Name)
         {
-            _instances.Add(this);
             AddComponent<Transform>();
             Id = (uint)GetHashCode();
 
             this.Name = Name;
         }
 
-        public GameObject(string Name, params Type[] ComponentTypes)
+        public _gameObject(string Name, params Type[] ComponentTypes)
         {
-            _instances.Add(this);
             AddComponent<Transform>();
             Id = (uint)GetHashCode();
 
             this.Name = Name;
             foreach (var t in ComponentTypes)
                 AddComponent(t);
-        }
-
-        ~GameObject()
-        {
-            _instances.Remove(this);
         }
 
         public bool KnowsMessage(string message)
@@ -121,7 +357,7 @@ namespace FPX
 
         public void BroadcastMessage(string Name, params object[] parameters)
         {
-            foreach (var comp in Components.FindAll(c =>c.KnowsMessage(Name)))
+            foreach (var comp in Components.FindAll(c => c.KnowsMessage(Name)))
                 comp.SendMessage(Name, parameters);
         }
 
@@ -140,7 +376,6 @@ namespace FPX
             where T : Component
         {
             Component comp = Activator.CreateInstance<T>();
-            comp.gameObject = this;
             if (instanciated)
                 comp.SendMessage("Awake");
             Components.Add(comp);
@@ -150,14 +385,12 @@ namespace FPX
 
         public void AddComponent(Component c)
         {
-            c.gameObject = this;
             Components.Add(c);
         }
 
         public object AddComponent(Type t)
         {
             Component comp = Activator.CreateInstance(t) as Component;
-            comp.gameObject = this;
             Components.Add(comp);
 
             return comp;
@@ -179,24 +412,9 @@ namespace FPX
             return Name;
         }
 
-        public static GameObject Empty
-        {
-            get { return new GameObject(true); }
-        }
-
-        public static GameObject Find(string name)
-        {
-            return _instances.Find(g => g.Name == name);
-        }
-
-        public static GameObject Find(uint Id)
-        {
-            return _instances.Find(g => g.Id == Id);
-        }
-
         public static GameObject Load(XmlElement node)
         {
-            GameObject obj = Empty;
+            GameObject obj = GameObject.Empty;
             var nameAttr = node.Attributes["Name"];
             if (nameAttr != null)
                 obj.Name = nameAttr.Value;
@@ -207,6 +425,9 @@ namespace FPX
             var enabledAttribute = node.Attributes["Enabled"];
             if (enabledAttribute != null)
                 obj.Enabled = bool.Parse(enabledAttribute.InnerText);
+            var visibleAttribute = node.Attributes["Visible"];
+            if (visibleAttribute != null)
+                obj.Visible = bool.Parse(visibleAttribute.Value);
             var idAttr = node.Attributes["Id"];
             if (idAttr != null)
                 obj.Id = uint.Parse(idAttr.Value);
@@ -219,15 +440,8 @@ namespace FPX
                     Debug.LogError("Could not find type {0} in assembly", componentNode.Name);
                     continue;
                 }
-                Component c = Activator.CreateInstance(createType) as Component;
-                if (c == null)
-                {
-                    Debug.LogError("Could not find type {0} in assembly", createType);
-                    continue;
-                }
-                c.gameObject = obj;
+                Component c = obj.AddComponent(createType);
                 c.LoadXml(componentNode);
-                obj.AddComponent(c);
             }
 
             var transform = obj.GetComponent<Transform>();
@@ -237,22 +451,11 @@ namespace FPX
             return obj;
         }
 
-        public static void Destroy(GameObject @object)
+        public static void Destroy(_gameObject @object)
         {
             while (@object.Components.Count > 0)
                 Component.Destroy(@object.Components[0]);
             @object.destroyed = true;
-        }
-
-        public static void GlobalBroadcastMessage(string message, params object[] prams)
-        {
-            GameCore.currentLevel.BroadcastMessage(message, prams);
-        }
-
-        public static List<T> FindObjectsOfType<T>()
-            where T : Component
-        {
-            return Component.g_collection.FindAll(c => c is T).Cast<T>().ToList();
         }
     }
 }

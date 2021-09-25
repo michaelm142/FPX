@@ -295,7 +295,8 @@ namespace FPX
 
         public static void Destroy(Component component)
         {
-            g_collection.Remove(component);
+            int index = g_collection.IndexOf(component);
+            g_collection[index] = null;
             component.gameObject.Components.Remove(component);
         }
         public static void Destroy(GameObject gameObject)

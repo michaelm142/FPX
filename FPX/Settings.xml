@@ -24,6 +24,7 @@
     <Axis Name="Yaw" Platform="GamePad" Axis="RightThumbStickX" DeadZone="0.1" Invert="true"/>
     <Axis Name="Pitch" Platform="GamePad" Axis="RightThumbStickY" DeadZone="0.1" Invert="true"/>
     <Axis Name="Fire" Platform="GamePad" PositiveButton="RightShoulder" Gravity="0.5" DeadZone="0.1"/>
+    <Axis Name="Submit" Platform="GamePad" PositiveButton="A"/>
   </Input>
   
 </Settings>

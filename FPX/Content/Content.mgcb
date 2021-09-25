@@ -615,3 +615,17 @@
 /processorParam:Quality=Best
 /build:Audio/shipDecelerate.wav
 
+#begin Impact.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:Impact.spritefont
+
+#begin ImpactSmall.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:ImpactSmall.spritefont
+

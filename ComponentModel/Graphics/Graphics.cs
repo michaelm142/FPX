@@ -136,7 +136,7 @@ namespace FPX
 
             GameCore.spriteBatch.Begin();
             {
-                Scene.Active.BroadcastMessage("DrawUI", GameCore.spriteBatch);
+                Component.g_collection.FindAll(c => c != null && c.KnowsMessage("DrawUI") && c.gameObject.Visible).ForEach(c => c.SendMessage("DrawUI", GameCore.spriteBatch));
             }
             GameCore.spriteBatch.End();
 

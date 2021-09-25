@@ -125,6 +125,7 @@
     <Compile Include="CameraSwitcher.vb" />
     <Compile Include="ClosestPointShower.vb" />
     <Compile Include="ClosetPointFinder.vb" />
+    <Compile Include="DeadScreen.vb" />
     <Compile Include="DebugDeviceTextures.vb" />
     <Compile Include="DestroyBullets.vb" />
     <Compile Include="EditorTester.vb" />
@@ -162,6 +163,7 @@
     <Compile Include="StartringForce.vb" />
     <Compile Include="TestScript.vb" />
     <Compile Include="TestSpriteController.vb" />
+    <Compile Include="TitleScreen.vb" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="My Project\Resources.resx">

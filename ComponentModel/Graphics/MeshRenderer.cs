@@ -161,7 +161,7 @@ namespace FPX
                         return;
                     }
                 }
-
+                
                 foreach (var child in bone.Children)
                     AnylizeHeirarchy(transform, child);
             }

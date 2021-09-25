@@ -131,12 +131,30 @@ namespace FPX
                     i--;
                 }
             }
+
+            if (_reseting)
+            {
+                DoReset();
+                _reseting = false;
+            }
         }
 
 
         public void Load()
         {
             Load(sceneName);
+        }
+
+        private bool _reseting;
+        public void Reset()
+        {
+            _reseting = true;
+        }
+        private void DoReset()
+        {
+            objects.ForEach(o => GameObject.Destroy(o));
+            objects.Clear();
+            Load();
         }
 
         internal void BroadcastMessage(string Name, params object[] parameters)

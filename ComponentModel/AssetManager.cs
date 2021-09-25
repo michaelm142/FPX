@@ -23,6 +23,9 @@ namespace FPX
             Debug.Log("Asset manager initializing...");
 
             AnalyzeDirectory(new DirectoryInfo(ContentRootDirectory));
+
+            foreach (var font in Assets.ToList().FindAll(f => f.Value.contentType == ContentType.SpriteFont))
+                GameCore.fonts.Add(Path.GetFileNameWithoutExtension(font.Key), font.Value.GetData<SpriteFont>());
         }
 
         public static void Close()

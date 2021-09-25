@@ -3,6 +3,19 @@
 <Scene>
   <Objects>
 
+    <Object Name="Title">
+      <Transform>
+        <Position X="250" Y="50"/>
+      </Transform>
+      <Camera>
+        <FieldOfView>60</FieldOfView>
+        <NearPlaneDistance>0.01</NearPlaneDistance>
+        <FarPlaneDistance>1000</FarPlaneDistance>
+        <ClearColor Name="Black"/>
+      </Camera>
+      <TitleScreen/>
+    </Object>
+    
     <Object Name="Camera 1" Tag="Camera">
       <Transform>
         <Rotation Y="180"/>
@@ -106,7 +119,7 @@
       </AudioSource>
       <FireLaser>
         <DestroyTag>Player</DestroyTag>
-        <Damage>10</Damage>
+        <Damage>100</Damage>
       </FireLaser>
     </Object>
 
@@ -232,6 +245,13 @@
         <DiffuseColor Name="White"/>
         <Intensity>0.9</Intensity>
       </Light>
+    </Object>
+
+    <Object Name="Death Screen" Visible="false">
+      <Transform>
+        <Position X="200" Y="200"/>
+      </Transform>
+      <DeadScreen/>
     </Object>
     
   </Objects>

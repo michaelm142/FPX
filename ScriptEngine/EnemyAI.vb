@@ -22,6 +22,9 @@ Public Class EnemyAI
     End Sub
 
     Public Sub Update(gameTime As GameTime)
+        If target.Destroyed Then
+            Return
+        End If
         Dim L = target.position - position
         If L.Length() < aggroRadius Then
             Dim targetPose = Matrix.CreateWorld(Vector3.Zero, L.Normalized(), Vector3.Up)
@@ -38,7 +41,7 @@ Public Class EnemyAI
             End If
         End If
 
-        If GetComponent(Of SpaceShipResources).health <= 0 Then
+        If GetComponent(Of SpaceShipResources).Health <= 0 Then
             Destroy(gameObject)
         End If
     End Sub

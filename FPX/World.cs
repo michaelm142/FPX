@@ -90,8 +90,6 @@ namespace FPX
         /// </summary>
         protected override void LoadContent()
         {
-            if (!GameCore.fonts.ContainsKey("SegoeUI"))
-                GameCore.fonts.Add("SegoeUI", GameCore.content.Load<SpriteFont>("SegoeUI"));
         }
 
         /// <summary>

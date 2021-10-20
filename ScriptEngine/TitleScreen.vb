@@ -9,11 +9,11 @@ Public Class TitleScreen
 
     Public Sub Start()
         For Each obj In Scene.Active.Objects
-            If obj.Name = "Death Screen" Then
+            If obj.Name = "Death Screen" Or obj.Name = Name Then
                 Continue For
             End If
-            obj.Enabled = obj Is gameObject
-            obj.Visible = obj Is gameObject
+            obj.Enabled = False
+            obj.Visible = False
         Next
     End Sub
 
@@ -25,9 +25,11 @@ Public Class TitleScreen
                 If obj.Name = "Death Screen" Then
                     Continue For
                 End If
-                obj.Enabled = Not obj Is gameObject
-                obj.Visible = Not obj Is gameObject
+                obj.Enabled = True
+                obj.Visible = True
             Next
+            gameObject.Enabled = False
+            gameObject.Visible = False
             Camera.Active = GameObject.FindByTag("Camera").GetComponent(Of Camera)
         End If
     End Sub

@@ -9,10 +9,9 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace FPX
 {
-    public sealed class GameObject
+    public sealed class GameObject : WeakReference
     {
-        private int index;
-        private _gameObject value { get { return _instances[index]; } }
+        private _gameObject value { get { return Target as _gameObject; } }
 
         // ==<Wrapper Functions>==
         internal List<Component> Components
@@ -101,62 +100,50 @@ namespace FPX
         }
 
         private GameObject(_gameObject value)
+            : base(value)
         {
-            index = _instances.IndexOf(value);
+            if (_instances.IndexOf(value) == -1)
+                _instances.Add(value);
         }
 
         private GameObject(bool isEmpty)
+            : base(new _gameObject(isEmpty), true)
         {
-            _instances.Add(new _gameObject(isEmpty));
-            index = _instances.Count - 1;
+            _instances.Add(Target as _gameObject);
         }
 
         public GameObject()
+        : base(new _gameObject(), true)
         {
-            var instance = new _gameObject();
-            _instances.Add(instance);
-            instance.transform.gameObject = this;
-
-            index = _instances.Count - 1;
+            _instances.Add(Target as _gameObject);
         }
+
         public GameObject(string Name)
+            : base(new _gameObject(Name), true)
         {
-            var instance = new _gameObject(Name);
-            _instances.Add(instance);
-            instance.transform.gameObject = this;
-
-            index = _instances.Count - 1;
+            _instances.Add(Target as _gameObject);
         }
-        public GameObject(string Name, params Type[] Components)
-        {
-            var instance = new _gameObject(Name, Components);
-            _instances.Add(instance);
-            instance.transform.gameObject = this;
 
-            index = _instances.Count - 1;
+        public GameObject(string Name, params Type[] Components)
+            : base(new _gameObject(Name, Components), true)
+        {
+            _instances.Add(Target as _gameObject);
         }
 
         public T AddComponent<T>()
             where T : Component
         {
-            T component = value.AddComponent<T>();
-            component.gameObject = this;
-
-            return component;
+            return value.AddComponent<T>();
         }
 
         public void AddComponent(Component c)
         {
             value.AddComponent(c);
-            c.gameObject = this;
         }
 
         public Component AddComponent(Type t)
         {
-            Component c = value.AddComponent(t) as Component;
-            c.gameObject = this;
-
-            return c;
+            return value.AddComponent(t) as Component;
         }
 
         public T GetComponent<T>()
@@ -202,10 +189,10 @@ namespace FPX
         {
             _gameObject.Destroy(gameObject.value);
 
-            int index = _instances.IndexOf(gameObject);
+            int index = _instances.IndexOf(_instances.Find(i => i == gameObject.value));
             _instances[index] = null;
+            gameObject.Target = null;
         }
-
         public static GameObject Empty
         {
             get { return new GameObject(true); }
@@ -213,12 +200,12 @@ namespace FPX
 
         public static GameObject Find(string name)
         {
-            return _instances.Find(g => g.Name == name);
+            return Scene.Active.Objects.ToList().Find(i => i.Name == name);
         }
 
         public static GameObject Find(uint Id)
         {
-            return _instances.Find(g => g.Id == Id);
+            return Scene.Active.Objects.ToList().Find(i => i.Id == Id);
         }
 
         public static GameObject Load(XmlElement node)
@@ -256,7 +243,7 @@ namespace FPX
 
         public static GameObject FindByTag(string Tag)
         {
-            return _instances.Find(o => o.Tag == Tag);
+            return _instances.Find(i => i.Tag == Tag);
         }
 
     }
@@ -379,6 +366,7 @@ namespace FPX
             if (instanciated)
                 comp.SendMessage("Awake");
             Components.Add(comp);
+            comp.gameObject = this;
 
             return comp as T;
         }
@@ -386,12 +374,14 @@ namespace FPX
         public void AddComponent(Component c)
         {
             Components.Add(c);
+            c.gameObject = this;
         }
 
         public object AddComponent(Type t)
         {
             Component comp = Activator.CreateInstance(t) as Component;
             Components.Add(comp);
+            comp.gameObject = this;
 
             return comp;
         }
@@ -412,9 +402,9 @@ namespace FPX
             return Name;
         }
 
-        public static GameObject Load(XmlElement node)
+        public static _gameObject Load(XmlElement node)
         {
-            GameObject obj = GameObject.Empty;
+            _gameObject obj = new _gameObject(true);
             var nameAttr = node.Attributes["Name"];
             if (nameAttr != null)
                 obj.Name = nameAttr.Value;
@@ -440,7 +430,7 @@ namespace FPX
                     Debug.LogError("Could not find type {0} in assembly", componentNode.Name);
                     continue;
                 }
-                Component c = obj.AddComponent(createType);
+                Component c = obj.AddComponent(createType) as Component;
                 c.LoadXml(componentNode);
             }
 

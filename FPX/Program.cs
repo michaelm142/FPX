@@ -7,6 +7,7 @@ using System.Security.Permissions;
 using System.Reflection;
 using System.Windows;
 using FPX;
+using FPX_Internal;
 
 using Application = System.Windows.Forms.Application;
 
@@ -27,6 +28,7 @@ namespace FPX
             Title();
             Settings.Initialize();
             uint frame = 0;
+
             while (Running)
             {
                 Debug.Log(DateTime.Now);

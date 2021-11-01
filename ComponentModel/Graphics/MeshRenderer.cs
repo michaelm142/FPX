@@ -9,7 +9,7 @@ using LodeObj;
 namespace FPX
 {
     [Editor(typeof(MeshRendererEditor))]
-    public class MeshRenderer : Component, IDrawable
+    public class MeshRenderer : Component, IGraphicsObject, IDrawable
     {
         /// <summary>
         /// Model/Mesh/MeshPart data for this object
@@ -28,7 +28,7 @@ namespace FPX
         }
 
         public int startIndex { get; private set; }
-        public int primitiveCount { get; private set; }
+        public int PrimitiveCount { get; private set; }
         public int indexCount { get; private set; }
 
         public VertexPositionNormalTextureBinormal[] Vertecies { get; private set; }
@@ -38,6 +38,8 @@ namespace FPX
         public bool Visible { get; set; } = true;
 
         public int DrawOrder { get; set; }
+
+        public PrimitiveType PrimitiveType { get; set; } = PrimitiveType.TriangleList;
 
         public event EventHandler<EventArgs> VisibleChanged;
         public event EventHandler<EventArgs> DrawOrderChanged;
@@ -64,9 +66,10 @@ namespace FPX
                 Debug.LogError("Mesh Renderer does not have a material assosiated with it");
         }
 
-        public void Draw(GameTime gametime)
+        public void Draw() { Draw(new GameTime()); }
+        public void Draw(GameTime gameTime)
         {
-            if (model == null || model.Tag != null)
+            if (Graphics.Mode != Graphics.RenderMode.Basic && (model == null || model.Tag != null))
                 return;
             foreach (var mesh in model.Meshes)
             {
@@ -124,7 +127,7 @@ namespace FPX
             try
             {
                 model = GameCore.content.Load<Model>(modelName);
-                if (Graphics.Mode == "Default")
+                if (Graphics.Mode == Graphics.RenderMode.Basic)
                     CreateFromMeshPart(model.Meshes[0].MeshParts[0]);
                 model.Tag = modelName;
             }
@@ -235,7 +238,7 @@ namespace FPX
             }
 
             startIndex = 0;
-            primitiveCount = indicies.Length / 3;
+            PrimitiveCount = indicies.Length / 3;
             indexCount = indicies.Length;
         }
 

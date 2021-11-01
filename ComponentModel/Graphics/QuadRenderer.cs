@@ -5,9 +5,10 @@ namespace FPX
 {
     public class QuadRenderer : IGameComponent
     {
-        public static QuadRenderer Instance { get; private set; }
+        static QuadRenderer Instance { get; set; }
 
         VertexPositionTexture[] vertecies;
+        public static VertexPositionTexture[] QuadVertecies { get { return Instance.vertecies; } }
 
         BasicEffect basicEffect;
 
@@ -35,13 +36,13 @@ namespace FPX
             basicEffect.TextureEnabled = true;
         }
 
-        public void RenderQuad(Texture2D texture, Vector2 position, Color blendColor)
+        public void RenderQuad(Texture2D texture, Vector3 position, Color blendColor)
         {
             GraphicsDevice device = GameCore.graphicsDevice;
 
             basicEffect.Texture = texture;
             basicEffect.DiffuseColor = blendColor.ToVector3();
-            basicEffect.World = Matrix.CreateTranslation(-0.5f, -0.5f, 0.0f) * Matrix.CreateScale(texture.Width, texture.Height, 1.0f) * Matrix.CreateTranslation(position.ToVector3());
+            basicEffect.World = Matrix.CreateTranslation(-0.5f, -0.5f, 0.0f) * Matrix.CreateScale(texture.Width, texture.Height, 1.0f) * Matrix.CreateTranslation(position);
             basicEffect.View = Matrix.Identity;
             basicEffect.Projection = Matrix.CreateOrthographic(device.Viewport.Width, device.Viewport.Height, 0.0f, 1.0f);
             basicEffect.CurrentTechnique.Passes[0].Apply();
@@ -49,7 +50,7 @@ namespace FPX
             device.DrawUserPrimitives(PrimitiveType.TriangleStrip, vertecies, 0, 2);
         }
 
-        public void _renderQuad(Texture2D texture, Vector2 position, Effect effect, bool useWVPPrams = true)
+        public void _renderQuad(Texture2D texture, Vector3 position, Effect effect, bool useWVPPrams = true)
         {
             GraphicsDevice device = GameCore.graphicsDevice;
 
@@ -57,7 +58,7 @@ namespace FPX
             device.Textures[0] = texture;
             if (useWVPPrams)
             {
-                effect.Parameters["World"].SetValue(Matrix.CreateTranslation(position.ToVector3()));
+                effect.Parameters["World"].SetValue(Matrix.CreateTranslation(position));
                 if (effect.Parameters["View"] != null)
                 {
                     effect.Parameters["View"].SetValue(Matrix.Identity);
@@ -119,7 +120,7 @@ namespace FPX
             Instance._renderQuad(texture, rect, effect != null ? effect : Instance.basicEffect, useWFPPrams);
         }
 
-        public static void RenderQuad(Texture2D texture, Vector2 position, Effect effect, bool useWVPPrams = true)
+        public static void RenderQuad(Texture2D texture, Vector3 position, Effect effect, bool useWVPPrams = true)
         {
             Instance._renderQuad(texture, position, effect != null ? effect : Instance.basicEffect, useWVPPrams);
         }

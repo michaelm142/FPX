@@ -202,7 +202,12 @@ namespace FPX
                     SoundEffect sndVal = GameCore.content.Load<SoundEffect>(filenameAttr.InnerText);
                     fieldData = sndVal;
                 }
-
+                else if (field.FieldType == typeof(Model))
+                {
+                    var filenameAttr = memberXmlElement.Attributes["FileName"];
+                    Model mdlVal = GameCore.content.Load<Model>(filenameAttr.InnerText);
+                    fieldData = mdlVal;
+                }
                 field.SetValue(this, fieldData);
             }
 

@@ -7,7 +7,6 @@ using System.Security.Permissions;
 using System.Reflection;
 using System.Windows;
 using FPX;
-using FPX_Internal;
 
 using Application = System.Windows.Forms.Application;
 
@@ -178,7 +177,7 @@ namespace FPX
 
         public static void SetRendererMode(string Mode)
         {
-            Graphics.Mode = Mode;
+            Graphics.Mode = (Graphics.RenderMode)Enum.Parse(typeof(Graphics.RenderMode), Mode);
             Debug.Log("Set mode to {0}", Mode);
         }
 

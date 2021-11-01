@@ -161,18 +161,8 @@ namespace FPX
                 GBufferShader.Parameters["CameraForward"].SetValue(cameraForward);
             }
 
-            foreach (MeshRenderer meshRender in Component.g_collection.FindAll(c => c is MeshRenderer))
-                RenderObject(meshRender);
-
-            var renderables = Component.g_collection.FindAll(c => c is IDrawable && c.GetType() != typeof(MeshRenderer) && c.GetType() != typeof(SkyboxRenderer)).Cast<IDrawable>().ToList();
-            renderables.ToList().Sort(Graphics.SortRenderables);
-            foreach (IDrawable drawable in renderables)
-            {
-                if (!drawable.Visible)
-                    continue;
-
-                drawable.Draw(Time.GameTime);
-            }
+            foreach (var obj in Component.g_collection.FindAll(c => c is IGraphicsObject))
+                RenderObject(obj);
         }
 
         public void Draw(GameTime gameTime)
@@ -223,19 +213,23 @@ namespace FPX
             Device.BlendState = BlendState.Opaque;
         }
 
-        public void RenderObject(MeshRenderer renderer)
+        public void RenderObject(Component component)
         {
-            if (!renderer.Visible || !renderer.gameObject.Visible || renderer.Vertecies == null || renderer.Vertecies.Length == 0)
+            IGraphicsObject obj = component as IGraphicsObject;
+            if (obj == null)
+                throw new InvalidOperationException("Component is not an IGraphicsObject");
+
+            if (!obj.Visible || obj.Vertecies == null || obj.Vertecies.Length == 0)
                 return;
 
-            Material material = renderer.GetComponent<Material>();
+            Material material = component.GetComponent<Material>();
             GBufferShader.Parameters["DiffuseMap"].SetValue(material.DiffuseMap);
             GBufferShader.Parameters["NormalMap"].SetValue(material.NormalMap);
             GBufferShader.Parameters["SpecularMap"].SetValue(material.SpecularMap);
 
-            GBufferShader.Parameters["World"].SetValue(renderer.transform.worldPose);
-            GBufferShader.Parameters["DiffuseColor"].SetValue(renderer.GetComponent<Material>().DiffuseColor.ToVector4());
-            GBufferShader.Parameters["SpecularColor"].SetValue(renderer.GetComponent<Material>().SpecularColor.ToVector4());
+            GBufferShader.Parameters["World"].SetValue(component.transform.worldPose);
+            GBufferShader.Parameters["DiffuseColor"].SetValue(component.GetComponent<Material>().DiffuseColor.ToVector4());
+            GBufferShader.Parameters["SpecularColor"].SetValue(component.GetComponent<Material>().SpecularColor.ToVector4());
             GBufferShader.Parameters["Roughness"].SetValue(material.Roughness);
             GBufferShader.Parameters["SpecularPower"].SetValue(material.SpecularPower);
             GBufferShader.Parameters["SpecularIntensity"].SetValue(material.SpecularIntensity);
@@ -245,7 +239,7 @@ namespace FPX
             GBufferShader.CurrentTechnique.Passes[0].Apply();
 
             // Device.DrawPrimitives(PrimitiveType.TriangleList, renderer.startIndex, renderer.primitiveCount);
-            Device.DrawUserIndexedPrimitives(PrimitiveType, renderer.Vertecies, 0, renderer.Vertecies.Length, renderer.Indicies, 0, renderer.primitiveCount);
+            Device.DrawUserIndexedPrimitives(obj.PrimitiveType, obj.Vertecies, 0, obj.Vertecies.Length, obj.Indicies, 0, obj.PrimitiveCount);
         }
 
         public void EndRenderGBuffers()

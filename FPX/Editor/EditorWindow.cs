@@ -139,7 +139,7 @@ namespace FPX
 
         private void defaultToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Graphics.Mode = "Default";
+            Graphics.Mode = Graphics.RenderMode.Basic;
             defaultToolStripMenuItem.Checked = true;
             deferredToolStripMenuItem.Checked = false;
             deferredDebugToolStripMenuItem.Checked = false;
@@ -148,7 +148,7 @@ namespace FPX
 
         private void deferredToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Graphics.Mode = "Deferred";
+            Graphics.Mode = Graphics.RenderMode.Deferred;
             defaultToolStripMenuItem.Checked = false;
             deferredToolStripMenuItem.Checked = true;
             deferredDebugToolStripMenuItem.Checked = false;
@@ -156,7 +156,7 @@ namespace FPX
 
         private void deferredDebugToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Graphics.Mode = "DeferredDebug";
+            Graphics.Mode = Graphics.RenderMode.DeferredDebug;
             deferredDebugToolStripMenuItem.Checked = true;
             defaultToolStripMenuItem.Checked = false;
             deferredToolStripMenuItem.Checked = false;

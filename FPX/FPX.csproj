@@ -268,10 +268,6 @@
       <Project>{a9df5e3c-aad6-4640-aaa1-65b3e7da290b}</Project>
       <Name>Crom.Controls.Docking</Name>
     </ProjectReference>
-    <ProjectReference Include="..\FPX_Internal\FPX_Internal.vcxproj">
-      <Project>{c763b520-c5cd-46cf-bb64-d2ecf7278020}</Project>
-      <Name>FPX_Internal</Name>
-    </ProjectReference>
     <ProjectReference Include="..\LodeObj\LodeObj.csproj">
       <Project>{1011caf4-54ec-405a-a387-f59cf91afcb3}</Project>
       <Name>LodeObj</Name>

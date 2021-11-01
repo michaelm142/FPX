@@ -10,7 +10,7 @@ namespace FPX
 {
     public class SkyboxRenderer : Component, IDrawable
     {
-        public bool Visible => false;
+        public bool Visible => true;
 
         public int DrawOrder { get { return -1000; } }
 
@@ -33,6 +33,7 @@ namespace FPX
         public void Draw(GameTime gameTime)
         {
             var device = GameCore.graphicsDevice;
+            var blendState = device.BlendState;
             device.BlendState = BlendState.Opaque;
             device.Textures[4] = SkyCube;
             foreach (var mesh in model.Meshes)
@@ -48,6 +49,7 @@ namespace FPX
 
                 device.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, mesh.MeshParts[0].NumVertices, 0, mesh.MeshParts[0].PrimitiveCount);
             }
+            device.BlendState = blendState;
         }
 
         public override void LoadXml(XmlElement element)

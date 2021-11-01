@@ -151,6 +151,8 @@
     <Compile Include="GameForm.Designer.cs">
       <DependentUpon>GameForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Graphics\BillboardSprite.cs" />
+    <Compile Include="Graphics\IGraphicsObject.cs" />
     <Compile Include="Graphics\Light.cs" />
     <Compile Include="Graphics\Camera.cs" />
     <Compile Include="Colliders\Collider.cs" />

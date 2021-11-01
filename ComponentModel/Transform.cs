@@ -50,21 +50,49 @@ namespace FPX
         public virtual Matrix worldPose
         {
             get { return Matrix.CreateScale(localScale) * Matrix.CreateFromQuaternion(rotation) * Matrix.CreateTranslation(position); }
+
+            set
+            {
+                position = value.Translation;
+                rotation = value.Rotation;
+                scale = value.Scale;
+            }
         }
 
         public Vector3 up
         {
             get { return worldPose.Up; }
+
+            set
+            {
+                Matrix m = worldPose;
+                m.Up = value;
+                worldPose = m;
+            }
         }
 
         public Vector3 right
         {
             get { return worldPose.Right; }
+
+            set
+            {
+                Matrix m = worldPose;
+                m.Right = value;
+                worldPose = m;
+            }
         }
 
         public Vector3 forward
         {
             get { return worldPose.Forward; }
+
+            set
+            {
+                Matrix m = worldPose;
+                m.Forward = value;
+                worldPose = m;
+            }
         }
 
         private Transform _parent;

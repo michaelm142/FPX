@@ -14,7 +14,7 @@ namespace FPX
         public const float Deg2Rad = (float)Math.PI / 180.0f;
 
 
-        public static Vector4 ToVector4(this Vector3 v, float a)
+        public static Vector4 ToVector4(this Vector3 v, float a = 0.0f)
         {
             return new Vector4(v, a);
         }
@@ -62,6 +62,16 @@ namespace FPX
             {
                 *((Vector4*)(&m)) = value;
             }
+            return m;
+        }
+
+        public static Matrix CreateFromRightForwardUp(Vector4 right, Vector4 forward, Vector4 up)
+        {
+            Matrix m = Matrix.Identity;
+            m.SetRow(0, right);
+            m.SetRow(1, up);
+            m.SetRow(2, forward);
+
             return m;
         }
 

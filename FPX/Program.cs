@@ -27,6 +27,7 @@ namespace FPX
             Title();
             Settings.Initialize();
             uint frame = 0;
+
             while (Running)
             {
                 Debug.Log(DateTime.Now);

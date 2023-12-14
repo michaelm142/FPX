@@ -48,7 +48,7 @@ namespace FPX
         public static void LogWarning(string warning, params object[] args)
         {
             ForegroundColor = ConsoleColor.Black;
-            BackgroundColor = ConsoleColor.DarkYellow;
+            BackgroundColor = ConsoleColor.Yellow;
             Log(warning, ConsoleColor.Yellow, args);
             ForegroundColor = ConsoleColor.Gray;
             BackgroundColor = ConsoleColor.Black;

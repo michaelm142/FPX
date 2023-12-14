@@ -5,7 +5,6 @@ Public Class SpaceshipEffects
     Inherits Component
 
     Public Sub Start()
-
         For Each t In transform
             If Not t.Name.IndexOf("engineLight") = -1 Then
                 Dim light = gameObject.AddComponent(Of Light)

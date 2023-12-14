@@ -22,6 +22,7 @@ int main()
 	InitializeInputModule((int)GetConsoleWindow());
 
 	std::cin.get();
+	QueryDevices();
 	while (running)
 	{
 		InputUpdate();
@@ -337,8 +338,8 @@ EXPORT void __stdcall InputUpdate()
 	long double elapsed = (long double)delta / CLOCKS_PER_SEC;
 	totalElapsed += elapsed;
 
-	if (fmod(totalElapsed, CHECK_CONNECTED_DEVICE_INTERVAL) < 0.1)
-		QueryDevices();
+	//if (fmod(totalElapsed, CHECK_CONNECTED_DEVICE_INTERVAL) < 0.1)
+	//	QueryDevices();
 	//if (GetAsyncKeyState(VK_ESCAPE))
 	//	running = false;
 	for (auto i = attachedDevices.begin(); i != attachedDevices.end();)
@@ -583,10 +584,10 @@ BOOL IsXInputDevice(const GUID* pGuidProductFromDirectInput)
 					// If it does, then get the VID/PID from var.bstrVal
 					DWORD dwPid = 0, dwVid = 0;
 					WCHAR* strVid = wcsstr(var.bstrVal, L"VID_");
-					if (strVid && swscanf(strVid, L"VID_%4X", &dwVid) != 1)
+					if (strVid && swscanf_s(strVid, L"VID_%4X", &dwVid) != 1)
 						dwVid = 0;
 					WCHAR* strPid = wcsstr(var.bstrVal, L"PID_");
-					if (strPid && swscanf(strPid, L"PID_%4X", &dwPid) != 1)
+					if (strPid && swscanf_s(strPid, L"PID_%4X", &dwPid) != 1)
 						dwPid = 0;
 
 					// Compare the VID/PID to the DInput device

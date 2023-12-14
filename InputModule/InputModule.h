@@ -4,7 +4,6 @@
 #pragma region DECL
 #include <windows.h>
 #include <dinput.h>
-#include <consoleapi3.h>
 #include <list>
 #include <XInput.h>
 

@@ -24,6 +24,18 @@
       </PusdodistanceTester>
     </Object>
 
+	  <Object Name="Ambient Light 1">
+		  <Transform>
+			  <Rotation X="45"/>
+			  <Position Y="1.0"/>
+		  </Transform>
+		  <Light>
+			  <LightType>Ambient</LightType>
+			  <DiffuseColor Name="White"/>
+			  <SpecularColor Name="White"/>
+			  <Intensity>0.5</Intensity>
+		  </Light>
+	  </Object>
     <Object Name="Box 1" Id="0">
       <Transform>
         <Position X="0" Y="2.5" Z="0"/>

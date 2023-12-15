@@ -8,12 +8,12 @@
 
     <Object Name="Camera 1">
       <Transform>
-        <Position X="0.0" Y="1.0" Z="10.0"/>
-        <Rotation X="0.0" Y="0.0" Z="0.0"/>
+        <Position X="0.0" Y="0.0" Z="-10.0"/>
+        <Rotation X="0.0" Y="180.0" Z="0.0"/>
         <Scale X="1.0" Y="1.0" Z="1.0" />
       </Transform>
       <Camera>
-        <FieldOfView>60.0</FieldOfView>
+        <FieldOfView>30.0</FieldOfView>
         <NearPlaneDistance>0.01</NearPlaneDistance>
         <FarPlaneDistance>1000.0</FarPlaneDistance>
       </Camera>
@@ -23,27 +23,53 @@
       </CameraController>
     </Object>
 
-    <Prefab Filename="Prefabs\\Arrow.xml"/>
-
     <Prefab Filename="Prefabs\\Box.xml" Name="Box 1">
       <Transform Id="22">
-        <Position X="-2.0"/>
+        <Position X="-1.0"/>
       </Transform>
       <ClosestPointFinder>
-        <Target>44</Target>
+        <targetId>Box 2</targetId>
       </ClosestPointFinder>
+		<ColliderTester/>
     </Prefab>
+	  
+	  <Object Name="Directional Light 1">
+		  <Transform>
+			  <Rotation X="45"/>
+			  <Position X="-1" Y="-30" Z="30"/>
+		  </Transform>
+		  <Light>
+			  <LightType>Directional</LightType>
+			  <DiffuseColor Name="White"/>
+			  <SpecularColor Name="White"/>
+			  <Intensity>0.5</Intensity>
+		  </Light>
+	  </Object>
 
+	  <Object Name="Ambient Light 1">
+		  <Transform>
+			  <Rotation X="45"/>
+			  <Position Y="1.0"/>
+		  </Transform>
+		  <Light>
+			  <LightType>Ambient</LightType>
+			  <DiffuseColor Name="White"/>
+			  <SpecularColor Name="White"/>
+			  <Intensity>0.5</Intensity>
+		  </Light>
+	  </Object>
+	  
     <Prefab Filename="Prefabs\\Box.xml" Name="Box 2">
+		<ColliderTester/>
       <Transform Id="44">
-        <Position X="2.0"/>
+        <Position X="1.0"/>
       </Transform>
       <ClosestPointFinder>
-        <Target>22</Target>
+        <targetId>Box 1</targetId>
       </ClosestPointFinder>
       <GameControlTest>
-        <MoveSpeed>1</MoveSpeed>
-        <RotationSpeed>2</RotationSpeed>
+        <MoveSpeed>10</MoveSpeed>
+        <RotationSpeed>50</RotationSpeed>
       </GameControlTest>
     </Prefab>
     

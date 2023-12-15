@@ -17,6 +17,19 @@
       </CameraController>
     </Object>
 
+	  <Object Name="Ambient Light 1">
+		  <Transform>
+			  <Rotation X="45"/>
+			  <Position Y="1.0"/>
+		  </Transform>
+		  <Light>
+			  <LightType>Ambient</LightType>
+			  <DiffuseColor Name="White"/>
+			  <SpecularColor Name="White"/>
+			  <Intensity>0.5</Intensity>
+		  </Light>
+	  </Object>
+	  
     <Prefab Filename="Prefabs\\Box.xml" Name="Rigidbody1">
       <Transform>
         <Position X="-3.0" Y="0" Z="0.5"/>

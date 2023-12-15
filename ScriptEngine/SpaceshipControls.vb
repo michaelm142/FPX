@@ -30,7 +30,7 @@ Public Class SpaceshipControls
         rigidbody.AddForce(force)
 
         If fireAxis = 0 And fireAxisPrevious > 0 Then
-            GetComponent(Of FireLaser).Fire(-1.0)
+            GetComponent(Of FireLaser).Fire(-10.0)
         End If
 
         If GetComponent(Of SpaceShipResources)().health <= 0.0F Then

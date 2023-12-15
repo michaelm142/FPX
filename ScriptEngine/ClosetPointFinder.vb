@@ -6,7 +6,7 @@ Public Class ClosestPointFinder
     Inherits Component
 
     Private target As GameObject
-    Private targetId As UInteger
+    Public targetId As String
 
     Private sphere As GameObject
 
@@ -14,11 +14,6 @@ Public Class ClosestPointFinder
         target = GameObject.Find(targetId)
         sphere = ObjectFactory.Create(PrimitiveType.Sphere, Scene.Active)
         sphere.transform.localScale = Vector3.One * 0.05
-    End Sub
-
-    Public Overrides Sub LoadXml(node As XmlElement)
-        Dim targetNode = node.SelectSingleNode("Target")
-        targetId = UInteger.Parse(targetNode.InnerText)
     End Sub
 
     Public Sub Update(gameTime As GameTime)
